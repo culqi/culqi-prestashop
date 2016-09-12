@@ -1,7 +1,7 @@
 <style type="text/css">
 	.culqi-payment {
 		padding: 30px 0px 50px 200px !important;
-		background: url('https://placeholdit.imgix.net/~text?txtsize=20&txt=CARDS&w=160&h=65') 23px 22px no-repeat #fbfbfb;
+		background: url('http://i.imgur.com/LjiIq9g.png') 23px 22px no-repeat #fbfbfb;
 	}
 </style>
 
