@@ -9,8 +9,8 @@
 	<div class="col-xs-12">
 		<p class="payment_module">
 		    <a class="culqi-payment" href="{$link->getModuleLink('culqi', 'payment', [], true)|escape:'html'}" title="{l s='Pagar con tarjeta de crédito o débito' mod='culqi'}">
-		    	Pagar con tarjeta
-		    	<span>Puedes utilizar cualquier tarjeta de crédito o débito VISA, Mastercard, American Express o Diners Club.</span>		       
+		    	Pagar con Tarjeta
+		    	<span>Pague con tarjeta de crédito/debito.</span>		       
 		    </a>
 		</p>
 	</div>
