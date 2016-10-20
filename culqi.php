@@ -2,28 +2,37 @@
 if (!defined('_PS_VERSION_'))
     exit;
 
-define('CULQI_SDK_VERSION', '1.1.0');
+define('CULQI_SDK_VERSION', '1.2.3');
+
+require_once 'settings.php';
 
 class Culqi extends PaymentModule
 {
 
     private $_postErrors = array();
 
+
+    const MODULE_NAME = "culqi";
+    const MODULE_AUTHOR = "Team Culqi (Brayan Cruces)";
+    const MODULE_NAME_DISP = "Culqi";
+
     public function __construct()
     {
-        $this->name = 'culqi';
+        $this->name = self::MODULE_NAME;
         $this->tab = 'payments_gateways';
-        $this->version = '1.0.2';
+        $this->version = '1.1.1';
         $this->controllers = array('payment', 'validation', 'postpayment');
-        $this->author = 'Culqi';
+        $this->author = self::MODULE_AUTHOR;
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
 
         parent::__construct();
 
-        $this->displayName = $this->l('Culqi');
+        $this->displayName = self::MODULE_NAME_DISP;
         $this->description = $this->l('Acepta tarjetas de crédito y débito en tu tienda online.');
+        $this->confirmUninstall = $this->l('¿Estás seguro que quieres desintalar el módulo de ' . self::MODULE_DISPLAY_NAME . '?');
+
     }
 
     public function install()
@@ -102,7 +111,7 @@ class Culqi extends PaymentModule
                 "correo_electronico" => $this->context->customer->email,
                 "id_usuario_comercio" => $this->getCustomerId(),
                 "nombres" => $this->context->customer->firstname,
-                "apellidos" => $this->context->customer->lastname,                
+                "apellidos" => $this->context->customer->lastname,
                 "plugin_culqi" => "{'plataforma': 'Prestashop','version': '$this->version'}"
             ));
 
