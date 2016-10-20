@@ -31,7 +31,7 @@ class Culqi extends PaymentModule
 
         $this->displayName = self::MODULE_NAME_DISP;
         $this->description = $this->l('Acepta tarjetas de crédito y débito en tu tienda online.');
-        $this->confirmUninstall = $this->l('¿Estás seguro que quieres desintalar el módulo de ' . self::MODULE_DISPLAY_NAME . '?');
+        $this->confirmUninstall = $this->l('¿Estás seguro que quieres desintalar el módulo de ' . self::MODULE_NAME_DISP . '?');
 
     }
 
