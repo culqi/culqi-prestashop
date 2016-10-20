@@ -4,7 +4,15 @@ if (!defined('_PS_VERSION_'))
 
 define('CULQI_SDK_VERSION', '1.2.3');
 
-require_once 'settings.php';
+//require_once 'settings.php';
+
+/**
+ * Calling dependencies
+ */
+require_once 'libraries/Requests/library/Requests.php';
+Requests::register_autoloader();
+require_once 'libraries/culqi-php/lib/Culqi.php';
+
 
 class Culqi extends PaymentModule
 {
@@ -84,6 +92,9 @@ class Culqi extends PaymentModule
         $smarty = $this->context->smarty;
         $smarty->assign('culqi_error_pago', $mensaje);
     }
+
+
+    /* PrePayment desaparece, ahora es crear Cargo */
 
     public function createPrePayment() {
         CulqiPago::$codigoComercio = Configuration::get('CULQI_CODIGO_COMERCIO');
@@ -268,6 +279,10 @@ class Culqi extends PaymentModule
         }
     }
 
+
+    /**
+     * Admin Zone
+     */
     public function renderForm()
     {
         $entorno_options = array(
@@ -283,13 +298,13 @@ class Culqi extends PaymentModule
         $fields_form = array(
             'form' => array(
                 'legend' => array(
-                    'title' => $this->l('CONFIGURACIONES GENERALES'),
+                    'title' => $this->l('CONFIGURACIONES GENERALES CULQI'),
                     'icon' => 'icon-money'
                 ),
                 'input' => array(
                     array(
                         'type' => 'text',
-                        'label' => $this->l('Llave del comercio'),
+                        'label' => $this->l('API Key (Llave de comercio)'),
                         'name' => 'CULQI_LLAVE_COMERCIO',
                         'required' => true
                     ),
@@ -362,7 +377,11 @@ class Culqi extends PaymentModule
         return str_replace(".","",str_replace( ',', '', number_format($amount,2,'.',',')));
     }
 
-    }
+  }
+
+
+
+/* Oldie but goldie classes of Culqi */
 
 class UrlAESCipher
 {

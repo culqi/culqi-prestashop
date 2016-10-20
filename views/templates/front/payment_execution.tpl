@@ -13,7 +13,7 @@
         font-size: 1.1em;
         vertical-align: middle;
     }
-    
+
     .culqi_btn_ok {
         width: 120px !important;
         height: 40px !important;
@@ -22,7 +22,7 @@
         border: 0px !important;
         text-align: center !important;
     }
-    
+
     .culqi_btn_cancel {
         width: 120px !important;
         height: 40px !important;
@@ -41,7 +41,7 @@
 </style>
 
 {literal}
-<script src="{/literal}{$ambiente_basepath}{literal}/api/v1/culqi.js"></script>
+<script src="{/literal}{$ambiente_basepath}{literal}/js/v1"></script>
 {/literal} {capture name=path}
 <a href="{$link->getPageLink('order', true, NULL, " step=3 ")|escape:'html':'UTF-8'}" title="{l s='Regresar' mod='culqi'}">{l s='Checkout' mod='culqi'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Pago con tarjeta' mod='culqi'} {/capture}
 
@@ -58,7 +58,7 @@
         <p style="margin-top:20px;">
             - {l s='El monto total a cancelar es de:' mod='culqi'}
             <span id="amount" class="price"><b>{displayPrice price=$total}</b></span>
-        </p>       
+        </p>
         <p style="margin-top:20px;">
             <b>{l s='Por favor confirme su pedido haciendo clic en el botón.' mod='culqi'}</b>
         </p>
@@ -69,11 +69,22 @@
 
         {/if} {literal}
         <script>
-            checkout.codigo_comercio = '{/literal}{$codigo_comercio}{literal}';
-            checkout.informacion_venta = '{/literal}{$informacion_venta}{literal}';
+
+            Culqi.codigoComercio = '{/literal}{$codigo_comercio}{literal}';
+
+            Culqi.configurar({
+                    nombre: 'Venta',
+                    orden: '000001',
+                    moneda: 'PEN',
+                    descripcion: 'Una descripcion',
+                    monto: 2000,
+                    guardar: false
+                  });
+
+
 
             $('#btn_pago').on('click', function(e) {
-                checkout.abrir();
+                Culqi.abrir();
                 e.preventDefault();
             });
 
@@ -103,10 +114,11 @@
                 return url.replace(/&amp;/g, '&');
             }
 
-            function culqi(checkout) {
+            function culqi() {
                 var urlResponse = fnReplace("{/literal}{$link->getModuleLink('culqi', 'validation', [], true)|escape:'html'}{literal}");
-                console.log(urlResponse)
-                if (checkout.respuesta == "checkout_cerrado") {
+                console.log(urlResponse);
+
+                if (Culqi.respuesta == "checkout_cerrado") {
                     repayment(window.btoa(unescape(encodeURIComponent("Se cerró el checkout, por favor intente nuevamente."))));
                 } else if (checkout.respuesta == "venta_expirada") {
                     repayment(window.btoa(unescape(encodeURIComponent("La venta expiró, por favor intente nuevamente."))));
