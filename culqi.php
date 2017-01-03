@@ -2,34 +2,34 @@
 if (!defined('_PS_VERSION_'))
     exit;
 
-define('CULQI_SDK_VERSION', '1.2.3');
+define('CULQI_SDK_VERSION', '1.3.0');
 
 //require_once 'settings.php';
 
 /**
  * Calling dependencies
  */
-require_once 'libraries/Requests/library/Requests.php';
+include_once dirname(__FILE__).'/libraries/Requests/library/Requests.php';
+
 Requests::register_autoloader();
-require_once 'libraries/culqi-php/lib/Culqi.php';
+
+include_once dirname(__FILE__).'/libraries/culqi-php/lib/culqi.php';
 
 
-class Culqi extends PaymentModule
-{
+class Culqi extends PaymentModule {
 
     private $_postErrors = array();
 
-
     const MODULE_NAME = "culqi";
-    const MODULE_AUTHOR = "Team Culqi (Brayan Cruces)";
+    const MODULE_AUTHOR = "Team Culqi (Brayan Cruces, Willy Aguirre)";
     const MODULE_NAME_DISP = "Culqi";
 
     public function __construct()
     {
         $this->name = self::MODULE_NAME;
         $this->tab = 'payments_gateways';
-        $this->version = '1.1.1';
-        $this->controllers = array('payment', 'validation', 'postpayment');
+        $this->version = '1.2.0';
+        $this->controllers = array('actionajax' ,'payment', 'validation', 'postpayment');
         $this->author = self::MODULE_AUTHOR;
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
@@ -52,8 +52,8 @@ class Culqi extends PaymentModule
             $this->registerHook('payment') &&
             $this->registerHook('paymentReturn') &&
             Configuration::updateValue('CULQI_LLAVE_COMERCIO', '') &&
-            Configuration::updateValue('CULQI_CODIGO_COMERCIO', '') &&
-            Configuration::updateValue('CULQI_AMBIENTE_JS', '')
+            Configuration::updateValue('CULQI_CODIGO_COMERCIO', '')
+            //Configuration::updateValue('CULQI_AMBIENTE_JS', '')
         );
     }
 
@@ -93,13 +93,43 @@ class Culqi extends PaymentModule
         $smarty->assign('culqi_error_pago', $mensaje);
     }
 
+    /* Se crea un Cargo con la nueva api v1.3 de Culqi PHP */
+    public function charge($token_id){
+      try {
+        $cart = $this->context->cart;
+        $userAddress = new Address(intval($cart->id_address_invoice));
+        $culqi = new Culqi\Culqi(array('api_key' => Configuration::get('CULQI_LLAVE_COMERCIO')));
+        $cargo = $culqi->Cargos->create(
+            array(
+                "address" => $this->getAddress($userAddress),
+                "address_city" => $userAddress->city,
+                "amount" => $this->removeComma($cart->getOrderTotal(true, Cart::BOTH)),
+                "country_code" => "PE",
+                "currency_code" => "PEN",
+                "email" => $this->context->customer->email,
+                "first_name" => $this->context->customer->firstname,
+                "installments" => 0,
+                "last_name" => $this->context->customer->lastname,
+                "metadata" => "",
+                "order_id" => $cart->id,
+                "phone_number" => $this->getPhone($userAddress),
+                "product_description" => "Orden de compra ".$cart->id,
+                "token_id" => $token_id
+            )
+        );
+        return $cargo;
+      } catch(Exception $e){
+        return $e->getMessage();
+      }
+    }
+
 
     /* PrePayment desaparece, ahora es crear Cargo */
 
     public function createPrePayment() {
         CulqiPago::$codigoComercio = Configuration::get('CULQI_CODIGO_COMERCIO');
         CulqiPago::$llaveSecreta = Configuration::get('CULQI_LLAVE_COMERCIO');
-        CulqiPago::$servidorBase = Configuration::get('CULQI_AMBIENTE_JS');
+        //CulqiPago::$servidorBase = Configuration::get('CULQI_AMBIENTE_JS');
 
         $cart = $this->context->cart;
         $smarty = $this->context->smarty;
@@ -129,10 +159,14 @@ class Culqi extends PaymentModule
             if($data["codigo_respuesta"] != "venta_registrada") {
                 return $data["mensaje_respuesta"];
             }
-            $smarty->assign('ambiente_basepath', Configuration::get('CULQI_AMBIENTE_JS'));
-            $smarty->assign('codigo_comercio', Configuration::get('CULQI_CODIGO_COMERCIO'));
-            $smarty->assign('informacion_venta', $data[Pago::PARAM_INFO_VENTA]);
-            return '';
+
+            $code_validation = array();
+            array_push($code_validation, Configuration::get('CULQI_CODIGO_COMERCIO'), $data[Pago::PARAM_INFO_VENTA]);
+
+            //$smarty->assign('ambiente_basepath', Configuration::get('CULQI_AMBIENTE_JS'));
+            //$smarty->assign('codigo_comercio', Configuration::get('CULQI_CODIGO_COMERCIO'));
+          //  $smarty->assign('informacion_venta', $data[Pago::PARAM_INFO_VENTA]);
+            return $code_validation;
         } catch (InvalidParamsException $e) {
             echo $e->getMessage()."\n";
         }
@@ -195,7 +229,7 @@ class Culqi extends PaymentModule
         || !Configuration::deleteByName('CULQI_STATE_OK')
         || !Configuration::deleteByName('CULQI_STATE_ERROR')
         || !Configuration::deleteByName('CULQI_LLAVE_COMERCIO')
-        || !Configuration::deleteByName('CULQI_AMBIENTE_JS')
+        //|| !Configuration::deleteByName('CULQI_AMBIENTE_JS')
         || !Configuration::deleteByName('CULQI_CODIGO_COMERCIO')
         || !$this->uninstallStates())
             return false;
@@ -209,8 +243,8 @@ class Culqi extends PaymentModule
             if (!Tools::getValue('CULQI_LLAVE_COMERCIO'))
                 $this->_postErrors[] = $this->l('El campo llave de comercio es requerido.');
 
-            if (!Tools::getValue('CULQI_AMBIENTE_JS'))
-                $this->_postErrors[] = $this->l('El campo ambiente es requerido.');
+            /*if (!Tools::getValue('CULQI_AMBIENTE_JS'))
+                $this->_postErrors[] = $this->l('El campo ambiente es requerido.');*/
 
             if (!Tools::getValue('CULQI_CODIGO_COMERCIO'))
                 $this->_postErrors[] = $this->l('El campo código de comercio es requerido.');
@@ -285,7 +319,7 @@ class Culqi extends PaymentModule
      */
     public function renderForm()
     {
-        $entorno_options = array(
+        /*$entorno_options = array(
             array(
                 'id_option' => 'https://integ-pago.culqi.com',
                 'name' => 'Integración'
@@ -293,7 +327,7 @@ class Culqi extends PaymentModule
                 'id_option' => 'https://pago.culqi.com',
                 'name' => 'Producción'
             )
-        );
+        );*/
 
         $fields_form = array(
             'form' => array(
@@ -308,7 +342,7 @@ class Culqi extends PaymentModule
                         'name' => 'CULQI_LLAVE_COMERCIO',
                         'required' => true
                     ),
-                    array(
+                    /*array(
                         'type' => 'select',
                         'label' => $this->l('Entorno'),
                         'name' => 'CULQI_AMBIENTE_JS',
@@ -318,7 +352,7 @@ class Culqi extends PaymentModule
                             'id' => 'id_option',
                             'name' => 'name'
                         )
-                    ),
+                    ),*/
                     array(
                         'type' => 'text',
                         'label' => $this->l('Código de comercio'),
@@ -357,7 +391,7 @@ class Culqi extends PaymentModule
     {
         return array(
             'CULQI_LLAVE_COMERCIO' => Tools::getValue('CULQI_LLAVE_COMERCIO', Configuration::get('CULQI_LLAVE_COMERCIO')),
-            'CULQI_AMBIENTE_JS' => Tools::getValue('CULQI_AMBIENTE_JS', Configuration::get('CULQI_AMBIENTE_JS')),
+            //'CULQI_AMBIENTE_JS' => Tools::getValue('CULQI_AMBIENTE_JS', Configuration::get('CULQI_AMBIENTE_JS')),
             'CULQI_CODIGO_COMERCIO' => Tools::getValue('CULQI_CODIGO_COMERCIO', Configuration::get('CULQI_CODIGO_COMERCIO'))
         );
     }
@@ -367,7 +401,7 @@ class Culqi extends PaymentModule
         if (Tools::isSubmit('btnSubmit'))
         {
             Configuration::updateValue('CULQI_LLAVE_COMERCIO', Tools::getValue('CULQI_LLAVE_COMERCIO'));
-            Configuration::updateValue('CULQI_AMBIENTE_JS', Tools::getValue('CULQI_AMBIENTE_JS'));
+            //Configuration::updateValue('CULQI_AMBIENTE_JS', Tools::getValue('CULQI_AMBIENTE_JS'));
             Configuration::updateValue('CULQI_CODIGO_COMERCIO', Tools::getValue('CULQI_CODIGO_COMERCIO'));
         }
         $this->_html .= $this->displayConfirmation($this->l('Se actualizaron las configuraciones'));
@@ -470,7 +504,7 @@ class CulqiPago
 {
     public static $llaveSecreta;
     public static $codigoComercio;
-    public static $servidorBase = 'https://pago.culqi.com';
+    //public static $servidorBase = 'https://pago.culqi.com';
 
     public static function cifrar($sp3231b0)
     {
@@ -533,14 +567,16 @@ class Pago
     {
         $sp327f8d = Pago::getCipherData(array(Pago::PARAM_TICKET => $sp517f27));
         $sp821fb9 = array(Pago::PARAM_COD_COMERCIO => CulqiPago::$codigoComercio, Pago::PARAM_INFO_VENTA => $sp327f8d);
-        return Pago::postJson(CulqiPago::$servidorBase . Pago::URL_CONSULTA, $sp821fb9);
+        return null;
+        //return Pago::postJson(CulqiPago::$servidorBase . Pago::URL_CONSULTA, $sp821fb9);
     }
 
     public static function anular($sp517f27)
     {
         $sp327f8d = Pago::getCipherData(array(Pago::PARAM_TICKET => $sp517f27));
         $sp821fb9 = array(Pago::PARAM_COD_COMERCIO => CulqiPago::$codigoComercio, Pago::PARAM_INFO_VENTA => $sp327f8d);
-        return Pago::postJson(CulqiPago::$servidorBase . Pago::URL_ANULACION, $sp821fb9);
+        return null;
+        //return Pago::postJson(CulqiPago::$servidorBase . Pago::URL_ANULACION, $sp821fb9);
     }
 
     private static function getCipherData($sp821fb9, $sp37cd46 = null)
@@ -556,7 +592,7 @@ class Pago
 
     private static function validateAuth($sp821fb9)
     {
-        return Pago::postJson(CulqiPago::$servidorBase . Pago::URL_VALIDACION_AUTORIZACION, $sp821fb9);
+        //return Pago::postJson(CulqiPago::$servidorBase . Pago::URL_VALIDACION_AUTORIZACION, $sp821fb9);
     }
 
     private static function validateParams($sp821fb9)

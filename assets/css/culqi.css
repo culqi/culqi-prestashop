@@ -1,0 +1,50 @@
+#showresultcontent {
+  font-size: 24px;
+}
+.hide {
+  display: none;
+}
+.green {
+  color: green;
+}
+.red {
+  color: red;
+}
+.culqi_error {
+    background-color: #B70F26;
+    width: auto;
+    height: auto;
+    text-align: left;
+    margin: 0 auto;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.1em;
+    vertical-align: middle;
+}
+
+.culqi_btn_ok {
+    width: 120px !important;
+    height: 40px !important;
+    background: green !important;
+    color: white !important;
+    border: 0px !important;
+    text-align: center !important;
+}
+
+.culqi_btn_cancel {
+    width: 120px !important;
+    height: 40px !important;
+    background: gray !important;
+    color: white !important;
+    border: 0px !important;
+    text-align: center !important;
+}
+#left_column {
+    display: none !important;
+}
+#center_column {
+    width: 100% !important;
+}

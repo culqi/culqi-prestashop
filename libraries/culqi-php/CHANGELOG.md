@@ -1,3 +1,22 @@
+### 1.3.0 19-12-2016
+* Se utiliza API v2.0
+* Cambios en Cargos.php
+* Cambios en Client.php
+* Cambios en Culqi.php
+* Cambios en Devoluciones.php
+* Cambios en Planes.php
+* Cambios en Suscripciones.php
+* Cambios en Tokens.php
+* Cambios en /examples/
+* Cambios en /tests/
+
+### 1.2.5 16-11-2016
+* Cambios en Client.php
+* Cambios en /examples/
+
+### 1.2.4 03-11-2016
+* Ejemplo de Planes añadido.
+
 ### 1.2.3 08-10-2016
 * Cambio en el timeout de la conexión a 120 segundos.
 
