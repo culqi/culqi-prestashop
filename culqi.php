@@ -342,17 +342,6 @@ class Culqi extends PaymentModule {
                         'name' => 'CULQI_LLAVE_COMERCIO',
                         'required' => true
                     ),
-                    /*array(
-                        'type' => 'select',
-                        'label' => $this->l('Entorno'),
-                        'name' => 'CULQI_AMBIENTE_JS',
-                        'required' => true,
-                        'options' => array(
-                            'query' => $entorno_options,
-                            'id' => 'id_option',
-                            'name' => 'name'
-                        )
-                    ),*/
                     array(
                         'type' => 'text',
                         'label' => $this->l('Código de comercio'),
@@ -391,7 +380,6 @@ class Culqi extends PaymentModule {
     {
         return array(
             'CULQI_LLAVE_COMERCIO' => Tools::getValue('CULQI_LLAVE_COMERCIO', Configuration::get('CULQI_LLAVE_COMERCIO')),
-            //'CULQI_AMBIENTE_JS' => Tools::getValue('CULQI_AMBIENTE_JS', Configuration::get('CULQI_AMBIENTE_JS')),
             'CULQI_CODIGO_COMERCIO' => Tools::getValue('CULQI_CODIGO_COMERCIO', Configuration::get('CULQI_CODIGO_COMERCIO'))
         );
     }
@@ -401,7 +389,6 @@ class Culqi extends PaymentModule {
         if (Tools::isSubmit('btnSubmit'))
         {
             Configuration::updateValue('CULQI_LLAVE_COMERCIO', Tools::getValue('CULQI_LLAVE_COMERCIO'));
-            //Configuration::updateValue('CULQI_AMBIENTE_JS', Tools::getValue('CULQI_AMBIENTE_JS'));
             Configuration::updateValue('CULQI_CODIGO_COMERCIO', Tools::getValue('CULQI_CODIGO_COMERCIO'));
         }
         $this->_html .= $this->displayConfirmation($this->l('Se actualizaron las configuraciones'));
@@ -412,7 +399,6 @@ class Culqi extends PaymentModule {
     }
 
   }
-
 
 
 /* Oldie but goldie classes of Culqi */
