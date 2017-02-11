@@ -29,7 +29,7 @@ class Culqi extends PaymentModule {
         $this->name = self::MODULE_NAME;
         $this->tab = 'payments_gateways';
         $this->version = '1.2.0';
-        $this->controllers = array('actionajax' ,'payment', 'validation', 'postpayment');
+        $this->controllers = array('chargeajax' ,'payment', 'validation', 'postpayment');
         $this->author = self::MODULE_AUTHOR;
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
@@ -99,22 +99,16 @@ class Culqi extends PaymentModule {
         $cart = $this->context->cart;
         $userAddress = new Address(intval($cart->id_address_invoice));
         $culqi = new Culqi\Culqi(array('api_key' => Configuration::get('CULQI_LLAVE_COMERCIO')));
-        $cargo = $culqi->Cargos->create(
+        $cargo = $culqi->Charges->create(
             array(
-                "address" => $this->getAddress($userAddress),
-                "address_city" => $userAddress->city,
-                "amount" => $this->removeComma($cart->getOrderTotal(true, Cart::BOTH)),
-                "country_code" => "PE",
-                "currency_code" => "PEN",
-                "email" => $this->context->customer->email,
-                "first_name" => $this->context->customer->firstname,
-                "installments" => 0,
-                "last_name" => $this->context->customer->lastname,
-                "metadata" => "",
-                "order_id" => $cart->id,
-                "phone_number" => $this->getPhone($userAddress),
-                "product_description" => "Orden de compra ".$cart->id,
-                "token_id" => $token_id
+              "amount" => $this->removeComma($cart->getOrderTotal(true, Cart::BOTH)),
+              "capture" => true,
+              "currency_code" => "PEN",
+              "description" => "Orden de compra ".$cart->id,
+              "installments" => 0,
+              "metadata" => array("order_id"=>(string)$cart->id),
+              "email" => $this->context->customer->email,
+              "source_id" => $token_id              
             )
         );
         return $cargo;
@@ -338,16 +332,16 @@ class Culqi extends PaymentModule {
                 'input' => array(
                     array(
                         'type' => 'text',
-                        'label' => $this->l('API Key (Llave de comercio)'),
-                        'name' => 'CULQI_LLAVE_COMERCIO',
-                        'required' => true
-                    ),
-                    array(
-                        'type' => 'text',
                         'label' => $this->l('Código de comercio'),
                         'name' => 'CULQI_CODIGO_COMERCIO',
                         'required' => true
                     ),
+                    array(
+                        'type' => 'text',
+                        'label' => $this->l('API Key (Llave de comercio)'),
+                        'name' => 'CULQI_LLAVE_COMERCIO',
+                        'required' => true
+                    )
                 ),
                 'submit' => array(
                     'title' => $this->l('Guardar'),

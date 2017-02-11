@@ -64,8 +64,9 @@
                     type: "POST",
                     success: function(response) {
                       var data = JSON.parse(response);
-                      if(data.response_code === 'venta_exitosa'){
+                      if(data.object === 'charge'){
                         showResult('green',data.user_message);
+                        redirect();
                       }
                       if(data.object === 'error'){
                         showResult('red',data.user_message);
@@ -94,10 +95,10 @@
             }
 
 
-            /*function redirect() {
+            function redirect() {
                 var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'html'}{literal}");
                 location.href = url;
-            };*/
+            };
 
             /*function returnRedirect() {
                 var url = fnREplace("{/literal}{$link->getPageLink('order', true, NULL, "

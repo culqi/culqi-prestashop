@@ -16,24 +16,14 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController {
         // se agrega js y css necesarios
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/assets/css/culqi.css');
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/assets/css/waitMe.min.css');
-        $this->context->controller->addJS('https://checkout.culqi.com/js/v2');
+        $this->context->controller->addJS('https://checkout.culqi.com/v2/js');
         $this->context->controller->addJS('https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
         $this->context->controller->addJS(__PS_BASE_URI__.'modules/'.$this->module->name.'/assets/js/waitMe.min.js');
 
         $cart = $this->context->cart;
 
-        if (!$this->module->checkCurrency($cart))
-            Tools::redirect('index.php?controller=order');
-
-        $result = $this->module->createPrePayment();
-
-        if(!empty($result)){
-            Tools::redirect('index.php?controller=order&step=3');
-        }
-
-        if(isset($_GET['code'])) {
-            $error = base64_decode($_GET['code']);
-            $this->context->smarty->assign('payment_error', $error);
+        if (!$this->module->checkCurrency($cart)) {
+          Tools::redirect('index.php?controller=order');
         }
 
         $this->context->smarty->assign(array(
