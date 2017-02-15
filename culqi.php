@@ -94,21 +94,34 @@ class Culqi extends PaymentModule {
     }
 
     /* Se crea un Cargo con la nueva api v1.3 de Culqi PHP */
-    public function charge($token_id){
+    public function charge($token_id, $installments){
       try {
+
         $cart = $this->context->cart;
+
         $userAddress = new Address(intval($cart->id_address_invoice));
+        $userCountry = new Country(intval($userAddress->id_country));
+
         $culqi = new Culqi\Culqi(array('api_key' => Configuration::get('CULQI_LLAVE_COMERCIO')));
+
         $cargo = $culqi->Charges->create(
             array(
               "amount" => $this->removeComma($cart->getOrderTotal(true, Cart::BOTH)),
+              "antifraud_details" => array(
+                  "address" => $this->getAddress($userAddress),
+                  "address_city" => $userAddress->city,
+                  "country_code" => $userCountry->iso_code,
+                  "first_name" => $this->context->customer->firstname,
+                  "last_name" => $this->context->customer->lastname,
+                  "phone_number" => $this->getPhone($userAddress)
+              ),
               "capture" => true,
               "currency_code" => "PEN",
               "description" => "Orden de compra ".$cart->id,
-              "installments" => 0,
+              "installments" => $installments,
               "metadata" => array("order_id"=>(string)$cart->id),
               "email" => $this->context->customer->email,
-              "source_id" => $token_id              
+              "source_id" => $token_id
             )
         );
         return $cargo;
@@ -313,16 +326,6 @@ class Culqi extends PaymentModule {
      */
     public function renderForm()
     {
-        /*$entorno_options = array(
-            array(
-                'id_option' => 'https://integ-pago.culqi.com',
-                'name' => 'Integración'
-            ), array(
-                'id_option' => 'https://pago.culqi.com',
-                'name' => 'Producción'
-            )
-        );*/
-
         $fields_form = array(
             'form' => array(
                 'legend' => array(

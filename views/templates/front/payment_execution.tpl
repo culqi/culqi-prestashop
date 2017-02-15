@@ -31,20 +31,18 @@
 
             var $j = jQuery.noConflict();
 
-            Culqi.codigoComercio = '{/literal}{$codigo_comercio}{literal}';
+            Culqi.publicKey = '{/literal}{$codigo_comercio}{literal}';
 
-            Culqi.configurar({
-              nombre: 'Venta',
-              orden: '{/literal}{$orden}{literal}',
-              moneda: 'PEN',
-              descripcion: '{/literal}{$descripcion}{literal}',
-              monto: ({/literal}{$total}{literal})*100,
-              guardar: false
+            Culqi.settings({
+                title: 'Venta',
+                currency: 'PEN',
+                description: '{/literal}{$descripcion}{literal}',
+                amount: ({/literal}{$total}{literal})*100
             });
 
             $('#btn_pago').on('click', function(e) {
                 $('#showresult').addClass('hide');
-                Culqi.abrir();
+                Culqi.open();
                 e.preventDefault();
             });
 
@@ -59,7 +57,8 @@
                     data: {
                       ajax: true,
                       action: 'displayAjax',
-                      token_id: Culqi.token.id
+                      token_id: Culqi.token.id,
+                      installments: Culqi.token.metadata.installments
                     },
                     type: "POST",
                     success: function(response) {
