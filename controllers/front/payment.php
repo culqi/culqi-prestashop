@@ -16,7 +16,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController {
         // se agrega js y css necesarios
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/assets/css/culqi.css');
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/assets/css/waitMe.min.css');
-        $this->context->controller->addJS('https://checkout.culqi.com/v2');
+        $this->context->controller->addJS('https://checkout.culqi.com/plugins/v2/');
         $this->context->controller->addJS('https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
         $this->context->controller->addJS(__PS_BASE_URI__.'modules/'.$this->module->name.'/assets/js/waitMe.min.js');
 

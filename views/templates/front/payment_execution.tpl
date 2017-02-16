@@ -61,14 +61,21 @@
                       installments: Culqi.token.metadata.installments
                     },
                     type: "POST",
-                    success: function(response) {
-                      var data = JSON.parse(response);
-                      if(data.object === 'charge'){
-                        showResult('green',data.user_message);
+                    dataType: 'json',
+                    success: function(data) {
+                      var result = "";
+                      if(data.constructor == String){
+                          result = JSON.parse(data);
+                      }
+                      if(data.constructor == Object){
+                          result = JSON.parse(JSON.stringify(data));
+                      }
+                      if(result.object === 'charge'){
+                        showResult('green',result.outcome.user_message);
                         redirect();
                       }
-                      if(data.object === 'error'){
-                        showResult('red',data.user_message);
+                      if(result.object === 'error'){
+                        showResult('red',result.user_message);
                       }
                       $(document).ajaxComplete(function(){
                         $j('body').waitMe('hide');
@@ -78,7 +85,7 @@
               }
             }
 
-            function run_waitMe(){
+            function run_waitMe() {
               $j('body').waitMe({
                 effect: 'orbit',
                 text: 'Procesando pago...',
@@ -89,6 +96,7 @@
 
             function showResult(style,message){
               $('#showresult').removeClass('hide');
+              $('#showresultcontent').attr('class', '');
               $('#showresultcontent').addClass(style);
               $('#showresultcontent').html(message);
             }
