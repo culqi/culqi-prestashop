@@ -50,15 +50,19 @@
             function culqi() {
               if(Culqi.token) {
                 $(document).ajaxStart(function(){
-                  run_waitMe();
+                    run_waitMe();
                 });
+                $(document).ajaxComplete(function(){
+                    $j('body').waitMe('hide');
+                });
+                var installments = (Culqi.token.metadata.installments == undefined) ? 1 : Culqi.token.metadata.installments;
                 $.ajax({
                     url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'html'}{literal}"),
                     data: {
                       ajax: true,
                       action: 'displayAjax',
                       token_id: Culqi.token.id,
-                      installments: Culqi.token.metadata.installments
+                      installments: installments
                     },
                     type: "POST",
                     dataType: 'json',
@@ -71,17 +75,20 @@
                           result = JSON.parse(JSON.stringify(data));
                       }
                       if(result.object === 'charge'){
+                        $j('body').waitMe('hide');
                         showResult('green',result.outcome.user_message);
                         redirect();
                       }
                       if(result.object === 'error'){
-                        showResult('red',result.user_message);
-                      }
-                      $(document).ajaxComplete(function(){
                         $j('body').waitMe('hide');
-                      });
+                        showResult('red',result.user_message);
+
+                      }
                     }
                 });
+              } else {
+                $j('body').waitMe('hide');
+                showResult('red',Culqi.error.user_message);                
               }
             }
 
