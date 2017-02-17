@@ -69,7 +69,7 @@
                     success: function(data) {
                       if(data === "Error de autenticación") {
                         $j('body').waitMe('hide');
-                        showResult('red',data + ": verificar llave del comercio");
+                        showResult('red',data + ": verificar si su Llave Secreta es la correcta");
                       } else {
                         var result = "";
                         if(data.constructor == String){

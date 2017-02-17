@@ -303,13 +303,13 @@ class Culqi extends PaymentModule
                 'input' => array(
                     array(
                         'type' => 'text',
-                        'label' => $this->l('Código de comercio'),
+                        'label' => $this->l('Llave Pública'),
                         'name' => 'CULQI_CODIGO_COMERCIO',
                         'required' => true
                     ),
                     array(
                         'type' => 'text',
-                        'label' => $this->l('API Key (Llave de comercio)'),
+                        'label' => $this->l('Llave Secreta'),
                         'name' => 'CULQI_LLAVE_COMERCIO',
                         'required' => true
                     )
