@@ -14,7 +14,8 @@ Requests::register_autoloader();
 include_once dirname(__FILE__).'/libraries/culqi-php/lib/culqi.php';
 
 
-class Culqi extends PaymentModule {
+class Culqi extends PaymentModule
+{
 
     private $_postErrors = array();
 
@@ -24,20 +25,20 @@ class Culqi extends PaymentModule {
 
     public function __construct()
     {
-        $this->name = self::MODULE_NAME;
+        $this->name = 'culqi';
         $this->tab = 'payments_gateways';
         $this->version = '2.0.0';
         $this->controllers = array('chargeajax' ,'payment', 'validation', 'postpayment');
-        $this->author = self::MODULE_AUTHOR;
+        $this->author = 'Team Culqi (Brayan Cruces, Willy Aguirre)';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
 
         parent::__construct();
 
-        $this->displayName = self::MODULE_NAME_DISP;
+        $this->displayName = 'Culqi';
         $this->description = $this->l('Acepta tarjetas de crédito y débito en tu tienda online.');
-        $this->confirmUninstall = $this->l('¿Estás seguro que quieres desintalar el módulo de ' . self::MODULE_NAME_DISP . '?');
+        $this->confirmUninstall = $this->l('¿Estás seguro que quieres desintalar el módulo de Culqi?');
 
     }
 
@@ -54,7 +55,8 @@ class Culqi extends PaymentModule {
         );
     }
 
-    private function getAddress($address) {
+    private function getAddress($address)
+    {
         if(empty($address->address1)) {
             return $address->address2;
         } else {
@@ -62,41 +64,41 @@ class Culqi extends PaymentModule {
         }
     }
 
-    private function getPhone($address) {
-        if(empty($address->phone_mobile)) {
+    private function getPhone($address)
+    {
+        if(empty($address->phone_mobile))
+        {
             return $address->phone;
         } else {
             return $address->phone_mobile;
         }
     }
 
-    private function getCustomerId() {
-        if ($this->context->customer->isLogged()) {
+    private function getCustomerId()
+    {
+        if ($this->context->customer->isLogged())
+        {
             return (int) $this->context->customer->id;
         } else {
             return 0;
         }
     }
 
-    public function postPayment($respuestaCliente) {
-        CulqiPago::$codigoComercio = Configuration::get('CULQI_CODIGO_COMERCIO');
-        CulqiPago::$llaveSecreta = Configuration::get('CULQI_LLAVE_COMERCIO');
-        return json_decode(CulqiPago::decifrar($respuestaCliente));
-    }
-
-    public function errorPayment($mensaje) {
+    public function errorPayment($mensaje)
+    {
         $smarty = $this->context->smarty;
         $smarty->assign('culqi_error_pago', $mensaje);
     }
 
     /* Se crea un Cargo con la nueva api v2 de Culqi PHP */
-    public function charge($token_id, $installments){
+    public function charge($token_id, $installments)
+    {
       try {
 
         $cart = $this->context->cart;
 
-        $userAddress = new Address(intval($cart->id_address_invoice));
-        $userCountry = new Country(intval($userAddress->id_country));
+        $userAddress = new Address((int)$cart->id_address_invoice);
+        $userCountry = new Country((int)$userAddress->id_country);
 
         $culqi = new Culqi\Culqi(array('api_key' => Configuration::get('CULQI_LLAVE_COMERCIO')));
 
@@ -128,10 +130,12 @@ class Culqi extends PaymentModule {
 
     public function hookPayment($params)
     {
-        if (!$this->active) {
+        if (!$this->active)
+        {
           return;
         }
-        if (!$this->checkCurrency($params['cart'])) {
+        if (!$this->checkCurrency($params['cart']))
+        {
           return;
         }
         $this->smarty->assign(array(
@@ -143,7 +147,8 @@ class Culqi extends PaymentModule {
 
     public function hookPaymentReturn($params)
     {
-        if (!$this->active) {
+        if (!$this->active)
+        {
           return;
         }
         $this->smarty->assign(
@@ -159,9 +164,12 @@ class Culqi extends PaymentModule {
         $currency_order = new Currency((int)($cart->id_currency));
         $currencies_module = $this->getCurrency((int)$cart->id_currency);
 
-        if (is_array($currencies_module)) {
-          foreach ($currencies_module as $currency_module) {
-            if ($currency_order->id == $currency_module['id_currency']) {
+        if (is_array($currencies_module))
+        {
+          foreach ($currencies_module as $currency_module)
+          {
+            if ($currency_order->id == $currency_module['id_currency'])
+            {
               return true;
             }
           }
@@ -170,7 +178,8 @@ class Culqi extends PaymentModule {
         return false;
     }
 
-    public function uninstallStates() {
+    public function uninstallStates()
+    {
         if (Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state WHERE id_order_state = ( SELECT value
                 FROM " . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_OK' )") &&
             Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_order_state = ( SELECT value
@@ -199,11 +208,13 @@ class Culqi extends PaymentModule {
     {
         if (Tools::isSubmit('btnSubmit'))
         {
-            if (!Tools::getValue('CULQI_LLAVE_COMERCIO')) {
+            if (!Tools::getValue('CULQI_LLAVE_COMERCIO'))
+            {
               $this->_postErrors[] = $this->l('El campo llave de comercio es requerido.');
             }
 
-            if (!Tools::getValue('CULQI_CODIGO_COMERCIO')) {
+            if (!Tools::getValue('CULQI_CODIGO_COMERCIO'))
+            {
               $this->_postErrors[] = $this->l('El campo código de comercio es requerido.');
             }
         }
@@ -221,7 +232,8 @@ class Culqi extends PaymentModule {
         if (Tools::isSubmit('btnSubmit'))
         {
             $this->_postValidation();
-            if (!count($this->_postErrors)) {
+            if (!count($this->_postErrors))
+            {
               $this->_postProcess();
             } else {
               foreach ($this->_postErrors as $err) {
@@ -236,7 +248,8 @@ class Culqi extends PaymentModule {
         return $this->_html;
     }
 
-    private function createStates() {
+    private function createStates()
+    {
         if (!Configuration::get('CULQI_STATE_OK'))
         {
             $order_state = new OrderState();
@@ -262,7 +275,7 @@ class Culqi extends PaymentModule {
             $order_state->name = array();
             foreach (Language::getLanguages() as $language) {
               $order_state->name[$language['id_lang']] = 'Incorrecto';
-            }                
+            }
             $order_state->send_email = false;
             $order_state->color = '#FF2843';
             $order_state->module_name = 'culqi';
@@ -347,7 +360,7 @@ class Culqi extends PaymentModule {
     }
 
     public function removeComma($amount) {
-        return str_replace(".","",str_replace( ',', '', number_format($amount,2,'.',',')));
+        return str_replace(".","",str_replace(',', '', number_format($amount,2,'.',',')));
     }
 
   }

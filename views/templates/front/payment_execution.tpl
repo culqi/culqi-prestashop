@@ -1,10 +1,10 @@
 <h2>{l s='Resumen del pedido' mod='culqi'}</h2> {assign var='current_step' value='payment'} {include file="$tpl_dir./order-steps.tpl"} {if isset($nbProducts) && $nbProducts
 <=0 } <p class="warning">{l s='Tu carrito de compras está vacío.' mod='culqi'}</p>
     {else} {if isset($payment_error)}
-    <p class="warning culqi_error">{$payment_error}</p>
+    <p class="warning culqi_error">{$payment_error|escape:'htmlall':'UTF-8'}</p>
     {/if}
     <h3>{l s='Pago con tarjeta de crédito o débito' mod='culqi'}</h3> {*
-    <form id="pay" action="{$link->getModuleLink('culqi', 'validation', [], true)|escape:'html'}" method="post">*}
+    <form id="pay" action="{$link->getModuleLink('culqi', 'validation', [], true)|escape:'htmlall':'UTF-8'}" method="post">*}
         <p style="margin-top:20px;">
             Usted ha elegido pagar con tarjeta de crédito o débito. Solo cuenta con 10 minutos para realizar el pago, de lo contrario este expirará.
         </p>
@@ -17,7 +17,7 @@
         </p>
         <p style="margin-top:20px; display:block; margin: 0 auto; text-align: center;" class="cart_navigation" id="cart_navigation">
             <button id="btn_pago" class="culqi_btn_ok">Realizar Pago</button>
-            <a style="line-height: 30px;" href="{$link->getPageLink('order', true, NULL, " step=3 ")|escape:'html'}" class="culqi_btn_cancel button_large">{l s='Cancelar' mod='culqi'}</a>
+            <a style="line-height: 30px;" href="{$link->getPageLink('order', true, NULL, " step=3 ")|escape:'htmlall':'UTF-8'}" class="culqi_btn_cancel button_large">{l s='Cancelar' mod='culqi'}</a>
         </p>
 
         <p class="hide" id="showresult" style="margin-top:20px;">
@@ -31,13 +31,13 @@
 
             var $j = jQuery.noConflict();
 
-            Culqi.publicKey = '{/literal}{$codigo_comercio}{literal}';
+            Culqi.publicKey = '{/literal}{$codigo_comercio|escape:'htmlall':'UTF-8'}{literal}';
 
             Culqi.settings({
                 title: 'Venta',
                 currency: 'PEN',
-                description: '{/literal}{$descripcion}{literal}',
-                amount: ({/literal}{$total}{literal})*100
+                description: '{/literal}{$descripcion|escape:'htmlall':'UTF-8'}{literal}',
+                amount: ({/literal}{$total|escape:'htmlall':'UTF-8'}{literal})*100
             });
 
             $('#btn_pago').on('click', function(e) {
@@ -57,7 +57,7 @@
                 });
                 var installments = (Culqi.token.metadata.installments == undefined) ? 1 : Culqi.token.metadata.installments;
                 $.ajax({
-                    url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'html'}{literal}"),
+                    url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
                     data: {
                       ajax: true,
                       action: 'displayAjax',
@@ -67,28 +67,33 @@
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
-                      var result = "";
-                      if(data.constructor == String){
-                          result = JSON.parse(data);
-                      }
-                      if(data.constructor == Object){
-                          result = JSON.parse(JSON.stringify(data));
-                      }
-                      if(result.object === 'charge'){
+                      if(data === "Error de autenticación") {
                         $j('body').waitMe('hide');
-                        showResult('green',result.outcome.user_message);
-                        redirect();
-                      }
-                      if(result.object === 'error'){
-                        $j('body').waitMe('hide');
-                        showResult('red',result.user_message);
+                        showResult('red',data + ": verificar llave del comercio");
+                      } else {
+                        var result = "";
+                        if(data.constructor == String){
+                            result = JSON.parse(data);
+                        }
+                        if(data.constructor == Object){
+                            result = JSON.parse(JSON.stringify(data));
+                        }
+                        if(result.object === 'charge'){
+                          $j('body').waitMe('hide');
+                          showResult('green',result.outcome.user_message);
+                          redirect();
+                        }
+                        if(result.object === 'error'){
+                          $j('body').waitMe('hide');
+                          showResult('red',result.user_message);
 
+                        }
                       }
                     }
                 });
               } else {
                 $j('body').waitMe('hide');
-                showResult('red',Culqi.error.user_message);                
+                showResult('red',Culqi.error.user_message);
               }
             }
 
@@ -108,61 +113,14 @@
               $('#showresultcontent').html(message);
             }
 
-
             function redirect() {
-                var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'html'}{literal}");
+                var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
                 location.href = url;
             };
-
-            /*function returnRedirect() {
-                var url = fnREplace("{/literal}{$link->getPageLink('order', true, NULL, "
-                step = 3 ")|escape:'html'}{literal}");
-                location.href = url;
-            }*/
-
-            /*function repayment(respuesta) {
-                var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'payment', [] , true)|escape:'html'}{literal}");
-                var redirUrl = "";
-                if (respuesta != "") {
-                    redirUrl = url + "?code=" + respuesta;
-                } else {
-                    redirUrl = url;
-                }
-                location.href = redirUrl;
-            }*/
 
             function fnReplace(url) {
                 return url.replace(/&amp;/g, '&');
             }
-
-            /*function culqi() {
-                var urlResponse = fnReplace("{/literal}{$link->getModuleLink('culqi', 'validation', [], true)|escape:'html'}{literal}");
-                console.log(urlResponse);
-
-                if (Culqi.respuesta == "checkout_cerrado") {
-                    repayment(window.btoa(unescape(encodeURIComponent("Se cerró el checkout, por favor intente nuevamente."))));
-                } else if (checkout.respuesta == "venta_expirada") {
-                    repayment(window.btoa(unescape(encodeURIComponent("La venta expiró, por favor intente nuevamente."))));
-                } else {
-                    $.ajax({
-                        url: urlResponse,
-                        type: "POST",
-                        data: {
-                            respuesta: checkout.respuesta
-                        },
-                        success: function(data) {
-                            var res = JSON.parse(data);
-                            if (res.codigo_respuesta == "venta_exitosa") {
-                                checkout.cerrar();
-                                redirect();
-                            } else {
-                                checkout.cerrar();
-                                repayment(window.btoa(unescape(encodeURIComponent(res.mensaje_respuesta_usuario))));
-                            }
-                        }
-                    });
-                }
-            };*/
 
         </script>
         {/literal}

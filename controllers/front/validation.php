@@ -3,18 +3,16 @@
 class CulqiValidationModuleFrontController extends ModuleFrontController
 {
 
-    public function initContent() {
+    public function initContent()
+    {
         parent::initContent();
         $this->ajax = true;
     }
 
-    public function displayAjax() {
-        $smarty = $this->context->smarty;
-
+    public function displayAjax()
+    {
         $respuesta = $this->module->postPayment(Tools::getValue('respuesta'));
-        $array = json_decode(json_encode($respuesta), true);
-
-        die(Tools::jsonEncode($array));
+        die(Tools::jsonEncode($respuesta));
     }
 
 }

@@ -1,6 +1,7 @@
 <?php
 
-class CulqiPaymentModuleFrontController extends ModuleFrontController {
+class CulqiPaymentModuleFrontController extends ModuleFrontController
+{
 
     public $ssl = true;
     public $display_column_left = false;
@@ -9,21 +10,23 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController {
     /**
      * @see FrontController::initContent()
      */
-    public function initContent() {
+    public function initContent()
+    {
 
         parent::initContent();
 
         // se agrega js y css necesarios
-        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/assets/css/culqi.css');
-        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/assets/css/waitMe.min.css');
+        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/culqi.css');
+        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/waitMe.min.css');
         $this->context->controller->addJS('https://checkout.culqi.com/plugins/v2/');
         $this->context->controller->addJS('https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
-        $this->context->controller->addJS(__PS_BASE_URI__.'modules/'.$this->module->name.'/assets/js/waitMe.min.js');
+        $this->context->controller->addJS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/js/waitMe.min.js');
 
         $cart = $this->context->cart;
 
-        if (!$this->module->checkCurrency($cart)) {
-          Tools::redirect('index.php?controller=order');
+        if (!$this->module->checkCurrency($cart))
+        {
+            Tools::redirect('index.php?controller=order');
         }
 
         $this->context->smarty->assign(array(
