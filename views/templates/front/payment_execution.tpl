@@ -9,7 +9,7 @@
             Usted ha elegido pagar con tarjeta de crédito o débito. Solo cuenta con 10 minutos para realizar el pago, de lo contrario este expirará.
         </p>
         <p style="margin-top:20px;">
-            - {l s='El monto total a cancelar es deeeee:' mod='culqi'}
+            - {l s='El monto total a cancelar es de:' mod='culqi'}
             <span id="amount" class="price"><b>{displayPrice price=$total}</b></span>
         </p>
         <p style="margin-top:20px;">
