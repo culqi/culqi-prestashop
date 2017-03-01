@@ -29,8 +29,6 @@
         {literal}
         <script>
 
-            var $j = jQuery.noConflict();
-
             Culqi.publicKey = '{/literal}{$codigo_comercio|escape:'htmlall':'UTF-8'}{literal}';
 
             Culqi.settings({
@@ -53,7 +51,7 @@
                     run_waitMe();
                 });
                 $(document).ajaxComplete(function(){
-                    $j('body').waitMe('hide');
+                    $('body').waitMe('hide');
                 });
                 var installments = (Culqi.token.metadata.installments == undefined) ? 1 : Culqi.token.metadata.installments;
                 $.ajax({
@@ -68,7 +66,7 @@
                     dataType: 'json',
                     success: function(data) {
                       if(data === "Error de autenticación") {
-                        $j('body').waitMe('hide');
+                        $('body').waitMe('hide');
                         showResult('red',data + ": verificar si su Llave Secreta es la correcta");
                       } else {
                         var result = "";
@@ -79,12 +77,12 @@
                             result = JSON.parse(JSON.stringify(data));
                         }
                         if(result.object === 'charge'){
-                          $j('body').waitMe('hide');
+                          $('body').waitMe('hide');
                           showResult('green',result.outcome.user_message);
                           redirect();
                         }
                         if(result.object === 'error'){
-                          $j('body').waitMe('hide');
+                          $('body').waitMe('hide');
                           showResult('red',result.user_message);
 
                         }
@@ -92,13 +90,13 @@
                     }
                 });
               } else {
-                $j('body').waitMe('hide');
+                $('body').waitMe('hide');
                 showResult('red',Culqi.error.user_message);
               }
             }
 
             function run_waitMe() {
-              $j('body').waitMe({
+              $('body').waitMe({
                 effect: 'orbit',
                 text: 'Procesando pago...',
                 bg: 'rgba(255,255,255,0.7)',
