@@ -5,7 +5,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
 
     public $ssl = true;
     public $display_column_left = false;
-    public $display_column_right = false;
+    //public $display_column_right = false;
 
     /**
      * @see FrontController::initContent()
@@ -43,7 +43,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign('orden', $cart->id);
         $this->context->smarty->assign('codigo_comercio', Configuration::get('CULQI_CODIGO_COMERCIO'));
 
-        $this->setTemplate('payment_execution.tpl');
+        //$this->setTemplate('payment_execution.tpl');
     }
 
 }

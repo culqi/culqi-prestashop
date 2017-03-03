@@ -1,4 +1,7 @@
 <?php
+
+use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+
 if (!defined('_PS_VERSION_'))
     exit;
 
@@ -27,12 +30,13 @@ class Culqi extends PaymentModule
     {
         $this->name = 'culqi';
         $this->tab = 'payments_gateways';
-        $this->version = '2.0.0';
+        $this->version = '3.0.0';
         $this->controllers = array('chargeajax' ,'payment', 'validation', 'postpayment');
-        $this->author = 'Team Culqi (Brayan Cruces, Willy Aguirre)';
+        $this->author = 'Team Culqi (Willy Aguirre, Brayan Cruces)';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
+        $this->display = 'view';
 
         parent::__construct();
 
@@ -50,6 +54,7 @@ class Culqi extends PaymentModule
             parent::install() &&
             $this->registerHook('payment') &&
             $this->registerHook('paymentReturn') &&
+            $this->registerHook('paymentOptions') &&
             Configuration::updateValue('CULQI_LLAVE_COMERCIO', '') &&
             Configuration::updateValue('CULQI_CODIGO_COMERCIO', '')
         );
@@ -93,6 +98,7 @@ class Culqi extends PaymentModule
     /* Se crea un Cargo con la nueva api v2 de Culqi PHP */
     public function charge($token_id, $installments)
     {
+
       try {
 
         $cart = $this->context->cart;
@@ -102,7 +108,7 @@ class Culqi extends PaymentModule
 
         $culqi = new Culqi\Culqi(array('api_key' => Configuration::get('CULQI_LLAVE_COMERCIO')));
 
-        $cargo = $culqi->Charges->create(
+        $charge = $culqi->Charges->create(
             array(
               "amount" => $this->removeComma($cart->getOrderTotal(true, Cart::BOTH)),
               "antifraud_details" => array(
@@ -122,10 +128,12 @@ class Culqi extends PaymentModule
               "source_id" => $token_id
             )
         );
-        return $cargo;
+        //return $cargo;
+        return $charge;
       } catch(Exception $e){
         return $e->getMessage();
       }
+
     }
 
     public function hookPayment($params)
@@ -143,6 +151,37 @@ class Culqi extends PaymentModule
             'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
         ));
         return $this->display(__FILE__, 'payment.tpl');
+    }
+
+
+
+
+    public function hookPaymentOptions($params)
+    {
+        if (!$this->active)
+        {
+          return;
+        }
+        if (!$this->checkCurrency($params['cart']))
+        {
+          return;
+        }
+
+        $newOption = new PaymentOption();
+
+        $this->context->smarty->assign(
+          $this->getCulqiInfoCheckout()
+        );
+
+        $newOption->setCallToActionText($this->trans('Culqi', array(), 'culqi'))
+                      ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
+                      ->setAdditionalInformation($this->context->smarty->fetch('module:culqi/views/templates/hook/payment.tpl'));
+
+        $payment_options = [
+            $newOption,
+        ];
+
+        return $payment_options; //$this->display(__FILE__, 'payment.tpl');
     }
 
     public function hookPaymentReturn($params)
@@ -176,6 +215,17 @@ class Culqi extends PaymentModule
         }
 
         return false;
+    }
+
+    public function getCulqiInfoCheckout(){
+      $cart = $this->context->cart;
+      return array(
+        "module_dir" => $this->_path,
+        "descripcion" => "Orden de compra ".$cart->id,
+        "orden" => $cart->id,
+        "total" => $cart->getOrderTotal(true, Cart::BOTH),
+        "codigo_comercio" => Configuration::get('CULQI_CODIGO_COMERCIO')
+      );
     }
 
     public function uninstallStates()
@@ -227,6 +277,7 @@ class Culqi extends PaymentModule
 
     public function getContent()
     {
+
         $this->_html = '';
 
         if (Tools::isSubmit('btnSubmit'))
