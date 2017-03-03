@@ -20,7 +20,6 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/waitMe.min.css');
         $this->context->controller->addJS('https://checkout.culqi.com/plugins/v2/');
         $this->context->controller->addJS('https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
-        $this->context->controller->addJS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/js/waitMe.min.js');
 
         $cart = $this->context->cart;
 

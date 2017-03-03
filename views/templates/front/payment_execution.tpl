@@ -1,3 +1,4 @@
+<script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
 <h2>{l s='Resumen del pedido' mod='culqi'}</h2> {assign var='current_step' value='payment'} {include file="$tpl_dir./order-steps.tpl"} {if isset($nbProducts) && $nbProducts
 <=0 } <p class="warning">{l s='Tu carrito de compras está vacío.' mod='culqi'}</p>
     {else} {if isset($payment_error)}
@@ -9,7 +10,7 @@
             Usted ha elegido pagar con tarjeta de crédito o débito. Solo cuenta con 10 minutos para realizar el pago, de lo contrario este expirará.
         </p>
         <p style="margin-top:20px;">
-            - {l s='El monto total a cancelar es deeeee:' mod='culqi'}
+            - {l s='El monto total a cancelar es de:' mod='culqi'}
             <span id="amount" class="price"><b>{displayPrice price=$total}</b></span>
         </p>
         <p style="margin-top:20px;">
@@ -28,8 +29,6 @@
 
         {literal}
         <script>
-
-            var $j = jQuery.noConflict();
 
             Culqi.publicKey = '{/literal}{$codigo_comercio|escape:'htmlall':'UTF-8'}{literal}';
 
@@ -53,7 +52,7 @@
                     run_waitMe();
                 });
                 $(document).ajaxComplete(function(){
-                    $j('body').waitMe('hide');
+                    $('body').waitMe('hide');
                 });
                 var installments = (Culqi.token.metadata.installments == undefined) ? 1 : Culqi.token.metadata.installments;
                 $.ajax({
@@ -68,7 +67,7 @@
                     dataType: 'json',
                     success: function(data) {
                       if(data === "Error de autenticación") {
-                        $j('body').waitMe('hide');
+                        $('body').waitMe('hide');
                         showResult('red',data + ": verificar si su Llave Secreta es la correcta");
                       } else {
                         var result = "";
@@ -79,12 +78,12 @@
                             result = JSON.parse(JSON.stringify(data));
                         }
                         if(result.object === 'charge'){
-                          $j('body').waitMe('hide');
+                          $('body').waitMe('hide');
                           showResult('green',result.outcome.user_message);
                           redirect();
                         }
                         if(result.object === 'error'){
-                          $j('body').waitMe('hide');
+                          $('body').waitMe('hide');
                           showResult('red',result.user_message);
 
                         }
@@ -92,13 +91,13 @@
                     }
                 });
               } else {
-                $j('body').waitMe('hide');
+                $('body').waitMe('hide');
                 showResult('red',Culqi.error.user_message);
               }
             }
 
             function run_waitMe() {
-              $j('body').waitMe({
+              $('body').waitMe({
                 effect: 'orbit',
                 text: 'Procesando pago...',
                 bg: 'rgba(255,255,255,0.7)',
