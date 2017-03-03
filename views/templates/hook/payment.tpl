@@ -19,7 +19,7 @@
 
     $(document).ready(function(){
 
-      Culqi.publicKey = '{/literal}{$codigo_comercio|escape:'htmlall':'UTF-8'}{literal}'; //'pk_test_vzMuTHoueOMlgUPj';
+      Culqi.publicKey = '{/literal}{$llave_publica|escape:'htmlall':'UTF-8'}{literal}'; //'pk_test_vzMuTHoueOMlgUPj';
 
       Culqi.settings({
   			title: 'Venta',
@@ -42,12 +42,11 @@
           e.preventDefault();
       });
 
-
       $("#payment-confirmation > .ps-shown-by-js").children().click(function(e){
         e.preventDefault();
         e.stopPropagation();
         charge();
-      })
+      });
 
       // Recibimos Token del Culqi.js
       function charge() {

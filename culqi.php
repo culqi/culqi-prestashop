@@ -31,15 +31,15 @@ class Culqi extends PaymentModule
         $this->name = 'culqi';
         $this->tab = 'payments_gateways';
         $this->version = '3.0.0';
-        $this->controllers = array('chargeajax' ,'payment', 'validation', 'postpayment');
+        $this->controllers = array('chargeajax','postpayment');
         $this->author = 'Team Culqi (Willy Aguirre, Brayan Cruces)';
-        $this->need_instance = 0;
-        $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
         $this->display = 'view';
 
         parent::__construct();
 
+        $this->meta_title = 'Culqi';
         $this->displayName = 'Culqi';
         $this->description = $this->l('Acepta tarjetas de crédito y débito en tu tienda online.');
         $this->confirmUninstall = $this->l('¿Estás seguro que quieres desintalar el módulo de Culqi?');
@@ -52,11 +52,10 @@ class Culqi extends PaymentModule
 
         return (
             parent::install() &&
-            $this->registerHook('payment') &&
             $this->registerHook('paymentReturn') &&
             $this->registerHook('paymentOptions') &&
-            Configuration::updateValue('CULQI_LLAVE_COMERCIO', '') &&
-            Configuration::updateValue('CULQI_CODIGO_COMERCIO', '')
+            Configuration::updateValue('CULQI_LLAVE_SECRETA', '') &&
+            Configuration::updateValue('CULQI_LLAVE_PUBLICA', '')
         );
     }
 
@@ -106,7 +105,7 @@ class Culqi extends PaymentModule
         $userAddress = new Address((int)$cart->id_address_invoice);
         $userCountry = new Country((int)$userAddress->id_country);
 
-        $culqi = new Culqi\Culqi(array('api_key' => Configuration::get('CULQI_LLAVE_COMERCIO')));
+        $culqi = new Culqi\Culqi(array('api_key' => Configuration::get('CULQI_LLAVE_SECRETA')));
 
         $charge = $culqi->Charges->create(
             array(
@@ -136,26 +135,6 @@ class Culqi extends PaymentModule
 
     }
 
-    public function hookPayment($params)
-    {
-        if (!$this->active)
-        {
-          return;
-        }
-        if (!$this->checkCurrency($params['cart']))
-        {
-          return;
-        }
-        $this->smarty->assign(array(
-            'this_path' => $this->_path,
-            'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
-        ));
-        return $this->display(__FILE__, 'payment.tpl');
-    }
-
-
-
-
     public function hookPaymentOptions($params)
     {
         if (!$this->active)
@@ -173,15 +152,16 @@ class Culqi extends PaymentModule
           $this->getCulqiInfoCheckout()
         );
 
-        $newOption->setCallToActionText($this->trans('Culqi', array(), 'culqi'))
-                      ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
-                      ->setAdditionalInformation($this->context->smarty->fetch('module:culqi/views/templates/hook/payment.tpl'));
+        $newOption->setCallToActionText($this->trans('Pagar con Culqi', array(), 'culqi'))
+                      ->setAction($this->context->link->getModuleLink($this->name, 'postpayment', array(), true))
+                      ->setAdditionalInformation($this->context->smarty->fetch('module:culqi/views/templates/hook/payment.tpl'))
+                      ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/logo_culqi.png'));;
 
         $payment_options = [
             $newOption,
         ];
 
-        return $payment_options; //$this->display(__FILE__, 'payment.tpl');
+        return $payment_options;
     }
 
     public function hookPaymentReturn($params)
@@ -224,7 +204,7 @@ class Culqi extends PaymentModule
         "descripcion" => "Orden de compra ".$cart->id,
         "orden" => $cart->id,
         "total" => $cart->getOrderTotal(true, Cart::BOTH),
-        "codigo_comercio" => Configuration::get('CULQI_CODIGO_COMERCIO')
+        "llave_publica" => Configuration::get('CULQI_LLAVE_PUBLICA')
       );
     }
 
@@ -247,8 +227,8 @@ class Culqi extends PaymentModule
         if (!parent::uninstall()
         || !Configuration::deleteByName('CULQI_STATE_OK')
         || !Configuration::deleteByName('CULQI_STATE_ERROR')
-        || !Configuration::deleteByName('CULQI_LLAVE_COMERCIO')
-        || !Configuration::deleteByName('CULQI_CODIGO_COMERCIO')
+        || !Configuration::deleteByName('CULQI_LLAVE_SECRETA')
+        || !Configuration::deleteByName('CULQI_LLAVE_PUBLICA')
         || !$this->uninstallStates())
             return false;
         return true;
@@ -258,12 +238,12 @@ class Culqi extends PaymentModule
     {
         if (Tools::isSubmit('btnSubmit'))
         {
-            if (!Tools::getValue('CULQI_LLAVE_COMERCIO'))
+            if (!Tools::getValue('CULQI_LLAVE_SECRETA'))
             {
               $this->_postErrors[] = $this->l('El campo llave de comercio es requerido.');
             }
 
-            if (!Tools::getValue('CULQI_CODIGO_COMERCIO'))
+            if (!Tools::getValue('CULQI_LLAVE_PUBLICA'))
             {
               $this->_postErrors[] = $this->l('El campo código de comercio es requerido.');
             }
@@ -355,13 +335,13 @@ class Culqi extends PaymentModule
                     array(
                         'type' => 'text',
                         'label' => $this->l('Llave Pública'),
-                        'name' => 'CULQI_CODIGO_COMERCIO',
+                        'name' => 'CULQI_LLAVE_PUBLICA',
                         'required' => true
                     ),
                     array(
                         'type' => 'text',
                         'label' => $this->l('Llave Secreta'),
-                        'name' => 'CULQI_LLAVE_COMERCIO',
+                        'name' => 'CULQI_LLAVE_SECRETA',
                         'required' => true
                     )
                 ),
@@ -395,8 +375,8 @@ class Culqi extends PaymentModule
     public function getConfigFieldsValues()
     {
         return array(
-            'CULQI_LLAVE_COMERCIO' => Tools::getValue('CULQI_LLAVE_COMERCIO', Configuration::get('CULQI_LLAVE_COMERCIO')),
-            'CULQI_CODIGO_COMERCIO' => Tools::getValue('CULQI_CODIGO_COMERCIO', Configuration::get('CULQI_CODIGO_COMERCIO'))
+            'CULQI_LLAVE_SECRETA' => Tools::getValue('CULQI_LLAVE_SECRETA', Configuration::get('CULQI_LLAVE_SECRETA')),
+            'CULQI_LLAVE_PUBLICA' => Tools::getValue('CULQI_LLAVE_PUBLICA', Configuration::get('CULQI_LLAVE_PUBLICA'))
         );
     }
 
@@ -404,8 +384,8 @@ class Culqi extends PaymentModule
     {
         if (Tools::isSubmit('btnSubmit'))
         {
-            Configuration::updateValue('CULQI_LLAVE_COMERCIO', Tools::getValue('CULQI_LLAVE_COMERCIO'));
-            Configuration::updateValue('CULQI_CODIGO_COMERCIO', Tools::getValue('CULQI_CODIGO_COMERCIO'));
+            Configuration::updateValue('CULQI_LLAVE_SECRETA', Tools::getValue('CULQI_LLAVE_SECRETA'));
+            Configuration::updateValue('CULQI_LLAVE_PUBLICA', Tools::getValue('CULQI_LLAVE_PUBLICA'));
         }
         $this->_html .= $this->displayConfirmation($this->l('Se actualizaron las configuraciones'));
     }
