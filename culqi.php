@@ -30,7 +30,7 @@ class Culqi extends PaymentModule
     {
         $this->name = 'culqi';
         $this->tab = 'payments_gateways';
-        $this->version = '3.0.0';
+        $this->version = '3.0.1';
         $this->controllers = array('chargeajax','postpayment');
         $this->author = 'Team Culqi (Willy Aguirre, Brayan Cruces)';
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
@@ -52,7 +52,6 @@ class Culqi extends PaymentModule
 
         return (
             parent::install() &&
-            $this->registerHook('paymentReturn') &&
             $this->registerHook('paymentOptions') &&
             Configuration::updateValue('CULQI_LLAVE_SECRETA', '') &&
             Configuration::updateValue('CULQI_LLAVE_PUBLICA', '')
@@ -162,20 +161,6 @@ class Culqi extends PaymentModule
         ];
 
         return $payment_options;
-    }
-
-    public function hookPaymentReturn($params)
-    {
-        if (!$this->active)
-        {
-          return;
-        }
-        $this->smarty->assign(
-            array(
-                'status' => 'ok'
-            )
-        );
-        return $this->display(__FILE__, 'payment_return.tpl');
     }
 
     public function checkCurrency($cart)
