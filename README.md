@@ -1,7 +1,7 @@
 # Culqi Prestashop 1.7
 
 ![configuracion inicial](/docs/config.png)
-*Es necesario indicar el campo telefono como requerido ya que por defecto no esta configurado.*
+* Es necesario indicar el campo telefono como requerido ya que por defecto no esta configurado.*
 
 ![pasos](/docs/steps.png)
 * 1- Marcamos el checkbox para aceptar los términos y conficiones
