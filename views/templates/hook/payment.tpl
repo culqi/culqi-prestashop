@@ -7,7 +7,7 @@
     <script type="text/javascript" defer src="{$module_dir|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
 
 		Pague con tarjeta de crédito/debito.
-    <button disabled="disabled" id="btn_pago" class="btn btn-primary center-block">Realizar Pago</button><br/>
+    <button id="btn_pago" class="btn btn-primary center-block">Realizar Pago</button><br/>
     <p class="hide" id="showresult">
         <b id="showresultcontent"></b>
     </p>
@@ -17,9 +17,7 @@
 {literal}
 <script>
 
-    $(document).ready(function(){
-
-      Culqi.publicKey = '{/literal}{$llave_publica|escape:'htmlall':'UTF-8'}{literal}'; //'pk_test_vzMuTHoueOMlgUPj';
+      Culqi.publicKey = '{/literal}{$llave_publica|escape:'htmlall':'UTF-8'}{literal}';
 
       Culqi.settings({
   			title: 'Venta',
@@ -28,28 +26,14 @@
   			amount: ({/literal}{$total|escape:'htmlall':'UTF-8'}{literal})*100
       });
 
-      $(".custom-checkbox").click(function(){
-        if($(this).children().is(":checked")){
-          $("#btn_pago").removeAttr("disabled");
-        } else {
-          $("#btn_pago").attr("disabled","disabled");
-        }
-      });
-
       $('#btn_pago').on('click', function(e) {
           $('#showresult').addClass('hide');
           Culqi.open();
           e.preventDefault();
       });
 
-      $("#payment-confirmation > .ps-shown-by-js").children().click(function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        charge();
-      });
-
-      // Recibimos Token del Culqi.js
-      function charge() {
+      // Process to Pay
+      function culqi() {
         if(Culqi.token) {
           $(document).ajaxStart(function(){
               run_waitMe();
@@ -95,7 +79,9 @@
           });
         } else {
           $('body').waitMe('hide');
-          showResult('red',Culqi.error.user_message);
+					if(Culqi.error != undefined) {
+						showResult('red',Culqi.error.user_message);
+					}
         }
       }
 
@@ -108,7 +94,7 @@
         });
       }
 
-      function showResult(style,message){
+      function showResult(style,message) {
         $('#showresult').removeClass('hide');
         $('#showresultcontent').attr('class', '');
         $('#showresultcontent').addClass(style);
@@ -118,13 +104,11 @@
       function redirect() {
           var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
           location.href = url;
-      };
+      }
 
       function fnReplace(url) {
           return url.replace(/&amp;/g, '&');
       }
-
-    })
 
 </script>
 {/literal}
