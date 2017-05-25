@@ -21,7 +21,7 @@
 
       Culqi.settings({
   			title: 'Venta',
-  			currency: 'PEN',
+  			currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
   			description: '{/literal}{$descripcion|escape:'htmlall':'UTF-8'}{literal}',
   			amount: ({/literal}{$total|escape:'htmlall':'UTF-8'}{literal})*100
       });

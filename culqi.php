@@ -30,7 +30,7 @@ class Culqi extends PaymentModule
     {
         $this->name = 'culqi';
         $this->tab = 'payments_gateways';
-        $this->version = '3.0.2';
+        $this->version = '3.0.3';
         $this->controllers = array('chargeajax','postpayment');
         $this->author = 'Team Culqi (Willy Aguirre)';
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
@@ -118,7 +118,7 @@ class Culqi extends PaymentModule
                   "phone_number" => $this->getPhone($userAddress)
               ),
               "capture" => true,
-              "currency_code" => "PEN",
+              "currency_code" => $this->context->currency->iso_code,
               "description" => "Orden de compra ".$cart->id,
               "installments" => $installments,
               "metadata" => array("order_id"=>(string)$cart->id),
@@ -189,7 +189,8 @@ class Culqi extends PaymentModule
         "descripcion" => "Orden de compra ".$cart->id,
         "orden" => $cart->id,
         "total" => $cart->getOrderTotal(true, Cart::BOTH),
-        "llave_publica" => Configuration::get('CULQI_LLAVE_PUBLICA')
+        "llave_publica" => Configuration::get('CULQI_LLAVE_PUBLICA'),
+        "currency" => $this->context->currency->iso_code
       );
     }
 
