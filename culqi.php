@@ -114,7 +114,7 @@ class Culqi extends PaymentModule
                   "phone_number" => $this->getPhone($userAddress)
               ),
               "capture" => true,
-              "currency_code" => "PEN",
+              "currency_code" => $this->context->currency->iso_code,
               "description" => "Orden de compra ".$cart->id,
               "installments" => $installments,
               "metadata" => array("order_id"=>(string)$cart->id),
