@@ -6,8 +6,34 @@
     <script src="https://checkout.culqi.com/plugins/v2/"></script>
     <script type="text/javascript" defer src="{$module_dir|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
 
-		Pague con tarjeta de crédito/debito.
-    <button id="btn_pago" class="btn btn-primary center-block">Realizar Pago</button><br/>
+	<form >
+		<div>
+			<label>
+				<span>Email</span>
+				<input type="text"  size="25" data-culqi="card[email]" id="card[email]" />
+			</label>
+		</div><br>
+		<div>
+			<label>
+				<span>Numero Tarjeta</span>
+				<input type="text" size="10" data-culqi="card[number]" id="card[number]" />
+			</label>
+		</div><br>
+		<div>
+			<label>
+				<span>CVV</span>
+				<input type="text" size="2" data-culqi="card[cvv]" id="card[cvv]" />
+			</label>
+		</div><br>
+		<div>
+			<label>
+				<span>Fecha expiración</span>
+				<input type="text" size="1" data-culqi="card[exp_month]" id="card[exp_month]" />
+				<span>/</span>
+				<input type="text" size="2" data-culqi="card[exp_year]" id="card[exp_year]"/>
+			</label>
+		</div>
+		</form>
     <p class="hide" id="showresult">
         <b id="showresultcontent"></b>
     </p>
