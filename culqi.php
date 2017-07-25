@@ -22,9 +22,9 @@ class Culqi extends PaymentModule
 
     private $_postErrors = array();
 
-    const MODULE_NAME = "culqi";
-    const MODULE_AUTHOR = "Team Culqi (Brayan Cruces, Willy Aguirre)";
-    const MODULE_NAME_DISP = "Culqi";
+    //const MODULE_NAME = "culqi";
+    //const MODULE_AUTHOR = "Team Culqi (Willy Aguirre, Brayan Cruces, Lizz Ruelas)";
+    //const MODULE_NAME_DISP = "Culqi";
 
     public function __construct()
     {
@@ -112,7 +112,7 @@ class Culqi extends PaymentModule
               "antifraud_details" => array(
                   "address" => $this->getAddress($userAddress),
                   "address_city" => $userAddress->city,
-                  "country_code" => $userCountry->iso_code,
+                  "country_code" => "PE",
                   "first_name" => $this->context->customer->firstname,
                   "last_name" => $this->context->customer->lastname,
                   "phone_number" => $this->getPhone($userAddress)
@@ -151,10 +151,11 @@ class Culqi extends PaymentModule
           $this->getCulqiInfoCheckout()
         );
 
-        $newOption->setCallToActionText($this->trans('Pagar con Culqi', array(), 'culqi'))
-                      ->setAction($this->context->link->getModuleLink($this->name, 'postpayment', array(), true))
-                      ->setAdditionalInformation($this->context->smarty->fetch('module:culqi/views/templates/hook/payment.tpl'))
-                      ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/logo_culqi.png'));;
+        $newOption->setModuleName($this->name)
+                  ->setCallToActionText($this->trans('Pagar con Culqi', array(), 'culqi'))
+                  ->setAction($this->context->link->getModuleLink($this->name, 'postpayment', array(), true))
+                  ->setAdditionalInformation($this->context->smarty->fetch('module:culqi/views/templates/hook/payment.tpl'))
+                  ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/logo_culqi.png'));;
 
         $payment_options = [
             $newOption,
