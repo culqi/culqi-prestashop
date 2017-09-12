@@ -27,7 +27,7 @@ class Culqi extends PaymentModule
     {
         $this->name = 'culqi';
         $this->tab = 'payments_gateways';
-        $this->version = '2.0.0';
+        $this->version = '2.2.0';
         $this->controllers = array('chargeajax' ,'payment', 'validation', 'postpayment');
         $this->author = 'Team Culqi (Brayan Cruces, Willy Aguirre)';
         $this->need_instance = 0;
