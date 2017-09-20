@@ -1,4 +1,4 @@
-# Culqi Checkout - Prestashop 1.6
+# Culqi v2 Checkout - Prestashop 1.6
 
 ### Pasos para la Integración del Modulo de Culqi
 
