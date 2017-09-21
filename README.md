@@ -31,7 +31,7 @@ donde encontraras tus llaves `<link>` : <https://integ-panel.culqi.com/#/desarro
 ![Imgur](https://i.imgur.com/6Av9GdV.png)
 
 ##### 4.2
-![Imgur](https://i.imgur.com/LK6KN3s.png)
+
 
 ##### 4.3
 ![Imgur](https://i.imgur.com/Yp4yA1Y.png)
