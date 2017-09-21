@@ -11,7 +11,7 @@ donde encontraras tus llaves `<link>` : <https://integ-panel.culqi.com/#/desarro
 
 `Llave privada: sk_test_xxxxxxxxxxxxxx`
 
-#### 2. Descargar  el Plugin de Culqi 2.2.0 
+#### 2. Descargar  el Módulo de Culqi 2.2.0 
 
 `<link>` : <https://github.com/culqi/culqi-prestashop/releases/tag/v2.2.0> 
 
@@ -55,7 +55,7 @@ donde encontraras tus llaves `<link>` : <https://integ-panel.culqi.com/#/desarro
 
 ![Imgur](https://i.imgur.com/wVOz6cc.png)
 
-> Si tienes más dudas con respecto al procesos de "Activación de comercio" escribenos a unete@culqi.com
+> Si tienes más dudas con respecto al procesos de "Activación de comercio" escríbenos a unete@culqi.com
 
 Cuando te envien los accesos a tu panel de producción de Culqi debes reemplazar
 tus llaves de pruebas por tus llaves de producción como en el paso 4.2 
@@ -67,6 +67,6 @@ tus llaves de pruebas por tus llaves de producción como en el paso 4.2
 > En el ambiente de producción podrás comenzar a usar tarjetas reales.
 
 
-### Si tienes dudas de Integración escribenos a integrate@culqi.com
+### Si tienes dudas de Integración escríbenos a integrate@culqi.com
 
-### Si tienes dudas comerciales escribenos a unete@culqi.com
+### Si tienes dudas comerciales escríbenos a unete@culqi.com
