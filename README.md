@@ -20,7 +20,7 @@ donde encontraras tus llaves `<link>` : <https://integ-panel.culqi.com/#/desarro
 #### 3. Subir el Módulo de Culqi en tu administrador de Prestashop 1.6
 
 ##### 3.1
-![Imgur](https://i.imgur.com/4v2B2ad.png)
+![Imgur](https://i.imgur.com/XjXttCZ.png)
 
 ##### 3.2
 ![Imgur](https://i.imgur.com/woSOBjJ.png)
@@ -28,13 +28,13 @@ donde encontraras tus llaves `<link>` : <https://integ-panel.culqi.com/#/desarro
 #### 4. Configurar el Módulo de Culqi en tu administrador de Prestashop 1.6
 
 ##### 4.1
-![Imgur](https://i.imgur.com/6Av9GdV.png)
+![Imgur](https://i.imgur.com/Hsb6I6N.png)
 
 ##### 4.2
 ![Imgur](https://i.imgur.com/Gdu165f.png)
 
 ##### 4.3
-![Imgur](https://i.imgur.com/Yp4yA1Y.png)
+![Imgur](https://i.imgur.com/jEFeQUu.png)
 > Aquí van tus llaves que mencionamos en el paso 1 ( Registrarse en Culqi ).
 
 ### Finalmente debes tener a Culqi como pasarela de pago de esta manera:
