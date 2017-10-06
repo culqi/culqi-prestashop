@@ -38,23 +38,15 @@
     </p>
 {/if}
 
-<input type="hidden" id="culqi-codigo_comercio" value="{$codigo_comercio|escape:'htmlall':'UTF-8'}">
-<input type="hidden" id="culqi-currency" value="{$currency|escape:'htmlall':'UTF-8'}">
-<input type="hidden" id="culqi-descripcion" value="{$descripcion|escape:'htmlall':'UTF-8'}">
-<input type="hidden" id="culqi-total" value="{$total|escape:'htmlall':'UTF-8'}">
-<input type="hidden" id="culqi-postpayment" value="{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}">
-<input type="hidden" id="culqi-chargeajax" value="{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'htmlall':'UTF-8'}">
 
-{literal}
 <script>
-
-    Culqi.publicKey = $('#culqi-codigo_comercio').val();
+    Culqi.publicKey = "{$codigo_comercio|escape:'htmlall':'UTF-8'}";
 
     Culqi.settings({
         title: 'Venta',
-        currency: $('#culqi-currency').val(),
-        description: $('#culqi-descripcion').val(),
-        amount: $('#culqi-total').val()*100
+        currency: "{$currency|escape:'htmlall':'UTF-8'}",
+        description: "{$descripcion|escape:'htmlall':'UTF-8'}",
+        amount: parseInt({$total|escape:'intval'})
     });
 
     $('#btn_pago').on('click', function(e) {
@@ -66,77 +58,82 @@
     // Recibimos Token del Culqi.js
     function culqi() {
       if(Culqi.token) {
+
+        var installments = (Culqi.token.metadata.installments == undefined) ? 1 : Culqi.token.metadata.installments;
+        
         $(document).ajaxStart(function(){
             run_waitMe();
         });
+        
         $(document).ajaxComplete(function(){
             $('body').waitMe('hide');
         });
-        var installments = (Culqi.token.metadata.installments == undefined) ? 1 : Culqi.token.metadata.installments;
+        
         $.ajax({
-            url: fnReplace($('#culqi-chargeajax').val()),
+            url: "{$link->getModuleLink('culqi', 'chargeajax', [], true)}",
             data: {
-              ajax: true,
-              action: 'displayAjax',
-              token_id: Culqi.token.id,
-              installments: installments
+                ajax: true,
+                action: 'displayAjax',
+                token_id: Culqi.token.id,
+                installments: installments
             },
             type: "POST",
             dataType: 'json',
             success: function(data) {
-              if(data === "Error de autenticación") {
-                $('body').waitMe('hide');
-                showResult('red',data + ": verificar si su Llave Secreta es la correcta");
-              } else {
-                var result = "";
-                if(data.constructor == String){
-                    result = JSON.parse(data);
+                if(data === "Error de autenticación") {
+                    $('body').waitMe('hide');
+                    showResult('red',data + ": verificar si su Llave Secreta es la correcta");
+                } else {
+                    var result = "";
+                    if(data.constructor == String){
+                        result = JSON.parse(data);
+                    }
+                    if(data.constructor == Object){
+                        result = JSON.parse(JSON.stringify(data));
+                        console.log(result);
+                    }
+                    if(result.object === 'charge'){
+                        $('body').waitMe('hide');
+                        showResult('green', result.outcome.user_message);
+                        storeLog(result);
+                        location.href = "{$link->getModuleLink('culqi', 'postpayment', [], true)}";
+                    }
+                    if(result.object === 'error'){
+                      $('body').waitMe('hide');
+                      showResult('red', result.user_message);
+                    }
                 }
-                if(data.constructor == Object){
-                    result = JSON.parse(JSON.stringify(data));
-                }
-                if(result.object === 'charge'){
-                  $('body').waitMe('hide');
-                  showResult('green',result.outcome.user_message);
-                  redirect();
-                }
-                if(result.object === 'error'){
-                  $('body').waitMe('hide');
-                  showResult('red',result.user_message);
-                }
-              }
             }
         });
-      } else {
-        $('body').waitMe('hide');
-        showResult('red',Culqi.error.user_message);
-      }
+        } else {
+            $('body').waitMe('hide');
+            showResult('red',Culqi.error.user_message);
+        }
     }
 
     function run_waitMe() {
-      $('body').waitMe({
-        effect: 'orbit',
-        text: 'Procesando pago...',
-        bg: 'rgba(255,255,255,0.7)',
-        color:'#28d2c8'
-      });
+        $('body').waitMe({
+            effect: 'orbit',
+            text: 'Procesando pago...',
+            bg: 'rgba(255,255,255,0.7)',
+            color:'#28d2c8'
+        });
     }
 
     function showResult(style,message){
-      $('#showresult').removeClass('hide');
-      $('#showresultcontent').attr('class', '');
-      $('#showresultcontent').addClass(style);
-      $('#showresultcontent').html(message);
+        $('#showresult').removeClass('hide');
+        $('#showresultcontent').attr('class', '');
+        $('#showresultcontent').addClass(style);
+        $('#showresultcontent').html(message);
     }
 
-    function redirect() {
-        var url = fnReplace($('#culqi-postpayment').val());
-        location.href = url;
-    };
 
     function fnReplace(url) {
         return url.replace(/&amp;/g, '&');
     }
 
+    function storeLog(data) {
+        // AJAX POST insert row to Database
+        return 99;    // id inserted
+    }
 </script>
-{/literal}

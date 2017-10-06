@@ -29,8 +29,18 @@ $sql = array();
 $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'culqi_log` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `id_order` int(9) NOT NULL,
-    `id_cart` int(9) NOT NULL,
-    `id_customer` int(9) NOT NULL,
+    `amount` varchar(20) NOT NULL,
+    `currency_code` varchar(3) NOT NULL,
+    `outcome_code` varchar(10),
+    `merchant_message` varchar(50),
+    `reference_code` varchar(50),
+    `card_number` varchar(50),
+    `card_email` varchar(50),
+    `card_bin` varchar(50),
+    `card_numlast` varchar(50),
+    `card_brand` varchar(50),
+    `card_category` varchar(50),
+    `card_type` varchar(50),
     PRIMARY KEY  (`id`)
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
