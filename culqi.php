@@ -44,6 +44,8 @@ class Culqi extends PaymentModule
 
     public function install()
     {
+        include(dirname(__FILE__).'/sql/install.php');
+        
         $this->createStates();
 
         return (
@@ -194,6 +196,8 @@ class Culqi extends PaymentModule
 
     public function uninstall()
     {
+        include(dirname(__FILE__).'/sql/uninstall.php');
+        
         if (!parent::uninstall()
         || !Configuration::deleteByName('CULQI_STATE_OK')
         || !Configuration::deleteByName('CULQI_STATE_ERROR')
