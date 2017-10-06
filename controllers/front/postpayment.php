@@ -29,18 +29,18 @@ class CulqiPostpaymentModuleFrontController extends ModuleFrontController
     public function initContent()
     {
         parent::initContent();
-        $this->ajax = false;
-
+        
         $cart = $this->context->cart;
         $customer = new Customer($cart->id_customer);
         
-        $culqi_status = true;
-        
-        $ps = Configuration::get('PS_OS_CANCELED')
-        
-        if ($culqi_status)
-            $ps = Configuration::get('PS_OS_PAYMENT')
+        $this->ajax = false;
+        $ps = Configuration::get('PS_OS_CANCELED');
 
+        $culqi_status = true;   // Result of match with IdCulqiLog
+
+        if ($culqi_status)
+            $ps = Configuration::get('PS_OS_PAYMENT');
+        
         $this->module->validateOrder((int)$cart->id, $ps, (float)$cart->getordertotal(true), 'Culqi', null, array(), (int)$cart->id_currency, false, $customer->secure_key);
         Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int)$cart->id . '&id_module=' . (int)$this->module->id . '&id_order=' . $this->module->currentOrder . '&key=' . $customer->secure_key);
     }
