@@ -20,17 +20,36 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2016 PrestaShop SA
-
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+$sql = array();
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+$sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'culqi_log` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `id_cart` int(9) NOT NULL,
+    `id_customer` int(9) NOT NULL,
+    `amount` varchar(6),
+    `object` varchar(20),
+    `currency_code` varchar(3),
+    `description` varchar(100),
+    `duplicated` varchar(20),
+    `outcome_code` varchar(20),
+    `outcome_type` varchar(30),
+    `outcome_message` varchar(200),
+    `reference_code` varchar(20),
+    `card_number` varchar(20),
+    `card_email` varchar(40),
+    `card_brand` varchar(10),
+    `card_category` varchar(20),
+    `card_type` varchar(20),
+    `created_at` datetime,
+    PRIMARY KEY  (`id`)
+) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
-header('Location: ../../../../');
-exit;
+foreach ($sql as $query) {
+    if (Db::getInstance()->execute($query) == false && Db::getInstance()->execute($query)) {
+        return false;
+    }
+}

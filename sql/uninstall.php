@@ -20,17 +20,16 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2016 PrestaShop SA
-
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+$sql = array();
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'culqi_log`';
 
-header('Location: ../../../../');
-exit;
+foreach ($sql as $query) {
+    if (Db::getInstance()->execute($query) == false && Db::getInstance()->execute($query)) {
+        return false;
+    }
+}
