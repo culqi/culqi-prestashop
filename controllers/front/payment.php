@@ -53,6 +53,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         }
 
         $this->context->smarty->assign(array(
+            'cart' => $cart,
             'nbProducts' => $cart->nbProducts(),
             'cust_currency' => $cart->id_currency,
             'currencies' => $this->module->getCurrency((int)$cart->id_currency),
@@ -65,7 +66,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign('descripcion', "Orden de compra ".$cart->id);
         $this->context->smarty->assign('orden', $cart->id);
         $this->context->smarty->assign('codigo_comercio', Configuration::get('CULQI_CODIGO_COMERCIO'));
-        $this->context->smarty->assign('currency', $this->context->currency->iso_code);
+        $this->context->smarty->assign('currency', $this->context->currency);
 
         $this->setTemplate('payment_execution.tpl');
     }

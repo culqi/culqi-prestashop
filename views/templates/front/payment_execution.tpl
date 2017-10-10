@@ -1,7 +1,7 @@
 <script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
 
 {capture name=path}
-    <a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Volver al resumen del pedido' mod='culqi'}">{l s='Go back to the Checkout' mod='culqi'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Culqi' mod='culqi'} {$mid|upper}
+    <a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Volver al resumen del pedido' mod='culqi'}">{l s='Go back to the Checkout' mod='culqi'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Culqi' mod='culqi'}
 {/capture}
 
 {assign var='current_step' value='payment'}
@@ -38,13 +38,12 @@
     </p>
 {/if}
 
-
 <script>
     Culqi.publicKey = "{$codigo_comercio|escape:'htmlall':'UTF-8'}";
 
     Culqi.settings({
         title: 'Venta',
-        currency: "{$currency|escape:'htmlall':'UTF-8'}",
+        currency: "{$currency->iso_code|escape:'htmlall':'UTF-8'}",
         description: "{$descripcion|escape:'htmlall':'UTF-8'}",
         amount: parseInt({$total|escape:'intval'})
     });
@@ -90,13 +89,29 @@
                     }
                     if(data.constructor == Object){
                         result = JSON.parse(JSON.stringify(data));
-                        console.log(result);
                     }
+                    
+                    console.log(result);
+                    
                     if(result.object === 'charge'){
                         $('body').waitMe('hide');
                         showResult('green', result.outcome.user_message);
-                        storeLog(result);
-                        location.href = "{$link->getModuleLink('culqi', 'postpayment', [], true)}";
+                        
+                        $.ajax({
+                            url: "/modules/culqi/controllers/front/storeLog.php",
+                            data: {
+                                "data" : result,
+                                "id_cart": "{$cart->id}",
+                                "id_customer": "{$cart->id_customer}"
+                            },
+                            type: "POST",
+                            dataType: 'json',
+                            success: function(res) {
+                                console.log(res);
+                                if(res.status)
+                                    location.href = "{$link->getModuleLink('culqi', 'postpayment', ['id_cart' => $cart->id], true)}";
+                            }
+                        });
                     }
                     if(result.object === 'error'){
                       $('body').waitMe('hide');
@@ -110,7 +125,8 @@
             showResult('red',Culqi.error.user_message);
         }
     }
-
+    
+    
     function run_waitMe() {
         $('body').waitMe({
             effect: 'orbit',
@@ -126,14 +142,5 @@
         $('#showresultcontent').addClass(style);
         $('#showresultcontent').html(message);
     }
-
-
-    function fnReplace(url) {
-        return url.replace(/&amp;/g, '&');
-    }
-
-    function storeLog(data) {
-        // AJAX POST insert row to Database
-        return 99;    // id inserted
-    }
+    
 </script>

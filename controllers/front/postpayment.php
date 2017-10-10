@@ -35,8 +35,13 @@ class CulqiPostpaymentModuleFrontController extends ModuleFrontController
         
         $this->ajax = false;
         $ps = Configuration::get('PS_OS_CANCELED');
-
-        $culqi_status = true;   // Result of match with IdCulqiLog
+        
+        $id_cart = Tools::getValue('id_cart');
+        $sql = 'SELECT outcome_code FROM '._DB_PREFIX_.'culqi_log where id_cart = '.$id_cart;
+        $code = Db::getInstance()->getValue($sql);
+        
+        if ($code == 'AUT0000')
+            $culqi_status = true;
 
         if ($culqi_status)
             $ps = Configuration::get('PS_OS_PAYMENT');
