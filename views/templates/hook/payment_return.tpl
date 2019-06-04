@@ -12,6 +12,14 @@
 		<br /><br />{l s='Si tienes alguna consulta, comunícate con nosotros' mod='culqi'}.
 	</p>
 </div>
+{elseif $status == 'pending'}
+    <div class="font-enhancement">
+	<p>{l s='Tu pago esta en espera de ser pagado.' sprintf=$shop_name mod='culqi'}
+		{l s=' Adicionalmente, te hemos enviado un correo electrónico con la información de la compra que acabas de realizar.' mod='culqi'}
+	
+	</p>
+</div>
+
 {else}
 <p class="warning">
 	{l s='Ha ocurrido un error con tu pago:' mod='culqi'}
