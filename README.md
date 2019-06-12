@@ -17,7 +17,7 @@ donde encontraras tus llaves `<link>` : <https://integ-panel.culqi.com/#/desarro
 
 - Baja este repositorio como .zip.
 - Descomprime el archivo .zip. Esto debe resultar en una nueva carpeta.
-- **IMPORTANTE!** Renombra la carpeta a `culqi`.
+- **¡IMPORTANTE!** Renombra la carpeta a `culqi`.
 
 ![Imgur](https://i.imgur.com/dMjMefw.png)
 
