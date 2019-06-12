@@ -286,6 +286,8 @@ class Culqi extends PaymentModule
         if (!parent::uninstall()
         || !Configuration::deleteByName('CULQI_STATE_OK')
         || !Configuration::deleteByName('CULQI_STATE_ERROR')
+        || !Configuration::deleteByName('CULQI_STATE_PENDING')
+        || !Configuration::deleteByName('CULQI_STATE_EXPIRED')
         || !Configuration::deleteByName('CULQI_LLAVE_COMERCIO')
         || !Configuration::deleteByName('CULQI_CODIGO_COMERCIO') 
         || !Configuration::deleteByName('CULQI_ENABLED_MULTIPAYMENT')           
