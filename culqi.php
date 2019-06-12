@@ -564,9 +564,10 @@ class Culqi extends PaymentModule
            $amount = trim($objectOrder['amount']);               
 
            // Metadata 
-           $metadata = json_decode($data['metadata']); 
+           $metadata = $objectOrder['metadata']; 
            //$reference = trim($metadata['reference']);
-           $cartID = trim($metadata['cart_id']);
+           $cartID = $metadata['cart_id']; 
+           error_log($cartID);
            //$uidModule = trim($metadata['uid_module']); 
            //$customerSecureKey = trim($metadata['customer_secure_key']);       
            
