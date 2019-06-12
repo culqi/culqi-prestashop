@@ -144,7 +144,7 @@ class Culqi extends PaymentModule
                 "metadata" => array( 
                    "cart_id"=> (int)$cart->id,
                    "uid_module" => "123456789",
-                   "customer_secure_key" => $OrderObject->secure_key, 
+                   //"customer_secure_key" => $OrderObject->secure_key, 
                    "platform" => "ps-1.6"
                  )
               )
@@ -215,10 +215,13 @@ class Culqi extends PaymentModule
         if (!$this->active)
         {
           return;
-        } 
+        }  
 
-        if($params['status'] == 'pending') {
 
+        $state = $params['objOrder']->getCurrentState();
+
+        if($state == Configuration::get('CULQI_STATE_PENDING')) {
+         
             $this->smarty->assign(
                 array(
                     'status' => 'pending'

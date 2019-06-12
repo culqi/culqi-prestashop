@@ -14,7 +14,7 @@
 </div>
 {elseif $status == 'pending'}
     <div class="font-enhancement">
-	<p>{l s='Tu pago esta en espera de ser pagado.' sprintf=$shop_name mod='culqi'}
+	<p>{l s='¡Solo falta un paso! Tu pago esta en espera de ser pagado, no te olvides pagar con el <b>codigo de pago (CIP)</b> antes del tiempo de expiración en agentes/bancos o por banca móvil.' sprintf=$shop_name mod='culqi'}
 		{l s=' Adicionalmente, te hemos enviado un correo electrónico con la información de la compra que acabas de realizar.' mod='culqi'}
 	
 	</p>

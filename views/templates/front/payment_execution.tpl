@@ -85,7 +85,7 @@
                                 $('body').waitMe('hide');
                                 showResult('green',result.outcome.user_message); 
                                 Culqi.close();
-                                redirectPending();
+                                redirect();
                                 }
                                 if(result.object === 'error'){
                                 $('body').waitMe('hide');
