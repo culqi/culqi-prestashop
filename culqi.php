@@ -565,18 +565,18 @@ class Culqi extends PaymentModule
 
            // Metadata 
            $metadata = json_decode($data['metadata']); 
-           $reference = trim($metadata['reference']);
+           //$reference = trim($metadata['reference']);
            $cartID = trim($metadata['cart_id']);
-           $uidModule = trim($metadata['uid_module']); 
-           $customerSecureKey = trim($metadata['customer_secure_key']);       
+           //$uidModule = trim($metadata['uid_module']); 
+           //$customerSecureKey = trim($metadata['customer_secure_key']);       
            
            //$PS_UidModule =  trim(Tools::safeOutput(Configuration::get('PAYGOL_SECRETKEY')));
 
 
            // Validación  
-           if( empty($uidModule)){
+           /*if( empty($uidModule)){
             exit("Error: Codigo identificador invalido"); 
-           }
+           }*/
 
            if (empty($metadata)) {
             exit("Error: Metadata vacia"); 
@@ -586,7 +586,7 @@ class Culqi extends PaymentModule
             exit("Error: valores de la orden incorrectos"); 
            }  
 
-           if(Tools::strlen($cartID) < 1 || Tools::strlen($customerSecureKey) < 1){
+           if(Tools::strlen($cartID) < 1){
             exit("Error: Valores personalizados incorrectos");
            } 
 
