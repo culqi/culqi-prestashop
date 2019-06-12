@@ -2,7 +2,7 @@
 <module>
 	<name>culqi</name>
 	<displayName><![CDATA[Culqi]]></displayName>
-	<version><![CDATA[2.2.0]]></version>
+	<version><![CDATA[2.3.0]]></version>
 	<description><![CDATA[Acepta tarjetas de cr&eacute;dito y d&eacute;bito en tu tienda online.]]></description>
 	<author><![CDATA[Team Culqi (Brayan Cruces)]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
