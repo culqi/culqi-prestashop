@@ -604,9 +604,9 @@ class Culqi extends PaymentModule
              $OrderObject = new Order();
              $OrderObject = new Order($OrderObject->getOrderByCartId($ObjCart->id));
                 
-            if ($customerSecureKey != $OrderObject->secure_key || $customerSecureKey != $ObjCart->secure_key) {
+            /*if ($customerSecureKey != $OrderObject->secure_key || $customerSecureKey != $ObjCart->secure_key) {
                 exit("Error: Secure key does not match");
-            }
+            }*/
                     
             /*if ($customerID != $OrderObject->id_customer || $customerID != $ObjCart->id_customer) {
                 exit("Error: Customer ID does not match");
