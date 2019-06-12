@@ -1,4 +1,4 @@
-# Culqi Checkout v2 - Prestashop 1.6
+# culqi-prestashop
 
 ### Pasos para la integración del Módulo de Culqi
 
@@ -11,9 +11,9 @@ donde encontraras tus llaves `<link>` : <https://integ-panel.culqi.com/#/desarro
 
 `Llave privada: sk_test_xxxxxxxxxxxxxx`
 
-#### 2. Descargar  el Módulo de Culqi 2.2.0 
+#### 2. Descargar el módulo de Culqi 3.1.0
 
-`<link>` : <https://github.com/culqi/culqi-prestashop/releases/tag/v2.2.0> 
+`<link>` : <https://github.com/culqi/culqi-prestashop/releases/tag/v3.1.0> 
 
 ![Imgur](https://i.imgur.com/dMjMefw.png)
 
@@ -67,6 +67,6 @@ tus llaves de pruebas por tus llaves de producción como en el paso 4.2
 > En el ambiente de producción podrás comenzar a usar tarjetas reales.
 
 
-### Si tienes dudas de Integración escríbenos a integrate@culqi.com
+Si tienes dudas de Integración escríbenos a https://culqi.com/soporte
 
-### Si tienes dudas comerciales escríbenos a unete@culqi.com
+> El soporte para Prestashop 1.7 esta en el siguiente [repositorio](https://github.com/culqi/culqi-prestashop-1.7)

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>culqi</name>
+	<displayName><![CDATA[Culqi]]></displayName>
+	<version><![CDATA[2.3.0]]></version>
+	<description><![CDATA[Acepta tarjetas de cr&eacute;dito y d&eacute;bito en tu tienda online.]]></description>
+	<author><![CDATA[Team Culqi (Brayan Cruces)]]></author>
+	<tab><![CDATA[payments_gateways]]></tab>
+	<confirmUninstall><![CDATA[¿Estás seguro que quieres desintalar el módulo de Culqi?]]></confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

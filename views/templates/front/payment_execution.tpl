@@ -26,100 +26,273 @@
         </p>
 
     {/if}
+         
+        {if $multipayment_enable}
+            {literal}
+            <script>  
 
-        {literal}
-        <script>
+                console.log('Multipagos habilitados');
 
-            Culqi.publicKey = '{/literal}{$codigo_comercio|escape:'htmlall':'UTF-8'}{literal}';
+                Culqi.publicKey = '{/literal}{$codigo_comercio|escape:'htmlall':'UTF-8'}{literal}';
 
-            Culqi.settings({
-                title: 'Venta',
-                currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
-                description: '{/literal}{$descripcion|escape:'htmlall':'UTF-8'}{literal}',
-                amount: ({/literal}{$total|escape:'htmlall':'UTF-8'}{literal})*100
-            });
-
-            $('#btn_pago').on('click', function(e) {
-                $('#showresult').addClass('hide');
-                Culqi.open();
-                e.preventDefault();
-            });
-
-            // Recibimos Token del Culqi.js
-            function culqi() {
-              if(Culqi.token) {
-                $(document).ajaxStart(function(){
-                    run_waitMe();
+                Culqi.settings({
+                    title: '{/literal}{$shop_name|escape:'htmlall':'UTF-8'}{literal}',  
+                    currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
+                    description: '{/literal}{$descripcion|escape:'htmlall':'UTF-8'}{literal}',
+                    amount: ({/literal}{$total|escape:'htmlall':'UTF-8'}{literal})*100,            
+                    order: '{/literal}{$order_id|escape:'htmlall':'UTF-8'}{literal}'   
                 });
-                $(document).ajaxComplete(function(){
-                    $('body').waitMe('hide');
-                });
-                var installments = (Culqi.token.metadata.installments == undefined) ? 1 : Culqi.token.metadata.installments;
-                $.ajax({
-                    url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
-                    data: {
-                      ajax: true,
-                      action: 'displayAjax',
-                      token_id: Culqi.token.id,
-                      installments: installments
-                    },
-                    type: "POST",
-                    dataType: 'json',
-                    success: function(data) {
-                      if(data === "Error de autenticación") {
-                        $('body').waitMe('hide');
-                        showResult('red',data + ": verificar si su Llave Secreta es la correcta");
-                      } else {
-                        var result = "";
-                        if(data.constructor == String){
-                            result = JSON.parse(data);
-                        }
-                        if(data.constructor == Object){
-                            result = JSON.parse(JSON.stringify(data));
-                        }
-                        if(result.object === 'charge'){
-                          $('body').waitMe('hide');
-                          showResult('green',result.outcome.user_message);
-                          redirect();
-                        }
-                        if(result.object === 'error'){
-                          $('body').waitMe('hide');
-                          showResult('red',result.user_message);
 
-                        }
-                      }
+                $('#btn_pago').on('click', function(e) {
+                    $('#showresult').addClass('hide');
+                    Culqi.open();
+                    e.preventDefault();
+                });
+
+                // Recibimos Token del Culqi.js
+                function culqi() {
+                    if(Culqi.token) {
+                        $(document).ajaxStart(function(){
+                            run_waitMe();
+                        });
+                        $(document).ajaxComplete(function(){
+                            $('body').waitMe('hide');
+                        });
+                        var installments = (Culqi.token.metadata.installments == undefined) ? 1 : Culqi.token.metadata.installments;
+                        $.ajax({
+                            url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
+                            data: {
+                            ajax: true,
+                            action: 'displayAjax',
+                            token_id: Culqi.token.id,
+                            installments: installments
+                            },
+                            type: "POST",
+                            dataType: 'json',
+                            success: function(data) {
+                            if(data === "Error de autenticación") {
+                                $('body').waitMe('hide');
+                                showResult('red',data + ": verificar si su Llave Secreta es la correcta");
+                            } else {
+                                var result = "";
+                                if(data.constructor == String){
+                                    result = JSON.parse(data);
+                                }
+                                if(data.constructor == Object){
+                                    result = JSON.parse(JSON.stringify(data));
+                                }
+                                if(result.object === 'charge'){
+                                $('body').waitMe('hide');
+                                showResult('green',result.outcome.user_message); 
+                                Culqi.close();
+                                redirect();
+                                }
+                                if(result.object === 'error'){
+                                $('body').waitMe('hide');
+                                showResult('red',result.user_message);
+
+                                }
+                            }
+                            }
+                        });
+                    }  else if (Culqi.order) {  
+
+                        $(document).ajaxStart(function(){
+                            run_waitMe();
+                        });
+                        $(document).ajaxComplete(function(){
+                            $('body').waitMe('hide');
+                        });
+
+                        console.log("Order confirmada"); 
+                        
+                        $.ajax({
+                            url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'orderajax', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
+                            cache : false,
+                            data: {
+                                ajax: true,
+                                action: 'displayAjax',
+                                order_id: Culqi.order.id
+                            },
+                            type: "POST",
+                            dataType: 'json',
+                            success: function(data) {  
+
+                                if(data === "Error") {
+                                    $('body').waitMe('hide');
+                                    showResult('red',data + ", intente nuevamente o más tarde.");
+                                } else {
+                                    var result = "";
+                                    if(data.constructor == String){
+                                        result = JSON.parse(data);
+                                    }
+                                    if(data.constructor == Object){
+                                        result = JSON.parse(JSON.stringify(data));
+                                    }
+                                    if(result.object === 'order'){
+                                        $('body').waitMe('hide'); 
+                                        console.log('Redirigiendo....');
+                                        redirectPending();
+                                    }
+                                    if(result.object === 'error'){
+                                    $('body').waitMe('hide');
+                                    }
+                                } 
+                                
+                            }, 
+                            
+                            error: function(error){
+
+                                $('body').waitMe('hide');
+                                showResult('red',"Ocurrió un problema al procesar la orden, intente nuevamente o más tarde.");
+                            }
+                        });
+
+                    } 
+                    else if (Culqi.closeEvent){
+                        console.log(Culqi.closeEvent);               
                     }
+                    else {
+                        $('body').waitMe('hide');
+                        showResult('red',Culqi.error.user_message);
+                    }
+                }
+
+                function run_waitMe() {
+                $('body').waitMe({
+                    effect: 'orbit',
+                    text: 'Procesando pago...',
+                    bg: 'rgba(255,255,255,0.7)',
+                    color:'#28d2c8'
                 });
-              } else {
-                $('body').waitMe('hide');
-                showResult('red',Culqi.error.user_message);
-              }
-            }
+                }
 
-            function run_waitMe() {
-              $('body').waitMe({
-                effect: 'orbit',
-                text: 'Procesando pago...',
-                bg: 'rgba(255,255,255,0.7)',
-                color:'#28d2c8'
-              });
-            }
+                function showResult(style,message){
+                $('#showresult').removeClass('hide');
+                $('#showresultcontent').attr('class', '');
+                $('#showresultcontent').addClass(style);
+                $('#showresultcontent').html(message);
+                }
 
-            function showResult(style,message){
-              $('#showresult').removeClass('hide');
-              $('#showresultcontent').attr('class', '');
-              $('#showresultcontent').addClass(style);
-              $('#showresultcontent').html(message);
-            }
+                function redirect() {
+                    var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
+                    location.href = url;
+                }; 
 
-            function redirect() {
-                var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                location.href = url;
-            };
+                function redirectPending() {
+                    var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpendingpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
+                    location.href = url;
+                };
 
-            function fnReplace(url) {
-                return url.replace(/&amp;/g, '&');
-            }
+                function fnReplace(url) {
+                    return url.replace(/&amp;/g, '&');
+                }
 
-        </script>
-        {/literal}
+            </script>
+            {/literal} 
+        {else}
+             {literal}
+                <script>
+
+                    Culqi.publicKey = '{/literal}{$codigo_comercio|escape:'htmlall':'UTF-8'}{literal}';
+
+                    Culqi.settings({
+                        title: '{/literal}{$shop_name|escape:'htmlall':'UTF-8'}{literal}',  
+                        currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
+                        description: '{/literal}{$descripcion|escape:'htmlall':'UTF-8'}{literal}',
+                        amount: ({/literal}{$total|escape:'htmlall':'UTF-8'}{literal})*100          
+                    });
+
+                    $('#btn_pago').on('click', function(e) {
+                        $('#showresult').addClass('hide');
+                        Culqi.open();
+                        e.preventDefault();
+                    });
+
+                    // Recibimos Token del Culqi.js
+                    function culqi() {
+                    if(Culqi.token) {
+                        $(document).ajaxStart(function(){
+                            run_waitMe();
+                        });
+                        $(document).ajaxComplete(function(){
+                            $('body').waitMe('hide');
+                        });
+                        var installments = (Culqi.token.metadata.installments == undefined) ? 1 : Culqi.token.metadata.installments;
+                        $.ajax({
+                            url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
+                            data: {
+                            ajax: true,
+                            action: 'displayAjax',
+                            token_id: Culqi.token.id,
+                            installments: installments
+                            },
+                            type: "POST",
+                            dataType: 'json',
+                            success: function(data) {
+                            if(data === "Error de autenticación") {
+                                $('body').waitMe('hide');
+                                showResult('red',data + ": verificar si su Llave Secreta es la correcta");
+                            } else {
+                                var result = "";
+                                if(data.constructor == String){
+                                    result = JSON.parse(data);
+                                }
+                                if(data.constructor == Object){
+                                    result = JSON.parse(JSON.stringify(data));
+                                }
+                                if(result.object === 'charge'){
+                                $('body').waitMe('hide');
+                                showResult('green',result.outcome.user_message);
+                                redirect();
+                                }
+                                if(result.object === 'error'){
+                                $('body').waitMe('hide');
+                                showResult('red',result.user_message);
+
+                                }
+                            }
+                            }
+                        });
+                    } else {
+                        $('body').waitMe('hide');
+                        showResult('red',Culqi.error.user_message);
+                    }
+                    }
+
+                    function run_waitMe() {
+                    $('body').waitMe({
+                        effect: 'orbit',
+                        text: 'Procesando pago...',
+                        bg: 'rgba(255,255,255,0.7)',
+                        color:'#28d2c8'
+                    });
+                    }
+
+                    function showResult(style,message){
+                    $('#showresult').removeClass('hide');
+                    $('#showresultcontent').attr('class', '');
+                    $('#showresultcontent').addClass(style);
+                    $('#showresultcontent').html(message);
+                    }
+
+                    function redirect() {
+                        var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
+                        location.href = url;
+                    };
+
+                    function fnReplace(url) {
+                        return url.replace(/&amp;/g, '&');
+                    }
+
+                </script>
+             {/literal}  
+
+        {/if}
+        
+        
+
+
+
+
+        

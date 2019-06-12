@@ -18,7 +18,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         // se agrega js y css necesarios
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/culqi.css');
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/waitMe.min.css');
-        $this->context->controller->addJS('https://checkout.culqi.com/plugins/v2/');
+        $this->context->controller->addJS('https://checkout.culqi.com/js/v3');
         $this->context->controller->addJS('https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
 
         $cart = $this->context->cart;
@@ -38,11 +38,21 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
             'this_path_ssl' => Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . 'modules/' . $this->module->name . '/'
         ));
 
+        // Crear una orden   
+        if (Configuration::get('CULQI_ENABLED_MULTIPAYMENT')) {
+           $order = $this->module->createOrder();     
+           // Asignar una orden
+           $this->context->smarty->assign('order_id', trim($order->id));  
+        }
+         
+        $this->context->smarty->assign('shop_name', $this->context->shop->name);
         $this->context->smarty->assign('descripcion', "Orden de compra ".$cart->id);
         $this->context->smarty->assign('orden', $cart->id);
-        $this->context->smarty->assign('codigo_comercio', Configuration::get('CULQI_CODIGO_COMERCIO'));
-$this->context->smarty->assign('currency', $this->context->currency->iso_code);
+        $this->context->smarty->assign('currency', $this->context->currency->iso_code);      
 
+        // Config values
+        $this->context->smarty->assign('codigo_comercio', Configuration::get('CULQI_CODIGO_COMERCIO'));
+        $this->context->smarty->assign('multipayment_enable', Configuration::get('CULQI_ENABLED_MULTIPAYMENT'));
         $this->setTemplate('payment_execution.tpl');
     }
 
