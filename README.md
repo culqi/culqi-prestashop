@@ -13,7 +13,11 @@ donde encontraras tus llaves `<link>` : <https://integ-panel.culqi.com/#/desarro
 
 #### 2. Descargar el módulo de Culqi 2.3.0
 
-`<link>` : <https://github.com/culqi/culqi-prestashop/releases/tag/v2.3.0> 
+`<link>` : <https://github.com/culqi/culqi-prestashop/releases/tag/v2.3.0>  
+
+- Baja este repositorio como .zip.
+- Descomprime el archivo .zip. Esto debe resultar en una nueva carpeta.
+- **IMPORTANTE!** Renombra la carpeta a `culqi`.
 
 ![Imgur](https://i.imgur.com/dMjMefw.png)
 
