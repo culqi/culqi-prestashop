@@ -16,7 +16,7 @@ class Refunds extends Resource {
      *
      * @return all Refunds.
      */
-    public function getList($options = NULL) {
+    public function all($options = NULL) {
         return $this->request("GET", self::URL_REFUNDS, $api_key = $this->culqi->api_key, $options);
     }
 
@@ -36,6 +36,16 @@ class Refunds extends Resource {
      */
     public function get($id = NULL) {
         return $this->request("GET", self::URL_REFUNDS . $id . "/", $api_key = $this->culqi->api_key);
+    }
+
+    /**
+     * @param string|null $id
+     * @param array|null $options
+     *
+     * @return update Refund response.
+     */
+    public function update($id = NULL, $options = NULL) {
+        return $this->request("PATCH", self::URL_REFUNDS . $id . "/", $api_key = $this->culqi->api_key, $options);
     }
 
 }
