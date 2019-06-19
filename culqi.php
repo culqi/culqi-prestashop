@@ -206,8 +206,11 @@ class Culqi extends PaymentModule
         $this->smarty->assign(array(
             'this_path' => $this->_path,
             'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
-        ));
-        return $this->display(__FILE__, 'payment.tpl');
+        )); 
+
+        if(Configuration::get('CULQI_ENABLED_MULTIPAYMENT')) return $this->display(__FILE__, 'payment_multi.tpl'); 
+
+        return $this->display(__FILE__, 'payment.tpl'); 
     }
 
     public function hookPaymentReturn($params)
