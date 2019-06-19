@@ -27,7 +27,7 @@ class Culqi extends PaymentModule
     {
         $this->name = 'culqi';
         $this->tab = 'payments_gateways';
-        $this->version = '2.3.0';
+        $this->version = '2.3.1';
         $this->controllers = array('chargeajax', 'payment', 'validation', 'postpayment', 'postpendingpayment', 'orderajax');
         $this->author = "Team Culqi (Brayan Cruces)";
         $this->need_instance = 0;
@@ -44,6 +44,17 @@ class Culqi extends PaymentModule
 
     public function install()
     {
+        // Run sql for creating DB tables
+        Db::getInstance()->execute("CREATE TABLE IF NOT EXISTS "._DB_PREFIX_."culqi_order (
+            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            culqi_charge_id varchar(255) NULL,
+            amount int NULL,
+            installments int NULL,
+            email varchar(255) NULL,
+            prestashop_order_id varchar(255) NULL
+            ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8
+          ");
+
         $this->createStates();
 
         return (
@@ -102,9 +113,13 @@ class Culqi extends PaymentModule
 
         $culqi = new Culqi\Culqi(array('api_key' => Configuration::get('CULQI_LLAVE_COMERCIO')));
 
+        $amount = $this->removeComma($cart->getOrderTotal(true, Cart::BOTH));
+        $email =  $this->context->customer->email;
+        $order_id = (string)$cart->id;
+
         $cargo = $culqi->Charges->create(
             array(
-              "amount" => $this->removeComma($cart->getOrderTotal(true, Cart::BOTH)),
+              "amount" => $amount,
               "antifraud_details" => array(
                   "address" => $this->getAddress($userAddress),
                   "address_city" => $userAddress->city,
@@ -117,11 +132,22 @@ class Culqi extends PaymentModule
               "currency_code" => $this->context->currency->iso_code,
               "description" => "Orden de compra ".$cart->id,
               "installments" => $installments,
-              "metadata" => array("order_id"=>(string)$cart->id),
-              "email" => $this->context->customer->email,
+              "metadata" => array("order_id"=>$order_id),
+              "email" => $email,
               "source_id" => $token_id
             )
         );
+
+        if($cargo->object == "charge") {
+          Db::getInstance()->insert('culqi_order', array(
+              'culqi_charge_id'     => (string)$cargo->id,
+              'amount'              => $amount,
+              'installments'        => $installments,
+              'email'               => $email,
+              'prestashop_order_id' => $order_id
+          ));
+        }
+
         return $cargo;
       } catch(Exception $e){
         return $e->getMessage();
@@ -206,8 +232,11 @@ class Culqi extends PaymentModule
         $this->smarty->assign(array(
             'this_path' => $this->_path,
             'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
-        ));
-        return $this->display(__FILE__, 'payment.tpl');
+        )); 
+
+        if(Configuration::get('CULQI_ENABLED_MULTIPAYMENT')) return $this->display(__FILE__, 'payment_multi.tpl'); 
+
+        return $this->display(__FILE__, 'payment.tpl'); 
     }
 
     public function hookPaymentReturn($params)
@@ -283,6 +312,8 @@ class Culqi extends PaymentModule
 
     public function uninstall()
     {
+        Db::getInstance()->execute('DROP TABLE IF EXISTS '._DB_PREFIX_.'culqi_order');
+
         if (!parent::uninstall()
         || !Configuration::deleteByName('CULQI_STATE_OK')
         || !Configuration::deleteByName('CULQI_STATE_ERROR')
