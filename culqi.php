@@ -27,7 +27,7 @@ class Culqi extends PaymentModule
     {
         $this->name = 'culqi';
         $this->tab = 'payments_gateways';
-        $this->version = '2.3.0';
+        $this->version = '2.3.1';
         $this->controllers = array('chargeajax', 'payment', 'validation', 'postpayment', 'postpendingpayment', 'orderajax');
         $this->author = "Team Culqi (Brayan Cruces)";
         $this->need_instance = 0;
@@ -232,8 +232,11 @@ class Culqi extends PaymentModule
         $this->smarty->assign(array(
             'this_path' => $this->_path,
             'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
-        ));
-        return $this->display(__FILE__, 'payment.tpl');
+        )); 
+
+        if(Configuration::get('CULQI_ENABLED_MULTIPAYMENT')) return $this->display(__FILE__, 'payment_multi.tpl'); 
+
+        return $this->display(__FILE__, 'payment.tpl'); 
     }
 
     public function hookPaymentReturn($params)
