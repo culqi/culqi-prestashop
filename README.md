@@ -11,9 +11,9 @@ donde encontraras tus llaves `<link>` : <https://integ-panel.culqi.com/#/desarro
 
 `Llave privada: sk_test_xxxxxxxxxxxxxx`
 
-#### 2. Descargar el módulo de Culqi 2.3.0
+#### 2. Descargar el módulo de Culqi 2.3.2
 
-`<link>` : <https://github.com/culqi/culqi-prestashop/releases/tag/v2.3.0>  
+`<link>` : <https://github.com/culqi/culqi-prestashop/releases/tag/v2.3.2>  
 
 - Baja este repositorio como .zip.
 - Descomprime el archivo .zip. Esto debe resultar en una nueva carpeta.
