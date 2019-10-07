@@ -134,18 +134,9 @@ class Requests_Transport_cURL implements Requests_Transport {
 
 		$options['hooks']->dispatch('curl.before_send', array(&$this->handle));
 
-		if ($options['filename'] !== false) {
-			$this->stream_handle = fopen($options['filename'], 'wb');
-		}
+        $this->validateResponseData($options);
 
-		$this->response_data = '';
-		$this->response_bytes = 0;
-		$this->response_byte_limit = false;
-		if ($options['max_bytes'] !== false) {
-			$this->response_byte_limit = $options['max_bytes'];
-		}
-
-		if (isset($options['verify'])) {
+        if (isset($options['verify'])) {
 			if ($options['verify'] === false) {
 				curl_setopt($this->handle, CURLOPT_SSL_VERIFYHOST, 0);
 				curl_setopt($this->handle, CURLOPT_SSL_VERIFYPEER, 0);
@@ -283,17 +274,8 @@ class Requests_Transport_cURL implements Requests_Transport {
 	public function &get_subrequest_handle($url, $headers, $data, $options) {
 		$this->setup_handle($url, $headers, $data, $options);
 
-		if ($options['filename'] !== false) {
-			$this->stream_handle = fopen($options['filename'], 'wb');
-		}
-
-		$this->response_data = '';
-		$this->response_bytes = 0;
-		$this->response_byte_limit = false;
-		if ($options['max_bytes'] !== false) {
-			$this->response_byte_limit = $options['max_bytes'];
-		}
-		$this->hooks = $options['hooks'];
+        $this->validateResponseData($options);
+        $this->hooks = $options['hooks'];
 
 		return $this->handle;
 	}
@@ -392,13 +374,15 @@ class Requests_Transport_cURL implements Requests_Transport {
 		}
 	}
 
-	/**
-	 * Process a response
-	 *
-	 * @param string $response Response data from the body
-	 * @param array $options Request options
-	 * @return string HTTP response data including headers
-	 */
+    /**
+     * Process a response
+     *
+     * @param string $response Response data from the body
+     * @param array $options Request options
+     * @return string HTTP response data including headers
+     * @throws Requests_Exception
+     * @throws Requests_Exception
+     */
 	public function process_response($response, $options) {
 		if ($options['blocking'] === false) {
 			$fake_headers = '';
@@ -518,12 +502,13 @@ class Requests_Transport_cURL implements Requests_Transport {
 		return $url;
 	}
 
-	/**
-	 * Whether this transport is valid
-	 *
-	 * @codeCoverageIgnore
-	 * @return boolean True if the transport is valid, false otherwise.
-	 */
+    /**
+     * Whether this transport is valid
+     *
+     * @codeCoverageIgnore
+     * @param array $capabilities
+     * @return boolean True if the transport is valid, false otherwise.
+     */
 	public static function test($capabilities = array()) {
 		if (!function_exists('curl_init') || !function_exists('curl_exec')) {
 			return false;
@@ -539,4 +524,21 @@ class Requests_Transport_cURL implements Requests_Transport {
 
 		return true;
 	}
+
+    /**
+     * @param $options
+     */
+    private function validateResponseData($options)
+    {
+        if ($options['filename'] !== false) {
+            $this->stream_handle = fopen($options['filename'], 'wb');
+        }
+
+        $this->response_data = '';
+        $this->response_bytes = 0;
+        $this->response_byte_limit = false;
+        if ($options['max_bytes'] !== false) {
+            $this->response_byte_limit = $options['max_bytes'];
+        }
+    }
 }

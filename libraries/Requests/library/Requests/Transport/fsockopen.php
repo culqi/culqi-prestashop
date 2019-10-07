@@ -184,7 +184,7 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 			$out .= sprintf("User-Agent: %s\r\n", $options['useragent']);
 		}
 
-		$accept_encoding = $this->accept_encoding();
+		$accept_encoding = self::accept_encoding();
 		if (!isset($case_insensitive_headers['Accept-Encoding']) && !empty($accept_encoding)) {
 			$out .= sprintf("Accept-Encoding: %s\r\n", $accept_encoding);
 		}
@@ -192,7 +192,7 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 		$headers = Requests::flatten($headers);
 
 		if (!empty($headers)) {
-			$out .= implode($headers, "\r\n") . "\r\n";
+			$out .= implode("\r\n", $headers) . "\r\n";
 		}
 
 		$options['hooks']->dispatch('fsockopen.after_headers', array(&$out));
@@ -370,12 +370,13 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 		return $get;
 	}
 
-	/**
-	 * Error handler for stream_socket_client()
-	 *
-	 * @param int $errno Error number (e.g. E_WARNING)
-	 * @param string $errstr Error message
-	 */
+    /**
+     * Error handler for stream_socket_client()
+     *
+     * @param int $errno Error number (e.g. E_WARNING)
+     * @param string $errstr Error message
+     * @return bool
+     */
 	public function connect_error_handler($errno, $errstr) {
 		// Double-check we can handle it
 		if (($errno & E_WARNING) === 0 && ($errno & E_NOTICE) === 0) {
@@ -416,12 +417,13 @@ class Requests_Transport_fsockopen implements Requests_Transport {
 		return Requests_SSL::verify_certificate($host, $cert);
 	}
 
-	/**
-	 * Whether this transport is valid
-	 *
-	 * @codeCoverageIgnore
-	 * @return boolean True if the transport is valid, false otherwise.
-	 */
+    /**
+     * Whether this transport is valid
+     *
+     * @codeCoverageIgnore
+     * @param array $capabilities
+     * @return boolean True if the transport is valid, false otherwise.
+     */
 	public static function test($capabilities = array()) {
 		if (!function_exists('fsockopen')) {
 			return false;

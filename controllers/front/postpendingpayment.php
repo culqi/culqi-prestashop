@@ -1,7 +1,7 @@
 <?php
 
 class CulqiPostpendingpaymentModuleFrontController extends ModuleFrontController
-{	
+{
 
     public function initContent()
     {

@@ -30,7 +30,7 @@
     height: 40px !important;
     background: green !important;
     color: white !important;
-    border: 0px !important;
+    border: 0 !important;
     text-align: center !important;
 }
 
@@ -39,7 +39,7 @@
     height: 40px !important;
     background: gray !important;
     color: white !important;
-    border: 0px !important;
+    border: 0 !important;
     text-align: center !important;
 }
 #left_column {

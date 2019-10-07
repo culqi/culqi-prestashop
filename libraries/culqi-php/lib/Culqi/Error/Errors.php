@@ -1,6 +1,8 @@
 <?php
 namespace Culqi\Error;
 
+use Exception;
+
 /**
  * Culqi Exceptions
  */
@@ -8,8 +10,8 @@ namespace Culqi\Error;
 /**
  * Base Culqi Exception
  */
-class CulqiException extends \Exception {
-    protected $message = "Base Culqi Exception";
+class CulqiException extends Exception {
+    protected $message = 'Base Culqi Exception';
 }
 /**
  * Input validation error
@@ -17,7 +19,7 @@ class CulqiException extends \Exception {
 namespace Culqi\Error;
 
 class InputValidationError extends CulqiException {
-    protected $message = "Error de validacion en los campos";
+    protected $message = 'Error de validacion en los campos';
 }
 /**
  * Authentication error
@@ -25,7 +27,7 @@ class InputValidationError extends CulqiException {
 namespace Culqi\Error;
 
 class AuthenticationError extends CulqiException {
-    protected $message = "Error de autenticación";
+    protected $message = 'Error de autenticación';
 }
 /**
  * Resource not found
@@ -33,7 +35,7 @@ class AuthenticationError extends CulqiException {
 namespace Culqi\Error;
 
 class NotFound extends CulqiException {
-    protected $message = "Recurso no encontrado";
+    protected $message = 'Recurso no encontrado';
 }
 /**
  * Method not allowed
@@ -41,7 +43,7 @@ class NotFound extends CulqiException {
 namespace Culqi\Error;
 
 class MethodNotAllowed extends CulqiException {
-    protected $message = "Method not allowed";
+    protected $message = 'Method not allowed';
 }
 /**
  * Unhandled error
@@ -49,7 +51,7 @@ class MethodNotAllowed extends CulqiException {
 namespace Culqi\Error;
 
 class UnhandledError extends CulqiException {
-    protected $message = "Unhandled error";
+    protected $message = 'Unhandled error';
 }
 /**
  * Invalid API Key
@@ -57,11 +59,11 @@ class UnhandledError extends CulqiException {
 namespace Culqi\Error;
 
 class InvalidApiKey extends CulqiException {
-    protected $message = "API Key invalido";
+    protected $message = 'API Key invalido';
 }
 /**
  * Unable to connect to Culqi API
  */
 class UnableToConnect extends CulqiException {
-    protected $message = "Imposible conectar a Culqi API";
+    protected $message = 'Imposible conectar a Culqi API';
 }

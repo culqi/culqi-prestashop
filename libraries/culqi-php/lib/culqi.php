@@ -13,20 +13,20 @@
  */
 
 // Errors
-include_once dirname(__FILE__).'/Culqi/Error/Errors.php';
-include_once dirname(__FILE__).'/Culqi/Client.php';
-include_once dirname(__FILE__).'/Culqi/Resource.php';
+include_once __DIR__ .'/Culqi/Error/Errors.php';
+include_once __DIR__ .'/Culqi/Client.php';
+include_once __DIR__ .'/Culqi/Resource.php';
 
 // Culqi API
-include_once dirname(__FILE__).'/Culqi/Transfers.php';
-include_once dirname(__FILE__).'/Culqi/Cards.php';
-include_once dirname(__FILE__).'/Culqi/Events.php';
-include_once dirname(__FILE__).'/Culqi/Customers.php';
-include_once dirname(__FILE__).'/Culqi/Tokens.php';
-include_once dirname(__FILE__).'/Culqi/Charges.php';
-include_once dirname(__FILE__).'/Culqi/Refunds.php';
-include_once dirname(__FILE__).'/Culqi/Subscriptions.php';
-include_once dirname(__FILE__).'/Culqi/Plans.php';
-include_once dirname(__FILE__).'/Culqi/Iins.php';
-include_once dirname(__FILE__).'/Culqi/Orders.php';
-include_once dirname(__FILE__).'/Culqi/Culqi.php';
+include_once __DIR__ .'/Culqi/Transfers.php';
+include_once __DIR__ .'/Culqi/Cards.php';
+include_once __DIR__ .'/Culqi/Events.php';
+include_once __DIR__ .'/Culqi/Customers.php';
+include_once __DIR__ .'/Culqi/Tokens.php';
+include_once __DIR__ .'/Culqi/Charges.php';
+include_once __DIR__ .'/Culqi/Refunds.php';
+include_once __DIR__ .'/Culqi/Subscriptions.php';
+include_once __DIR__ .'/Culqi/Plans.php';
+include_once __DIR__ .'/Culqi/Iins.php';
+include_once __DIR__ .'/Culqi/Orders.php';
+include_once __DIR__ .'/Culqi/Culqi.php';

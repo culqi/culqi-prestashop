@@ -142,8 +142,8 @@ class Requests {
 		}
 
 		$file = str_replace('_', '/', $class);
-		if (file_exists(dirname(__FILE__) . '/' . $file . '.php')) {
-			require_once(dirname(__FILE__) . '/' . $file . '.php');
+		if (file_exists(__DIR__ . '/' . $file . '.php')) {
+			require_once(__DIR__ . '/' . $file . '.php');
 		}
 	}
 
@@ -172,12 +172,13 @@ class Requests {
 		self::$transports = array_merge(self::$transports, array($transport));
 	}
 
-	/**
-	 * Get a working transport
-	 *
-	 * @throws Requests_Exception If no valid transport is found (`notransport`)
-	 * @return Requests_Transport
-	 */
+    /**
+     * Get a working transport
+     *
+     * @param array $capabilities
+     * @return Requests_Transport
+     * @throws Requests_Exception If no valid transport is found (`notransport`)
+     */
 	protected static function get_transport($capabilities = array()) {
 		// Caching code, don't bother testing coverage
 		// @codeCoverageIgnoreStart
@@ -204,7 +205,7 @@ class Requests {
 				continue;
 			}
 
-			$result = call_user_func(array($class, 'test'), $capabilities);
+			$result = $class->test($capabilities);
 			if ($result) {
 				self::$transport[$cap_string] = $class;
 				break;
@@ -224,30 +225,50 @@ class Requests {
 	 * @param array $options
 	 * @return Requests_Response
 	 */
-	/**
-	 * Send a GET request
-	 */
+    /**
+     * Send a GET request
+     * @param $url
+     * @param array $headers
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public static function get($url, $headers = array(), $options = array()) {
 		return self::request($url, $headers, null, self::GET, $options);
 	}
 
-	/**
-	 * Send a HEAD request
-	 */
+    /**
+     * Send a HEAD request
+     * @param $url
+     * @param array $headers
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public static function head($url, $headers = array(), $options = array()) {
 		return self::request($url, $headers, null, self::HEAD, $options);
 	}
 
-	/**
-	 * Send a DELETE request
-	 */
+    /**
+     * Send a DELETE request
+     * @param $url
+     * @param array $headers
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public static function delete($url, $headers = array(), $options = array()) {
 		return self::request($url, $headers, null, self::DELETE, $options);
 	}
 
-	/**
-	 * Send a TRACE request
-	 */
+    /**
+     * Send a TRACE request
+     * @param $url
+     * @param array $headers
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public static function trace($url, $headers = array(), $options = array()) {
 		return self::request($url, $headers, null, self::TRACE, $options);
 	}
@@ -261,34 +282,59 @@ class Requests {
 	 * @param array $options
 	 * @return Requests_Response
 	 */
-	/**
-	 * Send a POST request
-	 */
+    /**
+     * Send a POST request
+     * @param $url
+     * @param array $headers
+     * @param array $data
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public static function post($url, $headers = array(), $data = array(), $options = array()) {
 		return self::request($url, $headers, $data, self::POST, $options);
 	}
-	/**
-	 * Send a PUT request
-	 */
+
+    /**
+     * Send a PUT request
+     * @param $url
+     * @param array $headers
+     * @param array $data
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public static function put($url, $headers = array(), $data = array(), $options = array()) {
 		return self::request($url, $headers, $data, self::PUT, $options);
 	}
 
-	/**
-	 * Send an OPTIONS request
-	 */
+    /**
+     * Send an OPTIONS request
+     * @param $url
+     * @param array $headers
+     * @param array $data
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public static function options($url, $headers = array(), $data = array(), $options = array()) {
 		return self::request($url, $headers, $data, self::OPTIONS, $options);
 	}
 
-	/**
-	 * Send a PATCH request
-	 *
-	 * Note: Unlike {@see post} and {@see put}, `$headers` is required, as the
-	 * specification recommends that should send an ETag
-	 *
-	 * @link https://tools.ietf.org/html/rfc5789
-	 */
+    /**
+     * Send a PATCH request
+     *
+     * Note: Unlike {@see post} and {@see put}, `$headers` is required, as the
+     * specification recommends that should send an ETag
+     *
+     * @link https://tools.ietf.org/html/rfc5789
+     * @param $url
+     * @param $headers
+     * @param array $data
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public static function patch($url, $headers, $data = array(), $options = array()) {
 		return self::request($url, $headers, $data, self::PATCH, $options);
 	}
@@ -383,47 +429,50 @@ class Requests {
 		return self::parse_response($response, $url, $headers, $data, $options);
 	}
 
-	/**
-	 * Send multiple HTTP requests simultaneously
-	 *
-	 * The `$requests` parameter takes an associative or indexed array of
-	 * request fields. The key of each request can be used to match up the
-	 * request with the returned data, or with the request passed into your
-	 * `multiple.request.complete` callback.
-	 *
-	 * The request fields value is an associative array with the following keys:
-	 *
-	 * - `url`: Request URL Same as the `$url` parameter to
-	 *    {@see Requests::request}
-	 *    (string, required)
-	 * - `headers`: Associative array of header fields. Same as the `$headers`
-	 *    parameter to {@see Requests::request}
-	 *    (array, default: `array()`)
-	 * - `data`: Associative array of data fields or a string. Same as the
-	 *    `$data` parameter to {@see Requests::request}
-	 *    (array|string, default: `array()`)
-	 * - `type`: HTTP request type (use Requests constants). Same as the `$type`
-	 *    parameter to {@see Requests::request}
-	 *    (string, default: `Requests::GET`)
-	 * - `cookies`: Associative array of cookie name to value, or cookie jar.
-	 *    (array|Requests_Cookie_Jar)
-	 *
-	 * If the `$options` parameter is specified, individual requests will
-	 * inherit options from it. This can be used to use a single hooking system,
-	 * or set all the types to `Requests::POST`, for example.
-	 *
-	 * In addition, the `$options` parameter takes the following global options:
-	 *
-	 * - `complete`: A callback for when a request is complete. Takes two
-	 *    parameters, a Requests_Response/Requests_Exception reference, and the
-	 *    ID from the request array (Note: this can also be overridden on a
-	 *    per-request basis, although that's a little silly)
-	 *    (callback)
-	 *
-	 * @param array $requests Requests data (see description for more information)
-	 * @param array $options Global and default options (see {@see Requests::request})
-	 * @return array Responses (either Requests_Response or a Requests_Exception object)
-	 */
+    /**
+     * Send multiple HTTP requests simultaneously
+     *
+     * The `$requests` parameter takes an associative or indexed array of
+     * request fields. The key of each request can be used to match up the
+     * request with the returned data, or with the request passed into your
+     * `multiple.request.complete` callback.
+     *
+     * The request fields value is an associative array with the following keys:
+     *
+     * - `url`: Request URL Same as the `$url` parameter to
+     *    {@see Requests::request}
+     *    (string, required)
+     * - `headers`: Associative array of header fields. Same as the `$headers`
+     *    parameter to {@see Requests::request}
+     *    (array, default: `array()`)
+     * - `data`: Associative array of data fields or a string. Same as the
+     *    `$data` parameter to {@see Requests::request}
+     *    (array|string, default: `array()`)
+     * - `type`: HTTP request type (use Requests constants). Same as the `$type`
+     *    parameter to {@see Requests::request}
+     *    (string, default: `Requests::GET`)
+     * - `cookies`: Associative array of cookie name to value, or cookie jar.
+     *    (array|Requests_Cookie_Jar)
+     *
+     * If the `$options` parameter is specified, individual requests will
+     * inherit options from it. This can be used to use a single hooking system,
+     * or set all the types to `Requests::POST`, for example.
+     *
+     * In addition, the `$options` parameter takes the following global options:
+     *
+     * - `complete`: A callback for when a request is complete. Takes two
+     *    parameters, a Requests_Response/Requests_Exception reference, and the
+     *    ID from the request array (Note: this can also be overridden on a
+     *    per-request basis, although that's a little silly)
+     *    (callback)
+     *
+     * @param array $requests Requests data (see description for more information)
+     * @param array $options Global and default options (see {@see Requests::request})
+     * @return array Responses (either Requests_Response or a Requests_Exception object)
+     * @throws Requests_Exception
+     * @throws Requests_Exception
+     * @throws Requests_Exception
+     */
 	public static function request_multiple($requests, $options = array()) {
 		$options = array_merge(self::get_default_options(true), $options);
 
@@ -518,7 +567,7 @@ class Requests {
 			'idn' => true,
 			'hooks' => null,
 			'transport' => null,
-			'verify' => Requests::get_certificate_path(),
+			'verify' => self::get_certificate_path(),
 			'verifyname' => true,
 		);
 		if ($multirequest !== false) {
@@ -533,11 +582,11 @@ class Requests {
 	 * @return string Default certificate path.
 	 */
 	public static function get_certificate_path() {
-		if ( ! empty( Requests::$certificate_path ) ) {
-			return Requests::$certificate_path;
+		if ( ! empty( self::$certificate_path ) ) {
+			return self::$certificate_path;
 		}
 
-		return dirname(__FILE__) . '/Requests/Transport/cacert.pem';
+		return __DIR__ . '/Requests/Transport/cacert.pem';
 	}
 
 	/**
@@ -546,19 +595,20 @@ class Requests {
 	 * @param string $path Certificate path, pointing to a PEM file.
 	 */
 	public static function set_certificate_path( $path ) {
-		Requests::$certificate_path = $path;
+		self::$certificate_path = $path;
 	}
 
-	/**
-	 * Set the default values
-	 *
-	 * @param string $url URL to request
-	 * @param array $headers Extra headers to send with the request
-	 * @param array|null $data Data to send either as a query string for GET/HEAD requests, or in the body for POST requests
-	 * @param string $type HTTP request type
-	 * @param array $options Options for the request
-	 * @return array $options
-	 */
+    /**
+     * Set the default values
+     *
+     * @param string $url URL to request
+     * @param array $headers Extra headers to send with the request
+     * @param array|null $data Data to send either as a query string for GET/HEAD requests, or in the body for POST requests
+     * @param string $type HTTP request type
+     * @param array $options Options for the request
+     * @return void $options
+     * @throws Requests_Exception
+     */
 	protected static function set_defaults(&$url, &$headers, &$data, &$type, &$options) {
 		if (!preg_match('/^http(s)?:\/\//i', $url, $matches)) {
 			throw new Requests_Exception('Only HTTP(S) requests are handled.', 'nonhttp', $url);
@@ -602,7 +652,7 @@ class Requests {
 		$type = strtoupper($type);
 
 		if (!isset($options['data_format'])) {
-			if (in_array($type, array(self::HEAD, self::GET, self::DELETE))) {
+			if (in_array($type, array(self::HEAD, self::GET, self::DELETE), true)) {
 				$options['data_format'] = 'query';
 			}
 			else {
@@ -683,34 +733,35 @@ class Requests {
 		$options['hooks']->dispatch('requests.before_redirect_check', array(&$return, $req_headers, $req_data, $options));
 
 		if ($return->is_redirect() && $options['follow_redirects'] === true) {
-			if (isset($return->headers['location']) && $options['redirected'] < $options['redirects']) {
-				if ($return->status_code === 303) {
-					$options['type'] = self::GET;
-				}
-				$options['redirected']++;
-				$location = $return->headers['location'];
-				if (strpos($location, 'http://') !== 0 && strpos($location, 'https://') !== 0) {
-					// relative redirect, for compatibility make it absolute
-					$location = Requests_IRI::absolutize($url, $location);
-					$location = $location->uri;
-				}
+            if (isset($return->headers['location']) && $options['redirected'] < $options['redirects']) {
+                if ($return->status_code === 303) {
+                    $options['type'] = self::GET;
+                }
+                $options['redirected']++;
+                $location = $return->headers['location'];
+                if (strpos($location, 'http://') !== 0 && strpos($location, 'https://') !== 0) {
+                    // relative redirect, for compatibility make it absolute
+                    $location = Requests_IRI::absolutize($url, $location);
+                    $location = $location->uri;
+                }
 
-				$hook_args = array(
-					&$location,
-					&$req_headers,
-					&$req_data,
-					&$options,
-					$return
-				);
-				$options['hooks']->dispatch('requests.before_redirect', $hook_args);
-				$redirected = self::request($location, $req_headers, $req_data, $options['type'], $options);
-				$redirected->history[] = $return;
-				return $redirected;
-			}
-			elseif ($options['redirected'] >= $options['redirects']) {
-				throw new Requests_Exception('Too many redirects', 'toomanyredirects', $return);
-			}
-		}
+                $hook_args = array(
+                    &$location,
+                    &$req_headers,
+                    &$req_data,
+                    &$options,
+                    $return
+                );
+                $options['hooks']->dispatch('requests.before_redirect', $hook_args);
+                $redirected = self::request($location, $req_headers, $req_data, $options['type'], $options);
+                $redirected->history[] = $return;
+                return $redirected;
+            }
+
+            if ($options['redirected'] >= $options['redirects']) {
+                throw new Requests_Exception('Too many redirects', 'toomanyredirects', $return);
+            }
+        }
 
 		$return->redirects = $options['redirected'];
 
@@ -821,25 +872,25 @@ class Requests {
 	 * @return string Decompressed string
 	 */
 	public static function decompress($data) {
-		if (substr($data, 0, 2) !== "\x1f\x8b" && substr($data, 0, 2) !== "\x78\x9c") {
+		if (strpos($data, "\x1f\x8b") !== 0 && strpos($data, "\x78\x9c") !== 0) {
 			// Not actually compressed. Probably cURL ruining this for us.
 			return $data;
 		}
 
-		if (function_exists('gzdecode') && ($decoded = @gzdecode($data)) !== false) {
-			return $decoded;
-		}
-		elseif (function_exists('gzinflate') && ($decoded = @gzinflate($data)) !== false) {
-			return $decoded;
-		}
-		elseif (($decoded = self::compatible_gzinflate($data)) !== false) {
-			return $decoded;
-		}
-		elseif (function_exists('gzuncompress') && ($decoded = @gzuncompress($data)) !== false) {
-			return $decoded;
-		}
+        if (function_exists('gzdecode') && ($decoded = @gzdecode($data)) !== false) {
+            return $decoded;
+        }
 
-		return $data;
+        if (function_exists('gzinflate') && ($decoded = @gzinflate($data)) !== false) {
+            return $decoded;
+        } elseif (($decoded = self::compatible_gzinflate($data)) !== false) {
+            return $decoded;
+        }
+        elseif (function_exists('gzuncompress') && ($decoded = @gzuncompress($data)) !== false) {
+            return $decoded;
+        }
+
+        return $data;
 	}
 
 	/**
@@ -865,13 +916,13 @@ class Requests {
 	public static function compatible_gzinflate($gzData) {
 		// Compressed data might contain a full zlib header, if so strip it for
 		// gzinflate()
-		if (substr($gzData, 0, 3) == "\x1f\x8b\x08") {
+		if (strpos($gzData, "\x1f\x8b\x08") === 0) {
 			$i = 10;
-			$flg = ord(substr($gzData, 3, 1));
+			$flg = ord($gzData[3]);
 			if ($flg > 0) {
 				if ($flg & 4) {
 					list($xlen) = unpack('v', substr($gzData, $i, 2));
-					$i = $i + 2 + $xlen;
+					$i += 2 + $xlen;
 				}
 				if ($flg & 8) {
 					$i = strpos($gzData, "\0", $i) + 1;
@@ -880,7 +931,7 @@ class Requests {
 					$i = strpos($gzData, "\0", $i) + 1;
 				}
 				if ($flg & 2) {
-					$i = $i + 2;
+					$i += 2;
 				}
 			}
 			$decompressed = self::compatible_gzinflate(substr($gzData, $i));
@@ -909,13 +960,11 @@ class Requests {
 			$huffman_encoded = true;
 		}
 
-		if ($huffman_encoded) {
-			if (false !== ($decompressed = @gzinflate(substr($gzData, 2)))) {
-				return $decompressed;
-			}
-		}
+		if ($huffman_encoded && false !== ($decompressed = @gzinflate(substr($gzData, 2)))) {
+            return $decompressed;
+        }
 
-		if ("\x50\x4b\x03\x04" == substr($gzData, 0, 4)) {
+		if (strpos($gzData, "\x50\x4b\x03\x04") === 0) {
 			// ZIP file format header
 			// Offset 6: 2 bytes, General-purpose field
 			// Offset 26: 2 bytes, filename length

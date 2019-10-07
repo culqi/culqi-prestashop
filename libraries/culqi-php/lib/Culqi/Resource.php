@@ -11,6 +11,7 @@ class Resource extends Client {
 
     /**
      * Constructor.
+     * @param $culqi
      */
     public function __construct($culqi)
     {

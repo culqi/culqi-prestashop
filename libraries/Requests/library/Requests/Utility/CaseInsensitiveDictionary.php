@@ -20,11 +20,13 @@ class Requests_Utility_CaseInsensitiveDictionary implements ArrayAccess, Iterato
 	 */
 	protected $data = array();
 
-	/**
-	 * Creates a case insensitive dictionary.
-	 *
-	 * @param array $data Dictionary/map to convert to case-insensitive
-	 */
+    /**
+     * Creates a case insensitive dictionary.
+     *
+     * @param array $data Dictionary/map to convert to case-insensitive
+     * @throws Requests_Exception
+     * @throws Requests_Exception
+     */
 	public function __construct(array $data = array()) {
 		foreach ($data as $key => $value) {
 			$this->offsetSet($key, $value);

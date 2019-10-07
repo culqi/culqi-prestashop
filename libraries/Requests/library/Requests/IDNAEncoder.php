@@ -34,12 +34,14 @@ class Requests_IDNAEncoder {
 	const BOOTSTRAP_INITIAL_N    = 128;
 	/**#@-*/
 
-	/**
-	 * Encode a hostname using Punycode
-	 *
-	 * @param string $string Hostname
-	 * @return string Punycode-encoded hostname
-	 */
+    /**
+     * Encode a hostname using Punycode
+     *
+     * @param string $string Hostname
+     * @return string Punycode-encoded hostname
+     * @throws Requests_Exception
+     * @throws Requests_Exception
+     */
 	public static function encode($string) {
 		$parts = explode('.', $string);
 		foreach ($parts as &$part) {
@@ -192,18 +194,18 @@ class Requests_IDNAEncoder {
 
 			if (
 				// Non-shortest form sequences are invalid
-				   $length > 1 && $character <= 0x7F
-				|| $length > 2 && $character <= 0x7FF
-				|| $length > 3 && $character <= 0xFFFF
+				   ($length > 1 && $character <= 0x7F)
+				|| ($length > 2 && $character <= 0x7FF)
+				|| ($length > 3 && $character <= 0xFFFF)
 				// Outside of range of ucschar codepoints
 				// Noncharacters
 				|| ($character & 0xFFFE) === 0xFFFE
-				|| $character >= 0xFDD0 && $character <= 0xFDEF
+				|| ($character >= 0xFDD0 && $character <= 0xFDEF)
 				|| (
 					// Everything else not in ucschar
-					   $character > 0xD7FF && $character < 0xF900
+					   ($character > 0xD7FF && $character < 0xF900)
 					|| $character < 0x20
-					|| $character > 0x7E && $character < 0xA0
+					|| ($character > 0x7E && $character < 0xA0)
 					|| $character > 0xEFFFD
 				)
 			) {
@@ -261,7 +263,7 @@ class Requests_IDNAEncoder {
 		sort($extended);
 		$b = $h;
 #		[copy them] followed by a delimiter if b > 0
-		if (strlen($output) > 0) {
+		if ($output !== '') {
 			$output .= '-';
 		}
 #		{if the input contains a non-basic code point < n then fail}
@@ -275,52 +277,52 @@ class Requests_IDNAEncoder {
 #			let n = m
 			$n = $m;
 #			for each code point c in the input (in order) do begin
-			for ($num = 0; $num < count($codepoints); $num++) {
-				$c = $codepoints[$num];
+            foreach ($codepoints as $numValue) {
+                $c = $numValue;
 #				if c < n then increment delta, fail on overflow
-				if ($c < $n) {
-					$delta++;
-				}
+                if ($c < $n) {
+                    $delta++;
+                }
 #				if c == n then begin
-				elseif ($c === $n) {
+                elseif ($c === $n) {
 #					let q = delta
-					$q = $delta;
+                    $q = $delta;
 #					for k = base to infinity in steps of base do begin
-					for ($k = self::BOOTSTRAP_BASE; ; $k += self::BOOTSTRAP_BASE) {
+                    for ($k = self::BOOTSTRAP_BASE; ; $k += self::BOOTSTRAP_BASE) {
 #						let t = tmin if k <= bias {+ tmin}, or
 #								tmax if k >= bias + tmax, or k - bias otherwise
-						if ($k <= ($bias + self::BOOTSTRAP_TMIN)) {
-							$t = self::BOOTSTRAP_TMIN;
-						}
-						elseif ($k >= ($bias + self::BOOTSTRAP_TMAX)) {
-							$t = self::BOOTSTRAP_TMAX;
-						}
-						else {
-							$t = $k - $bias;
-						}
+                        if ($k <= ($bias + self::BOOTSTRAP_TMIN)) {
+                            $t = self::BOOTSTRAP_TMIN;
+                        }
+                        elseif ($k >= ($bias + self::BOOTSTRAP_TMAX)) {
+                            $t = self::BOOTSTRAP_TMAX;
+                        }
+                        else {
+                            $t = $k - $bias;
+                        }
 #						if q < t then break
-						if ($q < $t) {
-							break;
-						}
+                        if ($q < $t) {
+                            break;
+                        }
 #						output the code point for digit t + ((q - t) mod (base - t))
-						$digit = $t + (($q - $t) % (self::BOOTSTRAP_BASE - $t));
-						$output .= self::digit_to_char($digit);
+                        $digit = $t + (($q - $t) % (self::BOOTSTRAP_BASE - $t));
+                        $output .= self::digit_to_char($digit);
 #						let q = (q - t) div (base - t)
-						$q = floor(($q - $t) / (self::BOOTSTRAP_BASE - $t));
+                        $q = floor(($q - $t) / (self::BOOTSTRAP_BASE - $t));
 #					end
-					}
+                    }
 #					output the code point for digit q
-					$output .= self::digit_to_char($q);
+                    $output .= self::digit_to_char($q);
 #					let bias = adapt(delta, h + 1, test h equals b?)
-					$bias = self::adapt($delta, $h + 1, $h === $b);
+                    $bias = self::adapt($delta, $h + 1, $h === $b);
 #					let delta = 0
-					$delta = 0;
+                    $delta = 0;
 #					increment h
-					$h++;
+                    $h++;
 #				end
-				}
+                }
 #			end
-			}
+            }
 #			increment delta and n
 			$delta++;
 			$n++;
@@ -347,7 +349,7 @@ class Requests_IDNAEncoder {
 		}
 		// @codeCoverageIgnoreEnd
 		$digits = 'abcdefghijklmnopqrstuvwxyz0123456789';
-		return substr($digits, $digit, 1);
+		return $digits[$digit];
 	}
 
 	/**

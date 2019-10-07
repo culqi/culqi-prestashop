@@ -98,11 +98,12 @@ class Requests_Session {
 		$this->options[$key] = $value;
 	}
 
-	/**
-	 * Remove a property's value
-	 *
-	 * @param string $key Property key
-	 */
+    /**
+     * Remove a property's value
+     *
+     * @param string $key Property key
+     * @return bool
+     */
 	public function __isset($key) {
 		return isset($this->options[$key]);
 	}
@@ -125,23 +126,38 @@ class Requests_Session {
 	 * @param array $options
 	 * @return Requests_Response
 	 */
-	/**
-	 * Send a GET request
-	 */
+    /**
+     * Send a GET request
+     * @param $url
+     * @param array $headers
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public function get($url, $headers = array(), $options = array()) {
 		return $this->request($url, $headers, null, Requests::GET, $options);
 	}
 
-	/**
-	 * Send a HEAD request
-	 */
+    /**
+     * Send a HEAD request
+     * @param $url
+     * @param array $headers
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public function head($url, $headers = array(), $options = array()) {
 		return $this->request($url, $headers, null, Requests::HEAD, $options);
 	}
 
-	/**
-	 * Send a DELETE request
-	 */
+    /**
+     * Send a DELETE request
+     * @param $url
+     * @param array $headers
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public function delete($url, $headers = array(), $options = array()) {
 		return $this->request($url, $headers, null, Requests::DELETE, $options);
 	}
@@ -155,28 +171,46 @@ class Requests_Session {
 	 * @param array $options
 	 * @return Requests_Response
 	 */
-	/**
-	 * Send a POST request
-	 */
+    /**
+     * Send a POST request
+     * @param $url
+     * @param array $headers
+     * @param array $data
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public function post($url, $headers = array(), $data = array(), $options = array()) {
 		return $this->request($url, $headers, $data, Requests::POST, $options);
 	}
 
-	/**
-	 * Send a PUT request
-	 */
+    /**
+     * Send a PUT request
+     * @param $url
+     * @param array $headers
+     * @param array $data
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public function put($url, $headers = array(), $data = array(), $options = array()) {
 		return $this->request($url, $headers, $data, Requests::PUT, $options);
 	}
 
-	/**
-	 * Send a PATCH request
-	 *
-	 * Note: Unlike {@see post} and {@see put}, `$headers` is required, as the
-	 * specification recommends that should send an ETag
-	 *
-	 * @link https://tools.ietf.org/html/rfc5789
-	 */
+    /**
+     * Send a PATCH request
+     *
+     * Note: Unlike {@see post} and {@see put}, `$headers` is required, as the
+     * specification recommends that should send an ETag
+     *
+     * @link https://tools.ietf.org/html/rfc5789
+     * @param $url
+     * @param $headers
+     * @param array $data
+     * @param array $options
+     * @return Requests_Response
+     * @throws Requests_Exception
+     */
 	public function patch($url, $headers, $data = array(), $options = array()) {
 		return $this->request($url, $headers, $data, Requests::PATCH, $options);
 	}

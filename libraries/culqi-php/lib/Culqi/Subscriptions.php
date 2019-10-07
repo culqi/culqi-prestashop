@@ -9,42 +9,66 @@ namespace Culqi;
  */
 class Subscriptions extends Resource {
 
-    const URL_SUBSCRIPTIONS = "/subscriptions/";
+    const URL_SUBSCRIPTIONS = '/subscriptions/';
 
     /**
      * @param array|null $options
      *
      * @return all Subscriptions.
+     * @throws Error\AuthenticationError
+     * @throws Error\InvalidApiKey
+     * @throws Error\MethodNotAllowed
+     * @throws Error\NotFound
+     * @throws Error\UnableToConnect
+     * @throws Error\UnhandledError
      */
     public function all($options = NULL) {
-        return $this->request("GET", self::URL_SUBSCRIPTIONS, $api_key = $this->culqi->api_key, $options);
+        return $this->request('GET', self::URL_SUBSCRIPTIONS, $api_key = $this->culqi->api_key, $options);
     }
 
     /**
      * @param array|null $options
      *
      * @return create Subscription response.
+     * @throws Error\AuthenticationError
+     * @throws Error\InvalidApiKey
+     * @throws Error\MethodNotAllowed
+     * @throws Error\NotFound
+     * @throws Error\UnableToConnect
+     * @throws Error\UnhandledError
      */
     public function create($options = NULL) {
-        return $this->request("POST", self::URL_SUBSCRIPTIONS, $api_key = $this->culqi->api_key, $options);
+        return $this->request('POST', self::URL_SUBSCRIPTIONS, $api_key = $this->culqi->api_key, $options);
     }
 
     /**
      * @param string|null $id
      *
      * @return delete a Subscription response.
+     * @throws Error\AuthenticationError
+     * @throws Error\InvalidApiKey
+     * @throws Error\MethodNotAllowed
+     * @throws Error\NotFound
+     * @throws Error\UnableToConnect
+     * @throws Error\UnhandledError
      */
     public function delete($id = NULL) {
-       return $this->request("DELETE", self::URL_SUBSCRIPTIONS . $id . "/", $api_key = $this->culqi->api_key);
+       return $this->request('DELETE', self::URL_SUBSCRIPTIONS . $id . '/', $api_key = $this->culqi->api_key);
     }
 
     /**
      * @param string|null $id
      *
      * @return get a Subscription.
+     * @throws Error\AuthenticationError
+     * @throws Error\InvalidApiKey
+     * @throws Error\MethodNotAllowed
+     * @throws Error\NotFound
+     * @throws Error\UnableToConnect
+     * @throws Error\UnhandledError
      */
     public function get($id = NULL) {
-        return $this->request("GET", self::URL_SUBSCRIPTIONS . $id . "/", $api_key = $this->culqi->api_key);
+        return $this->request('GET', self::URL_SUBSCRIPTIONS . $id . '/', $api_key = $this->culqi->api_key);
     }
 
     /**
@@ -52,9 +76,15 @@ class Subscriptions extends Resource {
      * @param array|null $options
      *
      * @return update Subscription response.
+     * @throws Error\AuthenticationError
+     * @throws Error\InvalidApiKey
+     * @throws Error\MethodNotAllowed
+     * @throws Error\NotFound
+     * @throws Error\UnableToConnect
+     * @throws Error\UnhandledError
      */
     public function update($id = NULL, $options = NULL) {
-        return $this->request("PATCH", self::URL_SUBSCRIPTIONS . $id . "/", $api_key = $this->culqi->api_key, $options);
+        return $this->request('PATCH', self::URL_SUBSCRIPTIONS . $id . '/', $api_key = $this->culqi->api_key, $options);
     }
 
 }
