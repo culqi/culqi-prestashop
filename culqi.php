@@ -1,17 +1,18 @@
 <?php
-if (!defined('_PS_VERSION_'))
+if (!defined('_PS_VERSION_')) {
     exit;
+}
 
 define('CULQI_SDK_VERSION', '1.3.0');
 
 /**
  * Calling dependencies
  */
-include_once dirname(__FILE__).'/libraries/Requests/library/Requests.php';
+include_once __DIR__ .'/libraries/Requests/library/Requests.php';
 
 Requests::register_autoloader();
 
-include_once dirname(__FILE__).'/libraries/culqi-php/lib/culqi.php';
+include_once __DIR__ .'/libraries/culqi-php/lib/culqi.php';
 
 
 class Culqi extends PaymentModule
@@ -19,9 +20,9 @@ class Culqi extends PaymentModule
 
     private $_postErrors = array();
 
-    const MODULE_NAME = "culqi";
-    const MODULE_AUTHOR = "Team Culqi (Brayan Cruces)";
-    const MODULE_NAME_DISP = "Culqi";
+    const MODULE_NAME = 'culqi';
+    const MODULE_AUTHOR = 'Team Culqi (Brayan Cruces)';
+    const MODULE_NAME_DISP = 'Culqi';
 
     public function __construct()
     {
@@ -29,7 +30,7 @@ class Culqi extends PaymentModule
         $this->tab = 'payments_gateways';
         $this->version = '2.3.2';
         $this->controllers = array('chargeajax', 'payment', 'validation', 'postpayment', 'postpendingpayment', 'orderajax');
-        $this->author = "Team Culqi (Brayan Cruces)";
+        $this->author = 'Team Culqi (Brayan Cruces)';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.5', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
@@ -45,15 +46,15 @@ class Culqi extends PaymentModule
     public function install()
     {
         // Run sql for creating DB tables
-        Db::getInstance()->execute("CREATE TABLE IF NOT EXISTS "._DB_PREFIX_."culqi_order (
+        Db::getInstance()->execute('CREATE TABLE IF NOT EXISTS ' ._DB_PREFIX_. 'culqi_order (
             id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             culqi_charge_id varchar(255) NULL,
             amount int NULL,
             installments int NULL,
             email varchar(255) NULL,
             prestashop_order_id varchar(255) NULL
-            ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8
-          ");
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8
+          ');
 
         $this->createStates();
 
@@ -70,9 +71,9 @@ class Culqi extends PaymentModule
     {
         if(empty($address->address1)) {
             return $address->address2;
-        } else {
-            return $address->address1;
         }
+
+        return $address->address1;
     }
 
     private function getPhone($address)
@@ -80,9 +81,9 @@ class Culqi extends PaymentModule
         if(empty($address->phone_mobile))
         {
             return $address->phone;
-        } else {
-            return $address->phone_mobile;
         }
+
+        return $address->phone_mobile;
     }
 
     private function getCustomerId()
@@ -90,9 +91,9 @@ class Culqi extends PaymentModule
         if ($this->context->customer->isLogged())
         {
             return (int) $this->context->customer->id;
-        } else {
-            return 0;
         }
+
+        return 0;
     }
 
     public function errorPayment($mensaje)
@@ -119,26 +120,26 @@ class Culqi extends PaymentModule
 
         $cargo = $culqi->Charges->create(
             array(
-              "amount" => $amount,
-              "antifraud_details" => array(
-                  "address" => $this->getAddress($userAddress),
-                  "address_city" => $userAddress->city,
-                  "country_code" => $userCountry->iso_code,
-                  "first_name" => $this->context->customer->firstname,
-                  "last_name" => $this->context->customer->lastname,
-                  "phone_number" => $this->getPhone($userAddress)
+              'amount' => $amount,
+              'antifraud_details' => array(
+                  'address' => $this->getAddress($userAddress),
+                  'address_city' => $userAddress->city,
+                  'country_code' => $userCountry->iso_code,
+                  'first_name' => $this->context->customer->firstname,
+                  'last_name' => $this->context->customer->lastname,
+                  'phone_number' => $this->getPhone($userAddress)
               ),
-              "capture" => true,
-              "currency_code" => $this->context->currency->iso_code,
-              "description" => "Orden de compra ".$cart->id,
-              "installments" => $installments,
-              "metadata" => array("order_id"=>$order_id),
-              "email" => $email,
-              "source_id" => $token_id
+              'capture' => true,
+              'currency_code' => $this->context->currency->iso_code,
+              'description' => 'Orden de compra ' .$cart->id,
+              'installments' => $installments,
+              'metadata' => array('order_id' =>$order_id),
+              'email' => $email,
+              'source_id' => $token_id
             )
         );
 
-        if($cargo->object == "charge") {
+        if($cargo->object === 'charge') {
           Db::getInstance()->insert('culqi_order', array(
               'culqi_charge_id'     => (string)$cargo->id,
               'amount'              => $amount,
@@ -167,11 +168,11 @@ class Culqi extends PaymentModule
   
             $order = $culqi->Orders->update($order_id,
               array(                
-                "metadata" => array( 
-                   "cart_id"=> (int)$cart->id,
-                   "uid_module" => "123456789",
+                'metadata' => array(
+                   'cart_id' => (int)$cart->id,
+                   'uid_module' => '123456789',
                    //"customer_secure_key" => $OrderObject->secure_key, 
-                   "platform" => "ps-1.6"
+                   'platform' => 'ps-1.6'
                  )
               )
              ); 
@@ -196,18 +197,18 @@ class Culqi extends PaymentModule
 
           $order = $culqi->Orders->create(
             array(
-              "amount" => $this->removeComma($cart->getOrderTotal(true, Cart::BOTH)),
-              "currency_code" => $this->context->currency->iso_code,
-              "description" => "Orden de compra ".$cart->id,        
-              "order_number" => "ps-".$cart->id."-".rand(1, 99999), 
-              "client_details" => array( 
-                 "first_name"=> $this->context->customer->firstname,
-                 "last_name" => $this->context->customer->lastname,
-                 "email" => $this->context->customer->email, 
-                 "phone_number" => "+51945145282"
+              'amount' => $this->removeComma($cart->getOrderTotal(true, Cart::BOTH)),
+              'currency_code' => $this->context->currency->iso_code,
+              'description' => 'Orden de compra ' .$cart->id,
+              'order_number' => 'ps-' .$cart->id. '-' .mt_rand(1, 99999),
+              'client_details' => array(
+                 'first_name' => $this->context->customer->firstname,
+                 'last_name' => $this->context->customer->lastname,
+                 'email' => $this->context->customer->email,
+                 'phone_number' => '+51945145282'
                ),
-               "confirm" => false,
-               "expiration_date" => time() + Configuration::get('CULQI_ORDER_MAX_DURATION')*60*60  
+               'confirm' => false,
+               'expiration_date' => time() + Configuration::get('CULQI_ORDER_MAX_DURATION')*60*60
             )
            ); 
            
@@ -234,7 +235,9 @@ class Culqi extends PaymentModule
             'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
         )); 
 
-        if(Configuration::get('CULQI_ENABLED_MULTIPAYMENT')) return $this->display(__FILE__, 'payment_multi.tpl'); 
+        if(Configuration::get('CULQI_ENABLED_MULTIPAYMENT')) {
+            return $this->display(__FILE__, 'payment_multi.tpl');
+        }
 
         return $this->display(__FILE__, 'payment.tpl'); 
     }
@@ -290,23 +293,25 @@ class Culqi extends PaymentModule
 
     public function uninstallStates()
     {
-        if (Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state WHERE id_order_state = ( SELECT value
-                FROM " . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_OK' )") &&
-            Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_order_state = ( SELECT value
-                FROM " . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_OK' )") &&
-            Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state WHERE id_order_state = ( SELECT value
-                FROM " . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_ERROR' )") &&
-            Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_order_state = ( SELECT value
-                FROM " . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_ERROR' )") &&  
-            Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state WHERE id_order_state = ( SELECT value
-                FROM " . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_PENDING' )") &&
-            Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_order_state = ( SELECT value
-                FROM " . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_PENDING' )" ) && 
-            Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state WHERE id_order_state = ( SELECT value
-                FROM " . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_EXPIRED' )") &&
-            Db::getInstance()->Execute("DELETE FROM " . _DB_PREFIX_ . "order_state_lang WHERE id_order_state = ( SELECT value
-                FROM " . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_EXPIRED' )")    
-        ) return true;
+        if (Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'order_state WHERE id_order_state = ( SELECT value
+                FROM ' . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_OK' )") &&
+            Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'order_state_lang WHERE id_order_state = ( SELECT value
+                FROM ' . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_OK' )") &&
+            Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'order_state WHERE id_order_state = ( SELECT value
+                FROM ' . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_ERROR' )") &&
+            Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'order_state_lang WHERE id_order_state = ( SELECT value
+                FROM ' . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_ERROR' )") &&
+            Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'order_state WHERE id_order_state = ( SELECT value
+                FROM ' . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_PENDING' )") &&
+            Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'order_state_lang WHERE id_order_state = ( SELECT value
+                FROM ' . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_PENDING' )" ) &&
+            Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'order_state WHERE id_order_state = ( SELECT value
+                FROM ' . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_EXPIRED' )") &&
+            Db::getInstance()->Execute('DELETE FROM ' . _DB_PREFIX_ . 'order_state_lang WHERE id_order_state = ( SELECT value
+                FROM ' . _DB_PREFIX_ . "configuration WHERE name =  'CULQI_STATE_EXPIRED' )")
+        ) {
+            return true;
+        }
         return false;
     }
 
@@ -323,8 +328,9 @@ class Culqi extends PaymentModule
         || !Configuration::deleteByName('CULQI_CODIGO_COMERCIO') 
         || !Configuration::deleteByName('CULQI_ENABLED_MULTIPAYMENT')           
         || !Configuration::deleteByName('CULQI_ORDER_MAX_DURATION')   
-        || !$this->uninstallStates())
+        || !$this->uninstallStates()) {
             return false;
+        }
         return true;
     }
 
@@ -530,7 +536,7 @@ class Culqi extends PaymentModule
         $helper->table = $this->table;
         $lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $helper->default_form_language = $lang->id;
-        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+        $helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ?: 0;
         $this->fields_form = array();
         $helper->id = (int)Tools::getValue('id_carrier');
         $helper->identifier = $this->identifier;
@@ -553,7 +559,7 @@ class Culqi extends PaymentModule
             'CULQI_CODIGO_COMERCIO' => Tools::getValue('CULQI_CODIGO_COMERCIO', Configuration::get('CULQI_CODIGO_COMERCIO')), 
             'CULQI_ENABLED_MULTIPAYMENT' => Tools::getValue('CULQI_ENABLED_MULTIPAYMENT', Configuration::get('CULQI_ENABLED_MULTIPAYMENT')), 
             'CULQI_ORDER_MAX_DURATION' => Tools::getValue('CULQI_ORDER_MAX_DURATION', Configuration::get('CULQI_ORDER_MAX_DURATION')), 
-            'CULQI_ORDER_WEBHOOK' => Tools::getValue('CULQI_ORDER_WEBHOOK', _PS_BASE_URL_.__PS_BASE_URI__."modules/culqi/culqi_webhook.php")           
+            'CULQI_ORDER_WEBHOOK' => Tools::getValue('CULQI_ORDER_WEBHOOK', _PS_BASE_URL_.__PS_BASE_URI__. 'modules/culqi/culqi_webhook.php')
 
         );
     }
@@ -571,7 +577,7 @@ class Culqi extends PaymentModule
     }
 
     public function removeComma($amount) {
-        return str_replace(".","",str_replace(',', '', number_format($amount,2,'.',',')));
+        return str_replace(array(',', '.'), '', number_format($amount, 2, '.', ','));
     } 
 
     
@@ -611,21 +617,21 @@ class Culqi extends PaymentModule
            }*/
 
            if (empty($metadata)) {
-            exit("Error: Metadata vacia"); 
+            exit('Error: Metadata vacia');
            } 
 
            if (empty($amount) || empty($currencyCode) || empty($state)) {
-            exit("Error: valores de la orden incorrectos"); 
+            exit('Error: valores de la orden incorrectos');
            }  
 
            if(Tools::strlen($cartID) < 1){
-            exit("Error: Valores personalizados incorrectos");
+            exit('Error: Valores personalizados incorrectos');
            } 
 
            if (Validate::isLoadedObject(new Cart($cartID))) {
             $ObjCart = new Cart($cartID);
            } else {
-             exit("Error: El carrito no existe");
+             exit('Error: El carrito no existe');
            } 
 
            // Validar carro con informacion de orden  
@@ -645,23 +651,22 @@ class Culqi extends PaymentModule
             }*/
 
             if ((int)Configuration::get('CULQI_STATE_OK') == $OrderObject->current_state) {
-                exit("WEBHOOK CALLBACK: La orden ya esta completa");
-            } else {  
-                
-                // Orden pagada
-                if($state == 'paid') { 
-                    error_log('Estado: Pagada'); 
-                    $OrderObject->setCurrentState((int)Configuration::get('CULQI_STATE_OK')); 
-                }
-
-                // Orden expirada
-                if($state == 'expired') { 
-                    error_log('Estado: Expirada'); 
-                    $OrderObject->setCurrentState((int)Configuration::get('CULQI_STATE_EXPIRED'));
-
-                }
-                exit("WEBHOOK CALLBACK: OK");
+                exit('WEBHOOK CALLBACK: La orden ya esta completa');
             }
+
+// Orden pagada
+              if($state == 'paid') {
+                  error_log('Estado: Pagada');
+                  $OrderObject->setCurrentState((int)Configuration::get('CULQI_STATE_OK'));
+              }
+
+              // Orden expirada
+              if($state == 'expired') {
+                  error_log('Estado: Expirada');
+                  $OrderObject->setCurrentState((int)Configuration::get('CULQI_STATE_EXPIRED'));
+
+              }
+              exit('WEBHOOK CALLBACK: OK');
           }        
                         
 

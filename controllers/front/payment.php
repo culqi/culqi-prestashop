@@ -46,7 +46,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         }
          
         $this->context->smarty->assign('shop_name', $this->context->shop->name);
-        $this->context->smarty->assign('descripcion', "Orden de compra ".$cart->id);
+        $this->context->smarty->assign('descripcion', 'Orden de compra ' .$cart->id);
         $this->context->smarty->assign('orden', $cart->id);
         $this->context->smarty->assign('currency', $this->context->currency->iso_code);      
 

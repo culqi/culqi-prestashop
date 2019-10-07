@@ -57,13 +57,15 @@ class Requests_Cookie {
 	 */
 	public $reference_time = 0;
 
-	/**
-	 * Create a new cookie object
-	 *
-	 * @param string $name
-	 * @param string $value
-	 * @param array|Requests_Utility_CaseInsensitiveDictionary $attributes Associative array of attribute data
-	 */
+    /**
+     * Create a new cookie object
+     *
+     * @param string $name
+     * @param string $value
+     * @param array|Requests_Utility_CaseInsensitiveDictionary $attributes Associative array of attribute data
+     * @param array $flags
+     * @param null $reference_time
+     */
 	public function __construct($name, $value, $attributes = array(), $flags = array(), $reference_time = null) {
 		$this->name = $name;
 		$this->value = $value;
@@ -202,14 +204,14 @@ class Requests_Cookie {
 			return true;
 		}
 
-		if (strlen($request_path) > strlen($cookie_path) && substr($request_path, 0, strlen($cookie_path)) === $cookie_path) {
+		if (strlen($request_path) > strlen($cookie_path) && strpos($request_path, $cookie_path) === 0) {
 			if (substr($cookie_path, -1) === '/') {
 				// The cookie-path is a prefix of the request-path, and the last
 				// character of the cookie-path is %x2F ("/").
 				return true;
 			}
 
-			if (substr($request_path, strlen($cookie_path), 1) === '/') {
+			if ($request_path[strlen($cookie_path)] === '/') {
 				// The cookie-path is a prefix of the request-path, and the
 				// first character of the request-path that is not included in
 				// the cookie-path is a %x2F ("/") character.
@@ -289,7 +291,7 @@ class Requests_Cookie {
 
 			case 'domain':
 				// Domain normalization, as per RFC 6265 section 5.2.3
-				if ($value[0] === '.') {
+				if (strpos($value, '.') === 0) {
 					$value = substr($value, 1);
 				}
 
@@ -369,16 +371,19 @@ class Requests_Cookie {
 		return $this->value;
 	}
 
-	/**
-	 * Parse a cookie string into a cookie object
-	 *
-	 * Based on Mozilla's parsing code in Firefox and related projects, which
-	 * is an intentional deviation from RFC 2109 and RFC 2616. RFC 6265
-	 * specifies some of this handling, but not in a thorough manner.
-	 *
-	 * @param string Cookie header value (from a Set-Cookie header)
-	 * @return Requests_Cookie Parsed cookie object
-	 */
+    /**
+     * Parse a cookie string into a cookie object
+     *
+     * Based on Mozilla's parsing code in Firefox and related projects, which
+     * is an intentional deviation from RFC 2109 and RFC 2616. RFC 6265
+     * specifies some of this handling, but not in a thorough manner.
+     *
+     * @param $string
+     * @param string $name
+     * @param null $reference_time
+     * @return Requests_Cookie Parsed cookie object
+     * @throws Requests_Exception
+     */
 	public static function parse($string, $name = '', $reference_time = null) {
 		$parts = explode(';', $string);
 		$kvparts = array_shift($parts);
@@ -442,7 +447,7 @@ class Requests_Cookie {
 			$parsed = self::parse($header, '', $time);
 
 			// Default domain/path attributes
-			if (empty($parsed->attributes['domain']) && !empty($origin)) {
+			if (empty($parsed->attributes['domain']) && $origin !== null) {
 				$parsed->attributes['domain'] = $origin->host;
 				$parsed->flags['host-only'] = true;
 			}
@@ -451,11 +456,11 @@ class Requests_Cookie {
 			}
 
 			$path_is_valid = (!empty($parsed->attributes['path']) && $parsed->attributes['path'][0] === '/');
-			if (!$path_is_valid && !empty($origin)) {
+			if (!$path_is_valid && $origin !== null) {
 				$path = $origin->path;
 
 				// Default path normalization as per RFC 6265 section 5.1.4
-				if (substr($path, 0, 1) !== '/') {
+				if (strpos($path, '/') !== 0) {
 					// If the uri-path is empty or if the first character of
 					// the uri-path is not a %x2F ("/") character, output
 					// %x2F ("/") and skip the remaining steps.
@@ -477,7 +482,7 @@ class Requests_Cookie {
 			}
 
 			// Reject invalid cookie domains
-			if (!empty($origin) && !$parsed->domain_matches($origin->host)) {
+			if ($origin !== null && !$parsed->domain_matches($origin->host)) {
 				continue;
 			}
 
@@ -487,13 +492,14 @@ class Requests_Cookie {
 		return $cookies;
 	}
 
-	/**
-	 * Parse all Set-Cookie headers from request headers
-	 *
-	 * @codeCoverageIgnore
-	 * @deprecated Use {@see Requests_Cookie::parse_from_headers}
-	 * @return string
-	 */
+    /**
+     * Parse all Set-Cookie headers from request headers
+     *
+     * @codeCoverageIgnore
+     * @param Requests_Response_Headers $headers
+     * @return array
+     * @deprecated Use {@see Requests_Cookie::parse_from_headers}
+     */
 	public static function parseFromHeaders(Requests_Response_Headers $headers) {
 		return self::parse_from_headers($headers);
 	}

@@ -1,6 +1,6 @@
 <style type="text/css">
 	.culqi-payment {
-		padding: 30px 0px 50px 200px !important;
+		padding: 30px 0 50px 200px !important;
 		background: url('https://i.imgur.com/6fbO8KQ.png') 23px 22px no-repeat #fbfbfb;
 	}
 </style>

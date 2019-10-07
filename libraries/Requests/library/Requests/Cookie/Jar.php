@@ -29,12 +29,14 @@ class Requests_Cookie_Jar implements ArrayAccess, IteratorAggregate {
 		$this->cookies = $cookies;
 	}
 
-	/**
-	 * Normalise cookie data into a Requests_Cookie
-	 *
-	 * @param string|Requests_Cookie $cookie
-	 * @return Requests_Cookie
-	 */
+    /**
+     * Normalise cookie data into a Requests_Cookie
+     *
+     * @param string|Requests_Cookie $cookie
+     * @param null $key
+     * @return Requests_Cookie
+     * @throws Requests_Exception
+     */
 	public function normalize_cookie($cookie, $key = null) {
 		if ($cookie instanceof Requests_Cookie) {
 			return $cookie;
@@ -43,13 +45,15 @@ class Requests_Cookie_Jar implements ArrayAccess, IteratorAggregate {
 		return Requests_Cookie::parse($cookie, $key);
 	}
 
-	/**
-	 * Normalise cookie data into a Requests_Cookie
-	 *
-	 * @codeCoverageIgnore
-	 * @deprecated Use {@see Requests_Cookie_Jar::normalize_cookie}
-	 * @return Requests_Cookie
-	 */
+    /**
+     * Normalise cookie data into a Requests_Cookie
+     *
+     * @codeCoverageIgnore
+     * @param $cookie
+     * @param null $key
+     * @return Requests_Cookie
+     * @deprecated Use {@see Requests_Cookie_Jar::normalize_cookie}
+     */
 	public function normalizeCookie($cookie, $key = null) {
 		return $this->normalize_cookie($cookie, $key);
 	}
@@ -162,7 +166,7 @@ class Requests_Cookie_Jar implements ArrayAccess, IteratorAggregate {
 	 *
 	 * @var Requests_Response $response
 	 */
-	public function before_redirect_check(Requests_Response &$return) {
+	public function before_redirect_check(Requests_Response $return) {
 		$url = $return->url;
 		if (!$url instanceof Requests_IRI) {
 			$url = new Requests_IRI($url);
