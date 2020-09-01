@@ -85,7 +85,7 @@
                                 $('body').waitMe('hide');
                                 showResult('green',result.outcome.user_message); 
                                 Culqi.close();
-                                redirect();
+                                redirect(result.id);
                                 }
                                 if(result.object === 'error'){
                                 $('body').waitMe('hide');
@@ -132,7 +132,7 @@
                                     if(result.object === 'order'){
                                         $('body').waitMe('hide'); 
                                         console.log('Redirigiendo....');
-                                        redirectPending();
+                                        redirectPending(result.id);
                                     }
                                     if(result.object === 'error'){
                                     $('body').waitMe('hide');
@@ -174,14 +174,14 @@
                 $('#showresultcontent').html(message);
                 }
 
-                function redirect() {
+                function redirect(value) {
                     var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                    location.href = url;
+                    location.href = url + '?validation=' + value;
                 }; 
 
-                function redirectPending() {
+                function redirectPending(value) {
                     var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpendingpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                    location.href = url;
+                    location.href = url + '?validation=' + value;
                 };
 
                 function fnReplace(url) {
@@ -244,7 +244,7 @@
                                 if(result.object === 'charge'){
                                 $('body').waitMe('hide');
                                 showResult('green',result.outcome.user_message);
-                                redirect();
+                                redirect(result.id);
                                 }
                                 if(result.object === 'error'){
                                 $('body').waitMe('hide');
@@ -276,9 +276,9 @@
                     $('#showresultcontent').html(message);
                     }
 
-                    function redirect() {
+                    function redirect(value) {
                         var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                        location.href = url;
+                        location.href = url + '?validation=' + value;
                     };
 
                     function fnReplace(url) {
