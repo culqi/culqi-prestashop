@@ -89,6 +89,7 @@
                                 }
                                 if(result.object === 'error'){
                                 $('body').waitMe('hide');
+                                Culqi.close();
                                 showResult('red',result.user_message);
 
                                 }
@@ -136,6 +137,7 @@
                                     }
                                     if(result.object === 'error'){
                                     $('body').waitMe('hide');
+                                    Culqi.close();
                                     }
                                 } 
                                 
@@ -248,6 +250,7 @@
                                 }
                                 if(result.object === 'error'){
                                 $('body').waitMe('hide');
+                                Culqi.close();                                
                                 showResult('red',result.user_message);
 
                                 }
