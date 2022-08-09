@@ -1,5 +1,14 @@
+#showresult {
+  margin-top:20px;
+}
 #showresultcontent {
   font-size: 16px;
+}
+#left_column {
+    display: none !important;
+}
+#center_column {
+    width: 100% !important;
 }
 .hide {
   display: none;
@@ -41,10 +50,4 @@
     color: white !important;
     border: 0px !important;
     text-align: center !important;
-}
-#left_column {
-    display: none !important;
-}
-#center_column {
-    width: 100% !important;
 }

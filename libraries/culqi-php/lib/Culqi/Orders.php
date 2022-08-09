@@ -8,7 +8,7 @@ namespace Culqi;
  * @package Culqi
  */
 class Orders extends Resource {
-
+    
     const URL_ORDERS = "/orders/";
 
     /**
