@@ -222,6 +222,7 @@
 
 	$('#buyButton').on('click', function(e) {
 		// Abre el formulario con las opciones de Culqi.settings
+		$('#buyButton').attr('disabled', true);
 		generateOrder(e);
 	});
 
@@ -244,6 +245,7 @@
 				});
 				orderid = response;
 				console.log(Culqi);
+				$('#buyButton').removeAttr('disabled');
 				Culqi.open();
 				$('#showresult').hide();
 				e.preventDefault();
@@ -260,6 +262,7 @@
 					culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
 				});
 				orderid = 'ungenereted';
+				$('#buyButton').removeAttr('disabled');
 				Culqi.open();
 				$('#showresult').hide();
 				e.preventDefault();
