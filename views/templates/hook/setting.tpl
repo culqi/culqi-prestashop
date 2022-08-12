@@ -1668,7 +1668,7 @@
 					    Tiempo de expiración de pago
 					</label>
 					<div class="col-lg-8">
-						<input type="number" name="CULQI_TIMEXP" id="CULQI_TIMEXP" value="{$fields_value.CULQI_TIMEXP|escape:'htmlall':'UTF-8'}" class="">
+						<input type="text" name="CULQI_TIMEXP" id="CULQI_TIMEXP" value="{$fields_value.CULQI_TIMEXP|escape:'htmlall':'UTF-8'}" class="">
                         <span id="errortimeexp" class="form-text text-muted" style="display: none; color: red; font-size: 0.8rem !important;">El tiempo de expiración debe ser un valor numérico, mayor a 0 y no mayor a 10 dígitos.</span>
                         <span class="form-text text-muted"> Ingresar el número de horas que tendrá el cliente para pagar su orden. Ejem: 24</span>
 					</div>
