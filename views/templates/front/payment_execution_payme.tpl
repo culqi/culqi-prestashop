@@ -240,7 +240,7 @@
     });
 
     function generateOrder(e) {
-
+        console.log('{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}');
         $.ajax({
             url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'generateorder', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
             data: {  },
