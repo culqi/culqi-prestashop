@@ -211,6 +211,7 @@
                 billetera: {/literal}{$billetera|escape:'htmlall':'UTF-8'}{literal},
                 cuotealo: {/literal}{$cuetealo|escape:'htmlall':'UTF-8'}{literal}
             },
+            installments: true,
             style: {
                 bannerColor: '{/literal}{$color_pallete[0]|escape:'htmlall':'UTF-8'}{literal}',
                 imageBanner: '',
@@ -237,7 +238,7 @@
         // Abre el formulario con las opciones de Culqi.settings
         $('#buyButton').attr('disabled', true);
         generateOrder(e);
-    });
+    }); 
 
     function generateOrder(e) {
         console.log('{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}');
@@ -253,7 +254,7 @@
                     currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
                     amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
                     order: response,
-                    culqiclient: 'pretashop',
+                    culqiclient: 'prestashop',
                     culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
                 });
                 orderid = response;
@@ -271,7 +272,7 @@
                     currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
                     amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
                     //order: 'ord_live_mQjOSWvYKnNgotsY', // esto es solo si se tiene habilitada la opción de billeteras, agentes y/o cuetealo
-                    culqiclient: 'pretashop',
+                    culqiclient: 'prestashop',
                     culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
                 });
                 orderid = 'ungenereted';
