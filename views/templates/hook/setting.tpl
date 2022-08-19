@@ -2380,7 +2380,6 @@
                     timeout: 0,
                     headers: {
                         'Authorization': 'Bearer ' + jQuery('#CULQI_TOKENLOGIN').val(),
-                        'Access-Control-Allow-Origin': '*',
                         "Content-Type": "application/json",
                         "Accept": "*/*"
                     },
@@ -2406,7 +2405,6 @@
                             timeout: 0,
                             headers: {
                                 'Authorization': 'Bearer ' + jQuery('#CULQI_TOKENLOGIN').val(),
-                                'Access-Control-Allow-Origin': '*',
                                 "Content-Type": "application/json",
                                 "Accept": "*/*"
                             },
@@ -2535,8 +2533,13 @@
 
             jQuery.ajax(settings)
                 .done(function (response) {
-                    console.log('response data:::', response.data[0].key);
-                    window.culqi_settings["private_key"] = response.data[0].key;
+                    window.culqi_settings["private_key"] = '';
+                    console.log('response data seckeys:::', response.data);
+                    for(var v=0; v<response.data.length; v++){
+                        if(response.data[v].active){
+                            window.culqi_settings["private_key"] = response.data[v].key;
+                        }
+                    }
                     renderSettings();
                     jQuery("#modalList").modal("hide");
                 })
@@ -2610,6 +2613,7 @@
             setTimeout(function() {
                 $('body').waitMe('hide');
             }, 2000)
+
             jQuery(".merchant_item").click(function (event) {
 
                 const key = jQuery(this).attr("data-key");
