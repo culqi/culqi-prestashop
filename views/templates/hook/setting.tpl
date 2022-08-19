@@ -2380,7 +2380,6 @@
                     timeout: 0,
                     headers: {
                         'Authorization': 'Bearer ' + jQuery('#CULQI_TOKENLOGIN').val(),
-                        'Access-Control-Allow-Origin': '*',
                         "Content-Type": "application/json",
                         "Accept": "*/*"
                     },
@@ -2406,7 +2405,6 @@
                             timeout: 0,
                             headers: {
                                 'Authorization': 'Bearer ' + jQuery('#CULQI_TOKENLOGIN').val(),
-                                'Access-Control-Allow-Origin': '*',
                                 "Content-Type": "application/json",
                                 "Accept": "*/*"
                             },
