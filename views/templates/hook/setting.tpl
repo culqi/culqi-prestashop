@@ -1660,6 +1660,7 @@
 			                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/></svg>
 		                    </span>
                     </div>
+                    <span id="errorpaymentmethod" class="form-text text-muted" style="display: none; color: red; font-size: 0.8rem !important;">Debes seleccionar al menos 1 método de pago.</span>
                 </div>
             </div>
 
@@ -2303,14 +2304,13 @@
      * THE SOFTWARE.
      */
     jQuery(document).ready(function () {
+        var sendsubmit = 0;
         var post = "{$fields_value.CULQI_POST|escape:'htmlall':'UTF-8'}";
         var errors = "{$fields_value.CULQI_POST_ERRORS|escape:'htmlall':'UTF-8'}";
         if(post==1 && errors==0){
             jQuery('#contact-popup').show()
         }
         jQuery('#module_form').submit(function (e) {
-
-            /* */
             console.log('hi save');
             var llavepublica = jQuery('#CULQI_LLAVE_PUBLICA').val().split('_');
             var llaveprivada = jQuery('#CULQI_LLAVE_SECRETA').val().split('_');
@@ -2353,7 +2353,6 @@
 
             console.log('timexp2:::', timexp);
             if(!(timexp=='' || (timexp>0 && timexp.length <= 10 && timexp.length > 0))){
-
                 //e.preventDefault();
                 jQuery('#errortimeexp').html('El tiempo de expiración debe ser un valor numérico, mayor a 0 y no mayor a 10 dígitos.');
                 //alert('El tiempo de expiración no es correcto, verifique.');
@@ -2361,11 +2360,40 @@
                 hasError = '1';
             }
             console.log('hasError:::', hasError);
+
+            if(!(jQuery('#CULQI_METHODS_TARJETA').is(':checked') || jQuery('#CULQI_METHODS_BANCAMOVIL').is(':checked') || jQuery('#CULQI_METHODS_AGENTS').is(':checked') || jQuery('#CULQI_METHODS_WALLETS').is(':checked') || jQuery('#CULQI_METHODS_QUOTEBCP').is(':checked'))){
+                jQuery('#errorpaymentmethod').css('display','block');
+                hasError = '1';
+            }
+
             if(hasError == '1') {
                 e.preventDefault();
+                return false;
             }
             //alert('hi');
+            console.log(sendsubmit);
 
+            sendWebhook();
+            e.preventDefault();
+        });
+
+        jQuery("#modal_login_form_culqi").submit(function (e) {
+
+            e.preventDefault();
+            const data = jQuery(this).serializeArray();
+            console.log('data:::', data);
+
+            const databody = data.reduce((acc, curVal) => {
+                return {  ...acc, [curVal.name]: curVal.value };
+            }, {});
+
+            console.log('databody:::', databody);
+            run_waitMe();
+            fullculqi_login(databody);
+        });
+
+        function sendWebhook(){
+            console.log('jaji');
             var urlwebhook = "{$fields_value.URLAPI_WEBHOOK_INTEG|escape:'htmlall':'UTF-8'}";
             if(jQuery('#produccion').is(':checked')){
                 urlwebhook = "{$fields_value.URLAPI_WEBHOOK_PROD|escape:'htmlall':'UTF-8'}";
@@ -2417,26 +2445,16 @@
                         };
                         jQuery.ajax(settings).done(function (response) {
                             console.log(response);
+                            $('#module_form').unbind('submit').submit();
                         });
+                    }else{
+                        $('#module_form').unbind('submit').submit();
                     }
                 });
+            }else{
+                $('#module_form').unbind('submit').submit();
             }
-        });
-
-        jQuery("#modal_login_form_culqi").submit(function (e) {
-
-            e.preventDefault();
-            const data = jQuery(this).serializeArray();
-            console.log('data:::', data);
-
-            const databody = data.reduce((acc, curVal) => {
-                return {  ...acc, [curVal.name]: curVal.value };
-            }, {});
-
-            console.log('databody:::', databody);
-            run_waitMe();
-            fullculqi_login(databody);
-        });
+        }
 
         function fullculqi_login(data) {
 
