@@ -2421,6 +2421,7 @@
                     }
                 });
             }
+            e.preventDefault();
         });
 
         jQuery("#modal_login_form_culqi").submit(function (e) {
