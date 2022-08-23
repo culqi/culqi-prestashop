@@ -36,12 +36,13 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
             Tools::redirect('index.php?controller=order');
         }
 
-        //$total = $cart->getOrderTotal(true, Cart::BOTH);
-        $total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+       //$total = $cart->getOrderTotal(true, Cart::BOTH);
+        $total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH),  _PS_PRICE_DISPLAY_PRECISION_);
+        //$total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
         $color_palette = Configuration::get('CULQI_COLOR_PALETTE');
         $base_url = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . 'module/culqi/payment';
 
-        $total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+        /*$total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
         //$total = $cart->getOrderTotal(true, Cart::BOTH);
         $total = explode('.', $total);
         if(count($total)>1){
@@ -53,6 +54,8 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         }else{
             $total = $total[0]*100;
         }
+*/
+        $total = $total*100;
 
 
         $this->context->smarty->assign(array(
