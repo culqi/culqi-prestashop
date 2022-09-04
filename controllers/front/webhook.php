@@ -10,22 +10,13 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
 
     public function displayAjax()
     {
-        /* ini_set('display_startup_errors', 1);
-        ini_set('display_errors', 1);
-        error_reporting(-1); */
-
-        //$charge_id = 'ord_live_Q2uzw1DkUSQsBxBW';
 
         Logger::addLog('Inicio weebhook');
 
         $postBody = file_get_contents("php://input");
-        //var_dump($postBody); exit(1);
         $postBody = json_decode($postBody, true);
-        //Logger::addLog('$postBody' . serialize($postBody));
         $data = json_decode($postBody["data"], true);
         Logger::addLog('$data ' . serialize($data));
-        //Logger::addLog('$$postBody->object ' . $postBody["object"]);
-        //var_dump($postBody); exit(1);
         if ($postBody["object"] != 'event')
             return;
 

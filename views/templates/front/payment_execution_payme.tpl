@@ -322,7 +322,7 @@
                 }
             });
 
-
+        /*
             if (Culqi.token == null) {
                 var id = setInterval(function () {
                     if (!Culqi.isOpen) {
@@ -338,6 +338,7 @@
                 var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpaymentpending', [], true)|escape:'htmlall':'UTF-8'}{literal}");
                 location.href = url + '?ps_order_id=' + ps_order_id;
             }
+            */
         } else if (Culqi.token) {
             Culqi.close();
             run_waitMe();
