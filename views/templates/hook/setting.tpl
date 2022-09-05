@@ -1446,7 +1446,8 @@
     position: relative;
   }
 
-  .customcheckout .form__group-input .opacity {
+  .customcheckout .form__group-input .opacity,
+  .customcheckout .form__group .opacity {
     opacity: 0.5 !important;
   }
 
@@ -2071,7 +2072,7 @@
                               <div class="subtitle">Predeterminado</div>
                               <div class="color-palette">
                                 <div class="color-palette__item">
-                                  <input type="radio" checked="" name="color-palette" id="141414-00a19b">
+                                  <input type="radio" checked="" name="color-palette" class="colorPreviewDefault" id="141414-00a19b">
                                   <label for="141414-00a19b">
                                     <div class="color-container">
                                       <div class="color-container__left" style="background: rgb(20, 20, 20);"></div>
@@ -2767,10 +2768,11 @@
 
     /* CUSTOMIZE */
 
-    const setUrlLogo = ''; // Al iniciar estará vacío, una vez personalizado el checkout esta variable tendrá seteado el url de logo ingresado
+    const setLogoPs = "{$fields_value.CULQI_URL_LOGO|escape:'htmlall':'UTF-8'}";
     const setPrimaryColor = ''; // Al iniciar estará vacío, una vez personalizado el checkout esta variable tendrá seteado el color ingresado
     const setSecondaryColor = ''; // Al iniciar estará vacío, una vez personalizado el checkout esta variable tendrá seteado el color ingresado
     const setPalette = "{$fields_value.CULQI_COLOR_PALETTE|escape:'htmlall':'UTF-8'}";
+
     const setColors = (setPrimaryColor != '' ? setPrimaryColor.slice(1) : '') + '-' + (setSecondaryColor != '' ? setSecondaryColor.slice(1) : '');
 
     const btnOpen = document.querySelector('#open-modal')
@@ -2792,20 +2794,49 @@
     const btnClose = document.querySelectorAll('#btn-close')
     const btnSave = document.querySelector('#btn-save')
 
-    const logoDefault = logo.src;
-    const labelDefault = 'Copia la URL de tu logotipo';
+
+    const checkoutPreviewText = {
+      labelDefault: 'Copia la URL de tu logotipo',
+      logoDefault: 'https://culqi-static-files.s3.amazonaws.com/v3/v3-checkout/brand.svg',
+      errors: {
+        logoUrl: 'URL incompleta, falta agregar protocolo https o http',
+        logoInvalid: 'Imagen no válida'
+      }
+    }
 
     let styleConfig = {};
-    let isSelectRadios = false,
-      isUrlDefault = false;
+    let isEnabledRadio = false,
+      isEnabledLogo = false,
+      isValidUrlLogo = true;
 
     const actionButton = () => {
-      if (isSelectRadios || isUrlDefault) {
+      if (isEnabledRadio || isEnabledLogo) {
         btnSave.disabled = false;
         btnSave.classList.remove('disabled')
       } else {
-        //btnSave.classList.add('disabled')
-        //btnSave.disabled = true;
+        btnSave.classList.add('disabled')
+        btnSave.disabled = true;
+      }
+    }
+
+    const getSetColor = () => {
+      let color = '';
+      if (styleConfig.primaryColor && styleConfig.secondaryColor) {
+        if (styleConfig.primaryColor != '' && styleConfig.secondaryColor != '') {
+          color = styleConfig.primaryColor.slice(1) + '-' + styleConfig.secondaryColor.slice(1);
+        }
+      } else if (setPalette != '') {
+        color = setPalette.replace(new RegExp('#', 'g'), '');
+      }
+      return color;
+    }
+
+    const setValidationInput = (input = null, logo = null) => {
+      if (typeof input == "boolean") {
+        isEnabledRadio = input
+      }
+      if (typeof logo == "boolean") {
+        isEnabledLogo = logo
       }
     }
 
@@ -2829,8 +2860,8 @@
       });
     };
 
-    if (setUrlLogo != '' && setUrlLogo != null && setUrlLogo != undefined) {
-      inputLogo.src = setColors;
+    if (setLogoPs != '' && setLogoPs != null && setLogoPs != undefined) {
+      inputLogo.src = setLogoPs;
     }
 
     if (setColors != '' && setColors != null && setColors != undefined) {
@@ -2851,7 +2882,7 @@
       right.style.background = '#' + colors[1];
       el.addEventListener('change', e => {
         const palette = e.target.id.split('-');
-        isSelectRadios = (e.target.id !== setColors);
+        setValidationInput(isValidUrlLogo ? (e.target.id !== getSetColor()) : false, null)
         configColors(palette);
         actionButton();
       })
@@ -2860,24 +2891,61 @@
     inputLogo.addEventListener('input', el => {
       const r = /^(http|https):\/\/[^ "]+$/
       if (r.test(el.target.value)) {
-        logo.src = el.target.value;
-        isUrlDefault = true;
-        labelText.innerText = labelDefault;
-        inputLogo.classList.remove('invalid');
-        labelText.removeAttribute('style');
+        let image = new Image();
+        image.src = el.target.value;
+
+        image.addEventListener('error', () => {
+          setValidationInput(false, false);
+          inputLogo.classList.add('invalid')
+          isValidUrlLogo = false;
+          labelText.style.color = '#D20808';
+          labelText.innerText = checkoutPreviewText.errors.logoInvalid;
+          actionButton();
+        });
+
+        image.addEventListener('load', () => {
+          if (styleConfig.urlLogo) {
+            if (styleConfig.urlLogo == el.target.value) {
+              setValidationInput(null, false);
+            }
+          } else if (setLogoPs == el.target.value) {
+            setValidationInput(null, false);
+          } else {
+            setValidationInput(true, true);
+          }
+          logo.src = el.target.value;
+          labelText.innerText = checkoutPreviewText.labelDefault;
+          isValidUrlLogo = true;
+          inputLogo.classList.remove('invalid');
+          labelText.removeAttribute('style');
+          actionButton();
+        });
       } else if (el.target.value == '') {
-        labelText.innerText = labelDefault;
+        labelText.innerText = checkoutPreviewText.labelDefault;
         inputLogo.classList.remove('invalid');
         labelText.removeAttribute('style');
-        logo.src = 'https://culqi-static-files.s3.amazonaws.com/v3/v3-checkout/brand.svg';
+        logo.src = checkoutPreviewText.logoDefault;
+        if (styleConfig.urlLogo) {
+          if (styleConfig.urlLogo == '') {
+            setValidationInput(true, false);
+          } else {
+            setValidationInput(null, true);
+          }
+        } else if (setLogoPs == '') {
+          setValidationInput(true, false);
+        } else {
+          setValidationInput(true, true);
+        }
+        isValidUrlLogo = true;
+        actionButton();
       } else {
+        isValidUrlLogo = false;
+        setValidationInput(false, false);
         inputLogo.classList.add('invalid')
         labelText.style.color = '#D20808';
-        isUrlDefault = false;
-        logo.src = logoDefault;
-        labelText.innerText = 'URL incompleta, falta agregar protocolo https o http';
-      };
-      actionButton();
+        labelText.innerText = checkoutPreviewText.errors.logoUrl;
+        actionButton();
+      }
     });
 
     action.addEventListener('click', () => {
@@ -2912,6 +2980,26 @@
 
     Array.from(btnClose).forEach((el) => {
       el.addEventListener('click', (event) => {
+        if (styleConfig.urlLogo != undefined) {
+          if (styleConfig.urlLogo != '' && styleConfig.urlLogo != null && styleConfig.urlLogo != undefined) {
+            inputLogo.value = styleConfig.urlLogo;
+            logo.src = styleConfig.urlLogo;
+          } else {
+            inputLogo.value = '';
+            logo.src = checkoutPreviewText.logoDefault;
+          }
+        } else {
+          if (setLogoPs != '' && setLogoPs != null && setLogoPs != undefined) {
+            inputLogo.value = setLogoPs;
+            logo.src = setLogoPs;
+          } else {
+            logo.src = checkoutPreviewText.logoDefault;
+            inputLogo.value = '';
+          }
+        }
+        labelText.innerText = checkoutPreviewText.labelDefault;
+        inputLogo.classList.remove('invalid');
+        labelText.removeAttribute('style');
         if (styleConfig.primaryColor && styleConfig.secondaryColor) {
           document.getElementById(styleConfig.primaryColor.slice(1) + '-' + styleConfig.secondaryColor.slice(1)).click()
           configColors([styleConfig.primaryColor, styleConfig.secondaryColor]);
@@ -2920,24 +3008,46 @@
             document.getElementById(setPalette.replace(new RegExp(/\#/g), '')).click()
           } else {
             configColors(setPalette.split('-'), true);
+
           }
         }
+        setValidationInput(false, false)
         overlay.classList.remove('active');
       });
     });
 
     btnOpen.addEventListener('click', () => {
+      setValidationInput(false, false)
+      actionButton();
+      if (styleConfig.urlLogo != undefined) {
+        if (styleConfig.urlLogo != '' && styleConfig.urlLogo != null && styleConfig.urlLogo != undefined) {
+          inputLogo.value = styleConfig.urlLogo;
+          logo.src = styleConfig.urlLogo;
+        } else {
+          inputLogo.value = '';
+          logo.src = checkoutPreviewText.logoDefault;
+        }
+      } else {
+        if (setLogoPs != '' && setLogoPs != null && setLogoPs != undefined) {
+          inputLogo.value = setLogoPs;
+          logo.src = setLogoPs;
+        } else {
+          logo.src = checkoutPreviewText.logoDefault;
+          inputLogo.value = '';
+        }
+      }
       if (styleConfig.primaryColor && styleConfig.secondaryColor) {
         configColors([styleConfig.primaryColor, styleConfig.secondaryColor]);
       } else {
         if (setPalette != '' && setPalette != null && setPalette != undefined) {
           configColors(setPalette.replace(new RegExp(/\#/g), "").split('-'));
         } else {
-          configColors(setPalette.split('-'), true);
+          document.querySelector(".colorPreviewDefault").click()
+          configColors(['', ''], true);
         }
       }
       overlay.classList.add('active')
-    });
+    })
   });
 </script>
 
