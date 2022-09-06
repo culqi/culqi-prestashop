@@ -428,39 +428,51 @@ class Culqi extends PaymentModule
         }
         if (!Configuration::get('CULQI_STATE_PENDING'))
         {
-            $order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language) {
-              $order_state->name[$language['id_lang']] = 'En espera de pago por Culqi';
+            $txt_state = 'En espera de pago por Culqi';
+            $orderstate = Db::getInstance()->ExecuteS("SELECT distinct id_order_state, name FROM " . _DB_PREFIX_ . "order_state_lang where name='".$txt_state."'");
+            if ((int)$orderstate[0]['id_order_state']==null){
+                $order_state = new OrderState();
+                $order_state->name = array();
+                foreach (Language::getLanguages() as $language) {
+                  $order_state->name[$language['id_lang']] = $txt_state;
+                }
+                $order_state->send_email = false;
+                $order_state->color = '#34209E';
+                $order_state->hidden = false;
+                $order_state->paid = true;
+                $order_state->module_name = 'culqi';
+                $order_state->delivery = false;
+                $order_state->logable = false;
+                $order_state->invoice = true;
+                $order_state->pdf_invoice = true;
+                $order_state->add();
+                Configuration::updateValue('CULQI_STATE_PENDING', (int)$order_state->id);
+            }else{
+                Configuration::updateValue('CULQI_STATE_PENDING', (int)$orderstate[0]['id_order_state']);
             }
-            $order_state->send_email = false;
-            $order_state->color = '#34209E';
-            $order_state->hidden = false;
-            $order_state->paid = true;
-            $order_state->module_name = 'culqi';
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = true;
-            $order_state->pdf_invoice = true;
-            $order_state->add();
-            Configuration::updateValue('CULQI_STATE_PENDING', (int)$order_state->id);
         }
         if (!Configuration::get('CULQI_STATE_ERROR'))
         {
-            $order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language) {
-              $order_state->name[$language['id_lang']] = 'Incorrecto - Culqi';
+            $txt_state = 'Incorrecto - Culqi';
+            $orderstate = Db::getInstance()->ExecuteS("SELECT distinct id_order_state, name FROM " . _DB_PREFIX_ . "order_state_lang where name='".$txt_state."'");
+            if ((int)$orderstate[0]['id_order_state']==null){
+                $order_state = new OrderState();
+                $order_state->name = array();
+                foreach (Language::getLanguages() as $language) {
+                  $order_state->name[$language['id_lang']] = $txt_state;
+                }
+                $order_state->send_email = false;
+                $order_state->color = '#FF2843';
+                $order_state->module_name = 'culqi';
+                $order_state->hidden = false;
+                $order_state->delivery = false;
+                $order_state->logable = false;
+                $order_state->invoice = false;
+                $order_state->add();
+                Configuration::updateValue('CULQI_STATE_ERROR', (int)$order_state->id);
+            }else{
+                Configuration::updateValue('CULQI_STATE_ERROR', (int)$orderstate[0]['id_order_state']);
             }
-            $order_state->send_email = false;
-            $order_state->color = '#FF2843';
-            $order_state->module_name = 'culqi';
-            $order_state->hidden = false;
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = false;
-            $order_state->add();
-            Configuration::updateValue('CULQI_STATE_ERROR', (int)$order_state->id);
         }
     }
 
