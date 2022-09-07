@@ -451,6 +451,29 @@ class Culqi extends PaymentModule
                 Configuration::updateValue('CULQI_STATE_PENDING', (int)$orderstate[0]['id_order_state']);
             }
         }
+        if (!Configuration::get('CULQI_STATE_EXPIRED'))
+        {
+            $txt_state = 'Orden expirada';
+            $orderstate = Db::getInstance()->ExecuteS("SELECT distinct id_order_state, name FROM " . _DB_PREFIX_ . "order_state_lang where name='".$txt_state."'");
+            if ((int)$orderstate[0]['id_order_state']==null){
+                $order_state = new OrderState();
+                $order_state->name = array();
+                foreach (Language::getLanguages() as $language) {
+                  $order_state->name[$language['id_lang']] = $txt_state;
+                }
+                $order_state->send_email = false;
+                $order_state->color = '#9ea095';
+                $order_state->module_name = 'culqi';
+                $order_state->hidden = false;
+                $order_state->delivery = false;
+                $order_state->logable = false;
+                $order_state->invoice = false;
+                $order_state->add();
+                Configuration::updateValue('CULQI_STATE_EXPIRED', (int)$order_state->id);
+            }else{
+                Configuration::updateValue('CULQI_STATE_ERROR', (int)$orderstate[0]['id_order_state']);
+            }
+        }
         if (!Configuration::get('CULQI_STATE_ERROR'))
         {
             $txt_state = 'Incorrecto - Culqi';
