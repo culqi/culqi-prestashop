@@ -21,83 +21,92 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         $currencyCode = trim($data['currency_code']);
         $state = trim($data['state']);
         $amount = trim($data['amount']);
-        $metadata = $data['metadata'];
-        $cartID = $metadata['cart_id'];
+        $order_number = trim($data['order_number']);
+        $id = trim($data['id']);
+        //$cartID = $metadata['cart_id'];
 
-        error_log($cartID);
+        //error_log($cartID);
 
-        if (empty($metadata)) {
-            exit("Error: Metadata vacia");
+        if (empty($amount)) {
+            echo json_encode(['success'=>'false', 'msj'=>'No envió el amount']);
+            exit();
         }
 
-        if (empty($amount) || empty($currencyCode) || empty($state)) {
-            exit("Error: valores de la orden incorrectos");
-        }
+        //if ($ObjCart->orderExists() > 0 ) {
+        if ($postBody["object"] != 'event')
+            return;
 
-        if(Tools::strlen($cartID) < 1){
-            exit("Error: Valores personalizados incorrectos");
-        }
+        switch ($postBody["type"]) {
 
-        if (Validate::isLoadedObject(new Cart($cartID))) {
-            $ObjCart = new Cart($cartID);
-        } else {
-            exit("Error: El carrito no existe");
-        }
+            case 'order.status.changed':
 
-        if ($ObjCart->orderExists() > 0 ) {
-            if ($postBody["object"] != 'event')
-                return;
+                Logger::addLog('entro -> order.status.changed');
 
-            switch ($postBody["type"]) {
+                $metadata = $data['metadata'];
 
-                case 'order.status.changed':
+                if (empty($metadata)) {
+                    exit("Error: Metadata vacia");
+                }
 
-                    Logger::addLog('entro -> order.status.changed');
+                if (empty($id) || empty($order_number) || empty($currencyCode) || empty($state)) {
+                    exit("Error: order_id, order_number, currency_code o state vacios");
+                }
 
-                    $metadata = $data["metadata"];
+                //$metadata = $data["metadata"];
 
-                    $order_id = (int)$metadata["pts_order_id"];
+                $order_id = (int)$metadata["pts_order_id"];
 
-                    $findorder = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "orders where id_cart='" . $order_id . "'");
+                $findorder = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "orders where id_cart='" . $order_id . "'");
 
-                    $id = $findorder[0]['id_order'];
-                    Logger::addLog('$id ' . $id);
+                $id = $findorder[0]['id_order'];
+                Logger::addLog('$id ' . $id);
 
-                    $state = 'CULQI_STATE_OK';
-                    $stateRequest = $data["state"];
-                    Logger::addLog('$state ' . $stateRequest);
+                $state = 'CULQI_STATE_OK';
+                $stateRequest = $data["state"];
+                Logger::addLog('$state ' . $stateRequest);
 
-                    if ($stateRequest == 'expired') {
-                        $state = 'CULQI_STATE_EXPIRED';
-                    }
-
-                    if ($stateRequest != 'pending') {
-                        $order = new Order($id);
-                        $order->current_state = (int)Configuration::get($state);
-                        $order->update();
-                    }
-
-                    break;
-
-                case 'refund.creation.succeeded':
-
-                    Logger::addLog('entro -> refund.creation.succeeded');
-                    $charge_id = $data["chargeId"];
-                    Logger::addLog('$charge_id_1' . $charge_id);
-                    Logger::addLog('$charge_id_2' . $data->chargeId);
-
-                    $order_payment = Db::getInstance()->ExecuteS("SELECT distinct * FROM " . _DB_PREFIX_ . "order_payment where transaction_id='" . $charge_id . "'");
-                    $order_reference = $order_payment[0]["order_reference"];
-
-                    $findorder = Db::getInstance()->ExecuteS("SELECT distinct * FROM " . _DB_PREFIX_ . "orders where reference='" . $order_reference . "'");
-                    $id = $findorder[0]['id_order'];
-
-                    $state_refund = 7;
+                if ($stateRequest == 'expired') {
+                    $state = 'CULQI_STATE_EXPIRED';
+                }
+                if ($stateRequest != 'pending') {
                     $order = new Order($id);
-                    $order->current_state = (int)$state_refund;
+                    $history = new OrderHistory();
+                    $history->id_order = (int)$order->id;
+                    $history->changeIdOrderState((int)Configuration::get($state), (int)($order->id));
+                    $order->current_state = (int)Configuration::get($state);
                     $order->update();
-                    break;
-            }
+                }
+                break;
+
+            case 'refund.creation.succeeded':
+
+                Logger::addLog('entro -> refund.creation.succeeded');
+
+                $charge_id = $data["chargeId"];
+
+                if (empty($charge_id)) {
+                    exit("Error: No envió el chargeId");
+                }
+
+                Logger::addLog('$charge_id_1' . $charge_id);
+                Logger::addLog('$charge_id_2' . $data->chargeId);
+
+                $order_payment = Db::getInstance()->ExecuteS("SELECT distinct * FROM " . _DB_PREFIX_ . "order_payment where transaction_id='" . $charge_id . "'");
+                $order_reference = $order_payment[0]["order_reference"];
+
+                $findorder = Db::getInstance()->ExecuteS("SELECT distinct * FROM " . _DB_PREFIX_ . "orders where reference='" . $order_reference . "'");
+                $id = $findorder[0]['id_order'];
+
+                $state_refund = 7;
+                $order = new Order($id);
+                $history = new OrderHistory();
+                $history->id_order = (int)$order->id;
+                $history->changeIdOrderState((int)$state_refund, (int)($order->id));
+                $order->current_state = (int)$state_refund;
+                $order->update();
+                break;
         }
+        //}
+        echo json_encode(['success'=>'true', 'msj'=>'Operación exitosa']);
     }
 }

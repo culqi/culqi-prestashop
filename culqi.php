@@ -49,7 +49,7 @@ class Culqi extends PaymentModule
         $this->version = '3.0.4';
         $this->controllers = array('chargeajax', 'postpayment', 'generateorder', 'merchantajax', 'webhook', 'registersale');
         $this->author = 'Team Culqi (Juan Ysen, Dennis Landa)';
-        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
         $this->display = 'view';
 
@@ -350,22 +350,8 @@ class Culqi extends PaymentModule
     private function createStates()
     {
         if (!Configuration::get('CULQI_STATE_OK')) {
-            $orderstate = Db::getInstance()->ExecuteS("SELECT distinct id_order_state, name FROM " . _DB_PREFIX_ . "order_state_lang where name='Pago aceptado'");
-            /*$order_state = new OrderState();
-            $order_state->name = array();
-            foreach (Language::getLanguages() as $language) {
-              $order_state->name[$language['id_lang']] = 'Exitoso - Culqi';
-            }
-            $order_state->send_email = false;
-            $order_state->color = '#39CC98';
-            $order_state->hidden = false;
-            $order_state->paid = true;
-            $order_state->module_name = 'culqi';
-            $order_state->delivery = false;
-            $order_state->logable = false;
-            $order_state->invoice = true;
-            $order_state->pdf_invoice = true;
-            $order_state->add();*/
+            $txt_state='Pago aceptado';
+            $orderstate = Db::getInstance()->ExecuteS("SELECT distinct osl.id_order_state, osl.name FROM " . _DB_PREFIX_ . "order_state_lang osl, " . _DB_PREFIX_ . "order_state os where osl.id_order_state=os.id_order_state and osl.name='" . $txt_state . "' and deleted=0");
             Configuration::updateValue('CULQI_STATE_OK', (int)$orderstate[0]['id_order_state']);
         }
         if (!Configuration::get('CULQI_STATE_PENDING')) {
@@ -412,7 +398,7 @@ class Culqi extends PaymentModule
                 $order_state->add();
                 Configuration::updateValue('CULQI_STATE_ERROR', (int)$order_state->id);
             } else {
-                $orderstate = Db::getInstance()->ExecuteS("SELECT distinct id_order_state, name FROM " . _DB_PREFIX_ . "order_state_lang where name='" . $txt_state . "'");
+                $orderstate = Db::getInstance()->ExecuteS("SELECT distinct osl.id_order_state, osl.name FROM " . _DB_PREFIX_ . "order_state_lang osl, " . _DB_PREFIX_ . "order_state os where osl.id_order_state=os.id_order_state and osl.name='" . $txt_state . "' and deleted=0");
                 Configuration::updateValue('CULQI_STATE_ERROR', (int)$orderstate[0]['id_order_state']);
             }
         }
@@ -435,7 +421,7 @@ class Culqi extends PaymentModule
                 $order_state->add();
                 Configuration::updateValue('CULQI_STATE_EXPIRED', (int)$order_state->id);
             } else {
-                $orderstate = Db::getInstance()->ExecuteS("SELECT distinct id_order_state, name FROM " . _DB_PREFIX_ . "order_state_lang where name='" . $txt_state . "'");
+                $orderstate = Db::getInstance()->ExecuteS("SELECT distinct osl.id_order_state, osl.name FROM " . _DB_PREFIX_ . "order_state_lang osl, " . _DB_PREFIX_ . "order_state os where osl.id_order_state=os.id_order_state and osl.name='" . $txt_state . "' and deleted=0");
                 Configuration::updateValue('CULQI_STATE_EXPIRED', (int)$orderstate[0]['id_order_state']);
             }
         }
