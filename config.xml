@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>culqi</name>
+	<displayName><![CDATA[Culqi Checkout]]></displayName>
+	<version><![CDATA[3.0.4]]></version>
+	<description><![CDATA[Con&eacute;ctate a nuestra pasarela de pagos para aumentar tus ventas.]]></description>
+	<author><![CDATA[Team Culqi (Juan Ysen, Dennis Landa)]]></author>
+	<tab><![CDATA[payments_gateways]]></tab>
+	<confirmUninstall><![CDATA[¿Estás seguro que quieres desintalar el módulo de Culqi?]]></confirmUninstall>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>

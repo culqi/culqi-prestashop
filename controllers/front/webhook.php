@@ -17,6 +17,22 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         $postBody = json_decode($postBody, true);
         $data = json_decode($postBody["data"], true);
         Logger::addLog('$data ' . serialize($data));
+
+        $currencyCode = trim($data['currency_code']);
+        $state = trim($data['state']);
+        $amount = trim($data['amount']);
+        $order_number = trim($data['order_number']);
+        $id = trim($data['id']);
+        //$cartID = $metadata['cart_id'];
+
+        //error_log($cartID);
+
+        if (empty($amount)) {
+            echo json_encode(['success'=>'false', 'msj'=>'No envió el amount']);
+            exit();
+        }
+
+        //if ($ObjCart->orderExists() > 0 ) {
         if ($postBody["object"] != 'event')
             return;
 
@@ -25,16 +41,20 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
             case 'order.status.changed':
 
                 Logger::addLog('entro -> order.status.changed');
-                //Logger::addLog('$metadata' . serialize($data["metadata"]));
 
-                $metadata = $data["metadata"];
-                //Logger::addLog('$metadata2' . serialize($metadata));
+                $metadata = $data['metadata'];
+
+                if (empty($metadata)) {
+                    exit("Error: Metadata vacia");
+                }
+
+                if (empty($id) || empty($order_number) || empty($currencyCode) || empty($state)) {
+                    exit("Error: order_id, order_number, currency_code o state vacios");
+                }
+
+                //$metadata = $data["metadata"];
 
                 $order_id = (int)$metadata["pts_order_id"];
-                //Logger::addLog('$order_id ' . $order_id);
-                //$order_payment = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "order_payment where transaction_id='" . $order_id . "'");
-
-                //$order_reference = $order_payment[0]['order_reference'];
 
                 $findorder = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "orders where id_cart='" . $order_id . "'");
 
@@ -45,82 +65,48 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
                 $stateRequest = $data["state"];
                 Logger::addLog('$state ' . $stateRequest);
 
-                if($stateRequest=='expired'){
-                    $state = 'CULQI_STATE_OK';
+                if ($stateRequest == 'expired') {
+                    $state = 'CULQI_STATE_EXPIRED';
                 }
-
-                if($stateRequest!='pending'){
+                if ($stateRequest != 'pending') {
                     $order = new Order($id);
+                    $history = new OrderHistory();
+                    $history->id_order = (int)$order->id;
+                    $history->changeIdOrderState((int)Configuration::get($state), (int)($order->id));
                     $order->current_state = (int)Configuration::get($state);
                     $order->update();
                 }
-
                 break;
 
             case 'refund.creation.succeeded':
 
                 Logger::addLog('entro -> refund.creation.succeeded');
-                //$metadata = $data["metadata"];
-                //var_dump($metadata); exit(1);
-                //Logger::addLog('$metadata' . serialize($metadata));
-                //$order_id = (int)$metadata["pts_order_id"];
-                //var_dump($data["chargeId"]);
+
                 $charge_id = $data["chargeId"];
+
+                if (empty($charge_id)) {
+                    exit("Error: No envió el chargeId");
+                }
+
                 Logger::addLog('$charge_id_1' . $charge_id);
                 Logger::addLog('$charge_id_2' . $data->chargeId);
-                //Logger::addLog('$metadata' . $metadata);
 
-                $order_payment = Db::getInstance()->ExecuteS("SELECT distinct * FROM " . _DB_PREFIX_ . "order_payment where transaction_id='". $charge_id . "'");
+                $order_payment = Db::getInstance()->ExecuteS("SELECT distinct * FROM " . _DB_PREFIX_ . "order_payment where transaction_id='" . $charge_id . "'");
                 $order_reference = $order_payment[0]["order_reference"];
 
-                $findorder = Db::getInstance()->ExecuteS("SELECT distinct * FROM " . _DB_PREFIX_ . "orders where reference='". $order_reference . "'");
+                $findorder = Db::getInstance()->ExecuteS("SELECT distinct * FROM " . _DB_PREFIX_ . "orders where reference='" . $order_reference . "'");
                 $id = $findorder[0]['id_order'];
 
                 $state_refund = 7;
                 $order = new Order($id);
-                $order->current_state = (int)$state_refund; // Cod 7 Reembolsado
+                $history = new OrderHistory();
+                $history->id_order = (int)$order->id;
+                $history->changeIdOrderState((int)$state_refund, (int)($order->id));
+                $order->current_state = (int)$state_refund;
                 $order->update();
-
-
                 break;
         }
-
-        // if ($postBody["object"] == 'event' && $postBody["type"] == 'order.status.changed') {
-
-        //     Logger::addLog('$entro if');
-        //     Logger::addLog('$metadata' . serialize($data["metadata"]));
-
-        //     $metadata = $data["metadata"];
-        //     Logger::addLog('$metadata2' . serialize($metadata));
-
-        //     $order_id = (int)$metadata["pts_order_id"];
-        //     Logger::addLog('$order_id ' . $order_id);
-        //     //$order_payment = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "order_payment where transaction_id='" . $order_id . "'");
-
-        //     //$order_reference = $order_payment[0]['order_reference'];
-
-        //     $findorder = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "orders where id_cart='" . $order_id . "'");
-
-        //     $id = $findorder[0]['id_order'];
-        //     Logger::addLog('$id ' . $id);
-
-        //     $state = 'CULQI_STATE_OK';
-        //     $stateRequest = $data["state"];
-        //     Logger::addLog('$state ' . $stateRequest);
-        //     if($stateRequest=='expired'){
-        //         $state = 'CULQI_STATE_OK';
-        //     }
-        //     if($stateRequest!='pending'){
-        //         $order = new Order($id);
-        //         $order->current_state = (int)Configuration::get($state);
-        //         $order->update();
-        //     }
-        // }
-
-
-
-
-        //var_dump('Actualizado!');
-        //exit(1);
+        //}
+        echo json_encode(['success'=>'true', 'msj'=>'Operación exitosa']);
     }
 }
