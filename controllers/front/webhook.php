@@ -69,7 +69,7 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
                     $state = 'CULQI_STATE_EXPIRED';
                 }
                 if ($stateRequest != 'pending') {
-                    updateOrderAndcreateOrderHistoryState($id,Configuration::get($state));
+                    $this->updateOrderAndcreateOrderHistoryState($id,Configuration::get($state));
                 }
                 break;
 
@@ -94,7 +94,7 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
 
                 $state_refund = 7;
                 
-                updateOrderAndcreateOrderHistoryState($id,$state_refund);
+                $this->updateOrderAndcreateOrderHistoryState($id,$state_refund);
                 break;
         }
         //}
