@@ -1751,10 +1751,7 @@
             <label for="CULQI_METHODS_TARJETA"><input type="checkbox" name="CULQI_METHODS_TARJETA" id="CULQI_METHODS_TARJETA" class="" value="yes" {$status_methods_tarjeta_enabled|escape:'htmlall':'UTF-8'}> Tarjetas débito/credito</label>
           </div>
           <div class="checkbox">
-            <label for="CULQI_METHODS_BANCAMOVIL"><input type="checkbox" name="CULQI_METHODS_BANCAMOVIL" id="CULQI_METHODS_BANCAMOVIL" class="" value="yes" {$status_methods_bancamovil_enabled|escape:'htmlall':'UTF-8'}>Banca móvil o internet</label>
-          </div>
-          <div class="checkbox">
-            <label for="CULQI_METHODS_AGENTS"><input type="checkbox" name="CULQI_METHODS_AGENTS" id="CULQI_METHODS_AGENTS" class="" value="yes" {$status_methods_agents_enabled|escape:'htmlall':'UTF-8'}>Agentes y bodegas</label>
+          <label for="CULQI_METHODS_YAPE"><input type="checkbox" name="CULQI_METHODS_YAPE" id="CULQI_METHODS_YAPE" class="" value="yes" {$status_methods_yape_enabled|escape:'htmlall':'UTF-8'}>Yape</label>
           </div>
           <div class="checkbox">
             <label for="CULQI_METHODS_WALLETS"><input type="checkbox" name="CULQI_METHODS_WALLETS" id="CULQI_METHODS_WALLETS" class="" value="yes" {$status_methods_wallets_enabled|escape:'htmlall':'UTF-8'}>Billeteras móviles</label>
@@ -1764,6 +1761,12 @@
               </svg>
             </span>
           </div>
+          <div class="checkbox">
+            <label for="CULQI_METHODS_BANCAMOVIL"><input type="checkbox" name="CULQI_METHODS_BANCAMOVIL" id="CULQI_METHODS_BANCAMOVIL" class="" value="yes" {$status_methods_bancamovil_enabled|escape:'htmlall':'UTF-8'}>Banca móvil o internet</label>
+          </div>         
+          <div class="checkbox">
+            <label for="CULQI_METHODS_AGENTS"><input type="checkbox" name="CULQI_METHODS_AGENTS" id="CULQI_METHODS_AGENTS" class="" value="yes" {$status_methods_agents_enabled|escape:'htmlall':'UTF-8'}>Agentes y bodegas</label>
+          </div>          
           <div class="checkbox">
             <label for="CULQI_METHODS_QUOTEBCP"><input type="checkbox" name="CULQI_METHODS_QUOTEBCP" id="CULQI_METHODS_QUOTEBCP" class="" value="yes" {$status_methods_quotebcp_enabled|escape:'htmlall':'UTF-8'}>Cuotéalo BCP</label>
             <span class="tool" data-tip="Paga en cuotas y sin tarjetas de crédito con Cuotéalo" tabindex="2">
@@ -2478,7 +2481,7 @@
       }
       console.log('hasError:::', hasError);
 
-      if (!(jQuery('#CULQI_METHODS_TARJETA').is(':checked') || jQuery('#CULQI_METHODS_BANCAMOVIL').is(':checked') || jQuery('#CULQI_METHODS_AGENTS').is(':checked') || jQuery('#CULQI_METHODS_WALLETS').is(':checked') || jQuery('#CULQI_METHODS_QUOTEBCP').is(':checked'))) {
+      if (!(jQuery('#CULQI_METHODS_TARJETA').is(':checked') || jQuery('#CULQI_METHODS_BANCAMOVIL').is(':checked') || jQuery('#CULQI_METHODS_YAPE').is(':checked') || jQuery('#CULQI_METHODS_AGENTS').is(':checked') || jQuery('#CULQI_METHODS_WALLETS').is(':checked') || jQuery('#CULQI_METHODS_QUOTEBCP').is(':checked'))) {
         jQuery('#errorpaymentmethod').css('display', 'block');
         hasError = '1';
       }

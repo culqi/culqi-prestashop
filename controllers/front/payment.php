@@ -86,6 +86,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign("llave_secreta", Configuration::get('CULQI_LLAVE_SECRETA'));
         $this->context->smarty->assign("tarjeta", Configuration::get('CULQI_METHODS_TARJETA') == 'yes' ? 'true' : 'false');
         $this->context->smarty->assign("banca_movil", Configuration::get('CULQI_METHODS_BANCAMOVIL') == 'yes' ? 'true' : 'false');
+        $this->context->smarty->assign("yape", Configuration::get('CULQI_METHODS_YAPE') == 'yes' ? 'true' : 'false');
         $this->context->smarty->assign("billetera", Configuration::get('CULQI_METHODS_WALLETS') == 'yes' ? 'true' : 'false');
         $this->context->smarty->assign("agente", Configuration::get('CULQI_METHODS_AGENTS') == 'yes' ? 'true' : 'false');
         $this->context->smarty->assign("cuetealo", Configuration::get('CULQI_METHODS_QUOTEBCP') == 'yes' ? 'true' : 'false');
