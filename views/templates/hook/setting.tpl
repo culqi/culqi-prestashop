@@ -1754,12 +1754,6 @@
           <label for="CULQI_METHODS_YAPE"><input type="checkbox" name="CULQI_METHODS_YAPE" id="CULQI_METHODS_YAPE" class="" value="yes" {$status_methods_yape_enabled|escape:'htmlall':'UTF-8'}>Yape</label>
           </div>
           <div class="checkbox">
-            <label for="CULQI_METHODS_BANCAMOVIL"><input type="checkbox" name="CULQI_METHODS_BANCAMOVIL" id="CULQI_METHODS_BANCAMOVIL" class="" value="yes" {$status_methods_bancamovil_enabled|escape:'htmlall':'UTF-8'}>Banca móvil o internet</label>
-          </div>         
-          <div class="checkbox">
-            <label for="CULQI_METHODS_AGENTS"><input type="checkbox" name="CULQI_METHODS_AGENTS" id="CULQI_METHODS_AGENTS" class="" value="yes" {$status_methods_agents_enabled|escape:'htmlall':'UTF-8'}>Agentes y bodegas</label>
-          </div>
-          <div class="checkbox">
             <label for="CULQI_METHODS_WALLETS"><input type="checkbox" name="CULQI_METHODS_WALLETS" id="CULQI_METHODS_WALLETS" class="" value="yes" {$status_methods_wallets_enabled|escape:'htmlall':'UTF-8'}>Billeteras móviles</label>
             <span class="tool" data-tip="Tus clientes pueden pagar con Yape, Plin y las principales billeteras móviles del país." tabindex="2">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle-fill" viewBox="0 0 16 16">
@@ -1767,6 +1761,12 @@
               </svg>
             </span>
           </div>
+          <div class="checkbox">
+            <label for="CULQI_METHODS_BANCAMOVIL"><input type="checkbox" name="CULQI_METHODS_BANCAMOVIL" id="CULQI_METHODS_BANCAMOVIL" class="" value="yes" {$status_methods_bancamovil_enabled|escape:'htmlall':'UTF-8'}>Banca móvil o internet</label>
+          </div>         
+          <div class="checkbox">
+            <label for="CULQI_METHODS_AGENTS"><input type="checkbox" name="CULQI_METHODS_AGENTS" id="CULQI_METHODS_AGENTS" class="" value="yes" {$status_methods_agents_enabled|escape:'htmlall':'UTF-8'}>Agentes y bodegas</label>
+          </div>          
           <div class="checkbox">
             <label for="CULQI_METHODS_QUOTEBCP"><input type="checkbox" name="CULQI_METHODS_QUOTEBCP" id="CULQI_METHODS_QUOTEBCP" class="" value="yes" {$status_methods_quotebcp_enabled|escape:'htmlall':'UTF-8'}>Cuotéalo BCP</label>
             <span class="tool" data-tip="Paga en cuotas y sin tarjetas de crédito con Cuotéalo" tabindex="2">
