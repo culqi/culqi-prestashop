@@ -175,6 +175,7 @@
             paymentMethods: {
                 tarjeta: {/literal}{$tarjeta|escape:'htmlall':'UTF-8'}{literal},
                 bancaMovil: {/literal}{$banca_movil|escape:'htmlall':'UTF-8'}{literal},
+                yape: {/literal}{$yape|escape:'htmlall':'UTF-8'}{literal},
                 agente: {/literal}{$agente|escape:'htmlall':'UTF-8'}{literal},
                 billetera: {/literal}{$billetera|escape:'htmlall':'UTF-8'}{literal},
                 cuotealo: {/literal}{$cuetealo|escape:'htmlall':'UTF-8'}{literal}
