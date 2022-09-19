@@ -218,13 +218,12 @@ class Culqi extends PaymentModule
 
     public function getCulqiInfoCheckout()
     {
-        //var_dump($this); exit(1);
         $cart = $this->context->cart;
-        $address = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "address where id_address=" . $cart->id_address_invoice);
 
+        $address = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "address where id_address=" . $cart->id_address_invoice);
+        $country = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "country where id_country=" . $address[0]['id_country']);
         $total = $cart->getOrderTotal(true, Cart::BOTH);
         $color_palette = Configuration::get('CULQI_COLOR_PALETTE');
-
 
         $urlapi_ordercharges = URLAPI_ORDERCHARGES_INTEG;
         $urlapi_checkout = URLAPI_CHECKOUT_INTEG;
@@ -252,7 +251,7 @@ class Culqi extends PaymentModule
             "llave_secreta" => Configuration::get('CULQI_LLAVE_SECRETA'),
             "tarjeta" => Configuration::get('CULQI_METHODS_TARJETA') == 'yes' ? 'true' : 'false',
             "banca_movil" => Configuration::get('CULQI_METHODS_BANCAMOVIL') == 'yes' ? 'true' : 'false',
-            "yape" => Configuration::get('CULQI_METHODS_yape') == 'yes' ? 'true' : 'false',
+            "yape" => Configuration::get('CULQI_METHODS_YAPE') == 'yes' ? 'true' : 'false',
             "billetera" => Configuration::get('CULQI_METHODS_WALLETS') == 'yes' ? 'true' : 'false',
             "agente" => Configuration::get('CULQI_METHODS_AGENTS') == 'yes' ? 'true' : 'false',
             "cuetealo" => Configuration::get('CULQI_METHODS_QUOTEBCP') == 'yes' ? 'true' : 'false',
@@ -263,7 +262,10 @@ class Culqi extends PaymentModule
             "address" => $address,
             "customer" => $this->context->customer,
             'commerce' => Configuration::get('PS_SHOP_NAME'),
-            "BASE_URL" => $base_url
+            "BASE_URL" => $base_url,
+            "firstname" => $this->context->customer->firstname,
+            "lastname" => $this->context->customer->lastname,
+            'country'=>$country
         );
     }
 
