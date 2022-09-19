@@ -46,9 +46,15 @@ class Culqi extends PaymentModule
     {
         $this->name = 'culqi';
         $this->tab = 'payments_gateways';
+
         $this->version = '3.0.4';
         $this->controllers = array('chargeajax', 'postpayment', 'generateorder', 'merchantajax', 'webhook', 'registersale');
         $this->author = 'Team Culqi (Juan Ysen, Dennis Landa)';
+
+        $this->version = '3.0.0';
+        $this->controllers = array('chargeajax','postpayment', 'generateorder', 'merchantajax', 'webhook', 'registersale');
+        $this->author = 'Culqi';
+
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
         $this->display = 'view';
@@ -246,6 +252,7 @@ class Culqi extends PaymentModule
             "llave_secreta" => Configuration::get('CULQI_LLAVE_SECRETA'),
             "tarjeta" => Configuration::get('CULQI_METHODS_TARJETA') == 'yes' ? 'true' : 'false',
             "banca_movil" => Configuration::get('CULQI_METHODS_BANCAMOVIL') == 'yes' ? 'true' : 'false',
+            "yape" => Configuration::get('CULQI_METHODS_yape') == 'yes' ? 'true' : 'false',
             "billetera" => Configuration::get('CULQI_METHODS_WALLETS') == 'yes' ? 'true' : 'false',
             "agente" => Configuration::get('CULQI_METHODS_AGENTS') == 'yes' ? 'true' : 'false',
             "cuetealo" => Configuration::get('CULQI_METHODS_QUOTEBCP') == 'yes' ? 'true' : 'false',
@@ -295,6 +302,10 @@ class Culqi extends PaymentModule
             || !Configuration::deleteByName('CULQI_LLAVE_PUBLICA')
             || !Configuration::deleteByName('CULQI_METHODS_TARJETA')
             || !Configuration::deleteByName('CULQI_METHODS_BANCAMOVIL')
+
+
+            || !Configuration::deleteByName('CULQI_METHODS_YAPE')
+
             || !Configuration::deleteByName('CULQI_METHODS_AGENTS')
             || !Configuration::deleteByName('CULQI_METHODS_WALLETS')
             || !Configuration::deleteByName('CULQI_METHODS_QUOTEBCP')
@@ -498,6 +509,7 @@ class Culqi extends PaymentModule
             'status_enabled' => $config['CULQI_ENABLED'] == 'yes' ? 'checked' : '',
             'status_methods_tarjeta_enabled' => $config['CULQI_METHODS_TARJETA'] == 'yes' ? 'checked' : '',
             'status_methods_bancamovil_enabled' => $config['CULQI_METHODS_BANCAMOVIL'] == 'yes' ? 'checked' : '',
+            'status_methods_yape_enabled' => $config['CULQI_METHODS_YAPE'] == 'yes' ? 'checked' : '',
             'status_methods_agents_enabled' => $config['CULQI_METHODS_AGENTS'] == 'yes' ? 'checked' : '',
             'status_methods_wallets_enabled' => $config['CULQI_METHODS_WALLETS'] == 'yes' ? 'checked' : '',
             'status_methods_quotebcp_enabled' => $config['CULQI_METHODS_QUOTEBCP'] == 'yes' ? 'checked' : ''
@@ -534,6 +546,7 @@ class Culqi extends PaymentModule
             'CULQI_LLAVE_PUBLICA' => Tools::getValue('CULQI_LLAVE_PUBLICA', Configuration::get('CULQI_LLAVE_PUBLICA')),
             'CULQI_METHODS_TARJETA' => Tools::getValue('CULQI_METHODS_TARJETA', Configuration::get('CULQI_METHODS_TARJETA')),
             'CULQI_METHODS_BANCAMOVIL' => Tools::getValue('CULQI_METHODS_BANCAMOVIL', Configuration::get('CULQI_METHODS_BANCAMOVIL')),
+            'CULQI_METHODS_YAPE' => Tools::getValue('CULQI_METHODS_YAPE', Configuration::get('CULQI_METHODS_YAPE')),
             'CULQI_METHODS_AGENTS' => Tools::getValue('CULQI_METHODS_AGENTS', Configuration::get('CULQI_METHODS_AGENTS')),
             'CULQI_METHODS_WALLETS' => Tools::getValue('CULQI_METHODS_WALLETS', Configuration::get('CULQI_METHODS_WALLETS')),
             'CULQI_METHODS_QUOTEBCP' => Tools::getValue('CULQI_METHODS_QUOTEBCP', Configuration::get('CULQI_METHODS_QUOTEBCP')),
@@ -573,6 +586,7 @@ class Culqi extends PaymentModule
             Configuration::updateValue('CULQI_LLAVE_PUBLICA', Tools::getValue('CULQI_LLAVE_PUBLICA'));
             Configuration::updateValue('CULQI_METHODS_TARJETA', Tools::getValue('CULQI_METHODS_TARJETA'));
             Configuration::updateValue('CULQI_METHODS_BANCAMOVIL', Tools::getValue('CULQI_METHODS_BANCAMOVIL'));
+            Configuration::updateValue('CULQI_METHODS_YAPE', Tools::getValue('CULQI_METHODS_YAPE'));
             Configuration::updateValue('CULQI_METHODS_AGENTS', Tools::getValue('CULQI_METHODS_AGENTS'));
             Configuration::updateValue('CULQI_METHODS_WALLETS', Tools::getValue('CULQI_METHODS_WALLETS'));
             Configuration::updateValue('CULQI_METHODS_QUOTEBCP', Tools::getValue('CULQI_METHODS_QUOTEBCP'));

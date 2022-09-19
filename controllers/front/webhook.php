@@ -69,12 +69,16 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
                     $state = 'CULQI_STATE_EXPIRED';
                 }
                 if ($stateRequest != 'pending') {
+
                     $order = new Order($id);
                     $history = new OrderHistory();
                     $history->id_order = (int)$order->id;
                     $history->changeIdOrderState((int)Configuration::get($state), (int)($order->id));
                     $order->current_state = (int)Configuration::get($state);
                     $order->update();
+
+                    $this->updateOrderAndcreateOrderHistoryState($id,Configuration::get($state));
+
                 }
                 break;
 
@@ -98,15 +102,33 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
                 $id = $findorder[0]['id_order'];
 
                 $state_refund = 7;
+
                 $order = new Order($id);
                 $history = new OrderHistory();
                 $history->id_order = (int)$order->id;
                 $history->changeIdOrderState((int)$state_refund, (int)($order->id));
                 $order->current_state = (int)$state_refund;
                 $order->update();
+
+                
+                $this->updateOrderAndcreateOrderHistoryState($id,$state_refund);
+
                 break;
         }
         //}
         echo json_encode(['success'=>'true', 'msj'=>'Operación exitosa']);
     }
+
+    public function updateOrderAndcreateOrderHistoryState($id_order,$id_state){
+		//insertamos el historial
+		$new_history = new OrderHistory();
+		$new_history->id_order = (int) $id_order;
+		$new_history->id_order_state = (int) $id_state;
+		$new_history->add(true);
+		$new_history->save();
+		//actualizamos el estado de la orden
+		$order = new Order($id_order);
+		$order->current_state = (int) $id_state;
+		$order->update();
+	}
 }
