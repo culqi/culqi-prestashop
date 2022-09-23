@@ -303,7 +303,7 @@ class Culqi extends PaymentModule
             "llave_secreta" => Configuration::get('CULQI_LLAVE_SECRETA'),
             "tarjeta" => Configuration::get('CULQI_METHODS_TARJETA') == 'yes' ? 'true' : 'false',
             "banca_movil" => Configuration::get('CULQI_METHODS_BANCAMOVIL') == 'yes' ? 'true' : 'false',
-            "yape" => Configuration::get('CULQI_METHODS_yape') == 'yes' ? 'true' : 'false',
+            "yape" => Configuration::get('CULQI_METHODS_YAPE') == 'yes' ? 'true' : 'false',
             "billetera" => Configuration::get('CULQI_METHODS_WALLETS') == 'yes' ? 'true' : 'false',
             "agente" => Configuration::get('CULQI_METHODS_AGENTS') == 'yes' ? 'true' : 'false',
             "cuetealo" => Configuration::get('CULQI_METHODS_QUOTEBCP') == 'yes' ? 'true' : 'false',
