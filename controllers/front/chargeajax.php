@@ -106,6 +106,7 @@ class CulqiChargeAjaxModuleFrontController extends ModuleFrontController
               'antifraud_details' => $antifraud_charges,
               'metadata' => ["pts_order_id" => (string)$cart->id, "sponsor" => "prestashop"],
           );
+          echo 'hola';
 
           if(Tools::getValue("parameters3DS")!==FALSE){
               $args_charge['authentication_3DS'] = Tools::getValue("parameters3DS");
