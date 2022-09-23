@@ -74,7 +74,26 @@ class CulqiChargeAjaxModuleFrontController extends ModuleFrontController
           //$this->module->validateOrder((int)$cart->id, Configuration::get('CULQI_STATE_PENDING'), (float)$cart->getordertotal(true), 'Culqi', null, array(), (int)$cart->id_currency, false, $customer->secure_key);
 
           //$order_id = Order::getOrderByCartId($this->context->cart->id);
-
+          $antifraud_charges = array();
+          if (isset($firstname) and !empty($firstname) and !is_null($firstname) and $firstname != '') {
+              $antifraud_charges['first_name'] = $firstname;
+          }
+          if (isset($lastname) and !empty($lastname) and !is_null($lastname) and $lastname != '') {
+              $antifraud_charges['last_name'] = $lastname;
+          }
+          if (isset($address[0]['address1']) and !empty($address[0]['address1']) and !is_null($address[0]['address1']) and $address[0]['address1'] != '') {
+              $antifraud_charges['address'] = $address[0]['address1'];
+          }
+          if (isset($address[0]['city']) and !empty($address[0]['city']) and !is_null($address[0]['city']) and $address[0]['city'] != '') {
+              $antifraud_charges['address_city'] = $address[0]['city'];
+          }
+          if (isset($country[0]['iso_code']) and !empty($country[0]['iso_code']) and !is_null($country[0]['iso_code']) and $country[0]['iso_code'] != '') {
+              $antifraud_charges['country_code'] = $country[0]['iso_code'];
+          }
+          if (isset($address[0]['phone']) and !empty($address[0]['phone']) and !is_null($address[0]['phone']) and $address[0]['phone'] != '') {
+              $antifraud_charges['phone_number'] = $address[0]['phone'];
+          }
+          $antifraud_charges['device_finger_print_id'] = Tools::getValue("device");
 
           // ENVIAMOS A GENERAR EL CARGO DE CULQI
           $args_charge = array(
@@ -84,15 +103,7 @@ class CulqiChargeAjaxModuleFrontController extends ModuleFrontController
               'source_id' => Tools::getValue("token_id"),
               'capture' => true,
               'enviroment' => $enviroment_cart,
-              'antifraud_details' => array(
-                  'firt_name'=>$firstname,
-                  'last_name'=>$lastname,
-                  'address'=>$address[0]['address1'],
-                  'address_city'=>$address[0]['city'],
-                  'country_code'=>$country[0]['iso_code'],
-                  'phone_number'=>$address[0]['phone'],
-                  'device_finger_print_id'=>Tools::getValue("device")
-              ),
+              'antifraud_details' => $antifraud_charges,
               'metadata' => ["pts_order_id" => (string)$cart->id, "sponsor" => "prestashop"],
           );
 
