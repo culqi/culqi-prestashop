@@ -60,8 +60,9 @@ class CulqiChargeAjaxModuleFrontController extends ModuleFrontController
     $enviroment_cart = $infoCheckout['enviroment_backend'];
     $address = $infoCheckout['address'];
     $country = $infoCheckout['country'];
-    $firstname = $infoCheckout['firstname'];
-    $lastname = $infoCheckout['lastname'];
+    $customer = $infoCheckout['customer'];
+    $firstname = $customer->firstname;
+    $lastname = $customer->lastname;
 
     //$order_id = Tools::getValue("ps_order_id");
     //var_dump($infoCheckout); exit(1);
