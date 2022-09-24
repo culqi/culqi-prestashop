@@ -105,7 +105,7 @@ class CulqiChargeAjaxModuleFrontController extends ModuleFrontController
             'source_id' => Tools::getValue("token_id"),
             'capture' => true, 
             'enviroment' => $enviroment_cart,
-            'antifraud_details' => $antifraud_charges,,
+            'antifraud_details' => $antifraud_charges,
             'metadata' => ["order_id" => (string) $order_id, "sponsor" => "prestashop"],
       );
 

@@ -76,6 +76,7 @@ class Culqi extends PaymentModule
             Configuration::updateValue('CULQI_LLAVE_SECRETA', '') &&
             Configuration::updateValue('CULQI_LLAVE_PUBLICA', '') &&
             Configuration::updateValue('CULQI_METHODS_TARJETA', '') &&
+            Configuration::updateValue('CULQI_METHODS_YAPE', '') &&
             Configuration::updateValue('CULQI_METHODS_BANCAMOVIL', '') &&
             Configuration::updateValue('CULQI_METHODS_AGENTS', '') &&
             Configuration::updateValue('CULQI_METHODS_WALLETS', '') &&
