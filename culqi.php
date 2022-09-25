@@ -65,6 +65,7 @@ class Culqi extends PaymentModule
     public function install()
     {
         $this->createStates();
+        $this->clearCache();
 
         return (
             parent::install() &&
@@ -88,6 +89,14 @@ class Culqi extends PaymentModule
         );
     }
 
+    private function clearCache()
+    {
+        Tools::clearSmartyCache();
+		Tools::clearXMLCache();
+		Tools::clearCache();
+		Tools::generateIndex();
+    }
+    
     private function getAddress($address)
     {
         if(empty($address->address1)) {

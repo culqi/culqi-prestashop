@@ -75,7 +75,7 @@ class CulqiChargeAjaxModuleFrontController extends ModuleFrontController
         $customer = new Customer($cart->id_customer);
         //$this->module->validateOrder((int)$cart->id, Configuration::get('CULQI_STATE_PENDING'), (float)$cart->getordertotal(true), 'Culqi', null, array(), (int)$cart->id_currency, false, $customer->secure_key);
 
-        $order_id = Order::getOrderByCartId($this->context->cart->id);
+        //$order_id = Order::getOrderByCartId($this->context->cart->id);
         
       $antifraud_charges = array();
       if (isset($firstname) and !empty($firstname) and !is_null($firstname) and $firstname != '') {
@@ -107,7 +107,7 @@ class CulqiChargeAjaxModuleFrontController extends ModuleFrontController
             'capture' => true, 
             'enviroment' => $enviroment_cart,
             'antifraud_details' => $antifraud_charges,
-            'metadata' => ["order_id" => (string) $order_id, "sponsor" => "prestashop"],
+            'metadata' => ["order_id" => (string)$cart->id, "sponsor" => "prestashop"],
       );
 
       if(Tools::getValue("parameters3DS")!==FALSE){

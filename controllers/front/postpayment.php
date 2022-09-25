@@ -38,7 +38,7 @@ class CulqiPostpaymentModuleFrontController extends ModuleFrontController
             'metadata' => ["order_id" => $id_order, "sponsor" => "prestashop"],
          );
 
-         $culqi_charge = $culqi->Charges->update( Tools::getValue("chargeid"), $args_charge );
+        $culqi_charge = $culqi->Charges->update( Tools::getValue("chargeid"), $args_charge );
 
         Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int)$cart->id . '&id_module=' . (int)$this->module->id . '&id_order=' . $this->module->currentOrder . '&key=' . $customer->secure_key);
 
