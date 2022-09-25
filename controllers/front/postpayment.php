@@ -29,13 +29,16 @@ class CulqiPostpaymentModuleFrontController extends ModuleFrontController
         //$order_payment->card_holder = Tools::getValue("transaction_id");
         $order_payment->update();
         //
+        $culqiPretashop =  new Culqi();
         $infoCheckout = $culqiPretashop->getCulqiInfoCheckout();
+        $enviroment_cart = $infoCheckout['enviroment_backend'];
         $culqi = new Culqi\Culqi(array('api_key' => $infoCheckout['llave_secreta'] ));
         $args_charge = array(
+            'enviroment' => $enviroment_cart,
             'metadata' => ["order_id" => $id_order, "sponsor" => "prestashop"],
          );
 
-         $culqi_charge = $culqi->Charges->update( $args_charge );
+         $culqi_charge = $culqi->Charges->update( Tools::getValue("chargeid"), $args_charge );
 
         Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int)$cart->id . '&id_module=' . (int)$this->module->id . '&id_order=' . $this->module->currentOrder . '&key=' . $customer->secure_key);
 
