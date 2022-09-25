@@ -54,7 +54,7 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
 
                 //$metadata = $data["metadata"];
 
-                $order_id = (int)$metadata["pts_order_id"];
+                $order_id = (int)$metadata["order_id"];
 
                 $findorder = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "orders where id_cart='" . $order_id . "'");
 
