@@ -2718,7 +2718,7 @@
       let html = "";
       merchants.forEach((merchant) => {
         html += `
->>>>>>> prestashop1.6-checkoutv4-js3DS__checkout-preview
+
                     <li>
                     <div class="items">
                        <div class="merchant_item" data-name="` + merchant.nombre_comercial + `" data-key='` + merchant.codigo_comercio + `'>
