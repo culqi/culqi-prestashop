@@ -1,5 +1,8 @@
 <?php
 
+include_once dirname(__FILE__, 3) . '/libraries/culqi-php/lib/culqi.php';
+include_once dirname(__FILE__, 3) . '/culqi.php';
+
 class CulqiRegisterSaleModuleFrontController extends ModuleFrontController
 {	
 
@@ -24,7 +27,18 @@ class CulqiRegisterSaleModuleFrontController extends ModuleFrontController
         // $order_payment->card_number = Tools::getValue("card_number").'-'.Tools::getValue("chargeid");
         // $order_payment->card_brand = Tools::getValue("card_brand");
         $order_payment->transaction_id = Tools::getValue("order_id");
-        $order_payment->update(); 
+        $order_payment->update();
+        //
+        $culqiPretashop =  new Culqi();
+        $infoCheckout = $culqiPretashop->getCulqiInfoCheckout();
+        $enviroment_cart = $infoCheckout['enviroment_backend'];
+        $culqi = new Culqi\Culqi(array('api_key' => $infoCheckout['llave_secreta'] ));
+        $args_order = array(
+            'enviroment' => $enviroment_cart,
+            'metadata' => ["order_id" => $id_order, "sponsor" => "prestashop"],
+         );
+
+        $culqi_order = $culqi->Orders->update( Tools::getValue("order_id"), $args_order ); 
 
         die(Tools::jsonEncode($id_order));
         //Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int)$cart->id . '&id_module=' . (int)$this->module->id . '&id_order=' . $this->module->currentOrder . '&key=' . $customer->secure_key);
