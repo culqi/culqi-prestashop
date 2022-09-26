@@ -56,10 +56,10 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
 
                 $order_id = (int)$metadata["order_id"];
 
-                $findorder = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "orders where id_cart='" . $order_id . "'");
+                //$findorder = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "orders where id_cart='" . $order_id . "'");
 
-                $id = $findorder[0]['id_order'];
-                Logger::addLog('$id ' . $id);
+                //$id = $findorder[0]['id_order'];
+                //Logger::addLog('$id ' . $id);
 
                 $state = 'CULQI_STATE_OK';
                 $stateRequest = $data["state"];
@@ -69,7 +69,7 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
                     $state = 'CULQI_STATE_EXPIRED';
                 }
                 if ($stateRequest != 'pending') {
-                    $this->updateOrderAndcreateOrderHistoryState($id,Configuration::get($state));
+                    $this->updateOrderAndcreateOrderHistoryState($order_id,Configuration::get($state));
                 }
                 break;
 
