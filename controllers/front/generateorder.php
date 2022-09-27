@@ -11,10 +11,8 @@ class CulqiGenerateOrderModuleFrontController extends ModuleFrontController
         parent::initContent();
         $this->ajax = false;
 
-        //var_dump('hi'); exit(1);
         $culqiPretashop =  new Culqi();
         $infoCheckout = $culqiPretashop->getCulqiInfoCheckout();
-        //var_dump($infoCheckout); exit(1);
         $culqi = new Culqi\Culqi(array('api_key' => $infoCheckout['llave_secreta'] ));
         $phone = ($infoCheckout['address'][0]['phone']!='' and !is_null($infoCheckout['address'][0]['phone'])) ? $infoCheckout['address'][0]['phone'] : '999999999';
         $expiration_date = time() + (int)$infoCheckout['tiempo_exp'] * 60 * 60;
@@ -40,15 +38,7 @@ class CulqiGenerateOrderModuleFrontController extends ModuleFrontController
             'enviroment' => $infoCheckout['enviroment_backend'],
             'metadata' => ["order_id" => (string)$infoCheckout['orden'], "sponsor" => "prestashop"]
         );
-
-        //var_dump($args_order); exit(1);
-        
         $culqi_order = $culqi->Orders->create( $args_order );
-        //var_dump($culqi_order); exit(1);
-        //echo var_dump($culqi_order);
-
         die(Tools::jsonEncode($culqi_order->id));
-        
-
     }
 }
