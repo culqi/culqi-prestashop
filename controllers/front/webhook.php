@@ -23,16 +23,11 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         $amount = trim($data['amount']);
         $order_number = trim($data['order_number']);
         $id = trim($data['id']);
-        //$cartID = $metadata['cart_id'];
-
-        //error_log($cartID);
-
         if (empty($amount)) {
             echo json_encode(['success'=>'false', 'msj'=>'No envió el amount']);
             exit();
         }
 
-        //if ($ObjCart->orderExists() > 0 ) {
         if ($postBody["object"] != 'event')
             return;
 
@@ -52,14 +47,7 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
                     exit("Error: order_id, order_number, currency_code o state vacios");
                 }
 
-                //$metadata = $data["metadata"];
-
                 $order_id = (int)$metadata["order_id"];
-
-                //$findorder = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "orders where id_cart='" . $order_id . "'");
-
-                //$id = $findorder[0]['id_order'];
-                //Logger::addLog('$id ' . $id);
 
                 $state = 'CULQI_STATE_OK';
                 $stateRequest = $data["state"];
@@ -97,18 +85,15 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
                 $this->updateOrderAndcreateOrderHistoryState($id,$state_refund);
                 break;
         }
-        //}
         echo json_encode(['success'=>'true', 'msj'=>'Operación exitosa']);
     }
 
     public function updateOrderAndcreateOrderHistoryState($id_order,$id_state){
-		//insertamos el historial
 		$new_history = new OrderHistory();
 		$new_history->id_order = (int) $id_order;
 		$new_history->id_order_state = (int) $id_state;
 		$new_history->add(true);
 		$new_history->save();
-		//actualizamos el estado de la orden
 		$order = new Order($id_order);
 		$order->current_state = (int) $id_state;
 		$order->update();

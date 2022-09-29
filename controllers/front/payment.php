@@ -23,7 +23,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
             $urlapi_checkout = URLAPI_CHECKOUT_PROD;
             $urlapi_3ds = URLAPI_PROD_3DS;
         }
-        // se agrega js y css necesarios
+
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/culqi.css');
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/waitMe.min.css');
         $this->context->controller->addJS($urlapi_checkout);
@@ -36,25 +36,10 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
             Tools::redirect('index.php?controller=order');
         }
 
-       //$total = $cart->getOrderTotal(true, Cart::BOTH);
         $total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH),  _PS_PRICE_DISPLAY_PRECISION_);
-        //$total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
         $color_palette = Configuration::get('CULQI_COLOR_PALETTE');
         $base_url = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . 'module/culqi/payment';
 
-        /*$total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
-        //$total = $cart->getOrderTotal(true, Cart::BOTH);
-        $total = explode('.', $total);
-        if(count($total)>1){
-            $decimales = $total[1];
-            if(strlen($decimales)==1){
-                $decimales=$decimales*10;
-            }
-            $total = ($total[0]*100)+$decimales;
-        }else{
-            $total = $total[0]*100;
-        }
-*/
         $total = $total*100;
 
 

@@ -1,4 +1,3 @@
-<!-- <link rel="stylesheet" href="{$this_path|escape:'htmlall':'UTF-8'}views/css/waitMe.min.css" type="text/css" media="all"> -->
 
 <script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
 
@@ -333,23 +332,7 @@
                 }
             }, 1000);
 
-        /*
-            if (Culqi.token == null) {
-                var id = setInterval(function () {
-                    if (!Culqi.isOpen) {
-                        run_waitMe();
-                        clearInterval(id);
-                        var orderid = Culqi.order['id'];
-                        var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpaymentpending', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                        location.href = url + '?ps_order_id=' + ps_order_id;
-                    }
-                }, 1000);
-            } else {
-                var orderid = Culqi.order['id'];
-                var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpaymentpending', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                location.href = url + '?ps_order_id=' + ps_order_id;
-            }
-            */
+
         } else if (Culqi.token) {
             Culqi.close();
             run_waitMe();
