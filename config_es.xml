@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>culqi</name>
-	<displayName><![CDATA[Culqi Checkout]]></displayName>
+	<displayName><![CDATA[Culqi]]></displayName>
 	<version><![CDATA[3.0.4]]></version>
 	<description><![CDATA[Con&eacute;ctate a nuestra pasarela de pagos para aumentar tus ventas.]]></description>
 	<author><![CDATA[Team Culqi (Juan Ysen, Dennis Landa)]]></author>

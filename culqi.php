@@ -56,7 +56,7 @@ class Culqi extends PaymentModule
         parent::__construct();
 
         $this->meta_title = 'Culqi';
-        $this->displayName = 'Culqi Checkout';
+        $this->displayName = 'Culqi';
         $this->description = $this->l('Conéctate a nuestra pasarela de pagos para aumentar tus ventas.');
         $this->confirmUninstall = $this->l('¿Estás seguro que quieres desintalar el módulo de Culqi?');
 

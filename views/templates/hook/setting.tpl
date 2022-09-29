@@ -1662,7 +1662,7 @@
 
       <div class="form-group">
         <label class="control-label col-lg-4" style="font-weight: bold !important;">
-          Culqi Checkout
+          Culqi
         </label>
         <div class="col-lg-8 can-toggle demo-rebrand-1">
           <input id="d" type="checkbox" name="CULQI_ENABLED" value="yes" {$status_enabled|escape:'htmlall':'UTF-8'}>
