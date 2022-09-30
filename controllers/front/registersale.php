@@ -31,7 +31,11 @@ class CulqiRegisterSaleModuleFrontController extends ModuleFrontController
             'metadata' => ["order_id" => $id_order, "sponsor" => "prestashop"],
          );
 
-        $culqi_order = $culqi->Orders->update( Tools::getValue("order_id"), $args_order ); 
+        try{
+            $culqi_order = $culqi->Orders->update( Tools::getValue("order_id"), $args_order );
+        }catch (Exception $e){
+            echo '<script type="text/javascript">console.log("Error en el update de cargo!"); </script>';
+        }
 
         die(Tools::jsonEncode($id_order));
 
