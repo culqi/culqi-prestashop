@@ -36,7 +36,11 @@ class CulqiPostpaymentModuleFrontController extends ModuleFrontController
             'metadata' => ["order_id" => $id_order, "sponsor" => "prestashop"],
          );
 
-        $culqi_charge = $culqi->Charges->update( Tools::getValue("chargeid"), $args_charge );
+        try{
+            $culqi_charge = $culqi->Charges->update( Tools::getValue("chargeid"), $args_charge );
+        }catch (Exception $e){
+            echo '<script type="text/javascript">console.log("Error en el update de cargo!"); </script>';
+        }
 
         Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int)$cart->id . '&id_module=' . (int)$this->module->id . '&id_order=' . $this->module->currentOrder . '&key=' . $customer->secure_key);
 
