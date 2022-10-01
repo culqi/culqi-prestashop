@@ -1631,7 +1631,7 @@
     <form class="contact-form" action="" id="contact-form" method="post" enctype="multipart/form-data">
         <div>
             <div>
-                <img src="https://psculqi.purpura.pe/modules/culqi/views/img/icon-check.png"/>
+                <img src="{$module_dir|escape:'htmlall':'UTF-8'}views/img/icon-check.png"/>
             </div>
             <div>
                 <h1>¡Configuración registrada<br/> con éxito!</h1>
