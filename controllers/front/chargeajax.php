@@ -1,7 +1,14 @@
 <?php
 
-include_once dirname(__FILE__, 3) . '/libraries/culqi-php/lib/culqi.php';
-include_once dirname(__FILE__, 3) . '/culqi.php';
+if(phpversion() <= 5.7) {
+    include_once RAIZ . '/libraries/culqi-php/lib/culqi.php';
+    include_once dirname(__FILE__) . '/culqi.php';
+} else {
+    include_once dirname(__FILE__, 3) . '/libraries/culqi-php/lib/culqi.php';
+    include_once dirname(__FILE__, 3) . '/culqi.php';
+}
+
+
 
 class CulqiChargeAjaxModuleFrontController extends ModuleFrontController
 {
