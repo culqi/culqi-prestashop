@@ -1,7 +1,7 @@
 <style type="text/css">
 	.culqi-payment {
-		padding: 30px 0px 50px 200px !important;
-		background: url('cards.png') 23px 22px no-repeat #fbfbfb;*/
+		padding: 30px 0px 50px 140px !important;
+		background: url('https://raw.githubusercontent.com/culqi/culqi-prestashop/prestashop1.6-checkoutv4-js3DS-imagen2/views/templates/hook/cards.png') -8px 22px no-repeat #fbfbfb;*/
 	}
 </style>
 
