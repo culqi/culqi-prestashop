@@ -1,8 +1,9 @@
 <style type="text/css">
 	.culqi-payment {
 		padding: 43px 0px 44px 97px !important;
-		background: url('/modules/culqi//logo.png') 17px 22px no-repeat #fbfbfb;
+		background: url('{$module_dir|escape:'htmlall':'UTF-8'}/logo.png') 17px 22px no-repeat #fbfbfb;	
 		background-size: 62px 61px;
+		
 	}
 </style>
 
