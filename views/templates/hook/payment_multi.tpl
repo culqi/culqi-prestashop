@@ -1,8 +1,8 @@
 <style type="text/css">
 	.culqi-payment {
-		padding: 30px 0px 50px 144px !important;
-		background: url('{$module_dir|escape:'htmlall':'UTF-8'}views/templates/hook/cards.png') 11px 22px no-repeat #fbfbfb;	
-		background-size: 122px 53px;
+		padding: 43px 0px 44px 97px !important;
+		background: url('/modules/culqi//logo.png') 17px 22px no-repeat #fbfbfb;
+		background-size: 62px 61px;
 	}
 </style>
 
