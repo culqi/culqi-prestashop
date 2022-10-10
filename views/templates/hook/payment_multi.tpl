@@ -2,6 +2,10 @@
 	.culqi-payment {
 		/*padding: 30px 0px 50px 200px !important;
 		background: url('https://i.imgur.com/10Nj1l0.png') 23px 22px no-repeat #fbfbfb;*/
+		padding: 43px 0px 44px 97px !important;
+		background: url('{$module_dir|escape:'htmlall':'UTF-8'}/logo.png') 17px 22px no-repeat #fbfbfb;	
+		background-size: 62px 61px;
+		
 	}
 </style>
 
