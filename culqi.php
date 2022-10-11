@@ -1,4 +1,5 @@
 <?php
+define("RAIZ",dirname(__FILE__));
 
 if (!defined('_PS_VERSION_'))
     exit;
@@ -21,7 +22,7 @@ define('URLAPI_WEBHOOK_INTEG', URLAPI_INTEG.'/secure/events');
 define('URLAPI_ORDERCHARGES_PROD', 'https://api.culqi.com/v2');
 define('URLAPI_CHECKOUT_PROD', 'https://checkout.culqi.com/js/v4');
 define('URLAPI_LOGIN_PROD', URLAPI_PROD.'/user/login');
-define('URLAPI_MERCHANT_PROD', URLAPI_PROD.'/secure/merchant/');
+define('URLAPI_MERCHANT_PROD', URLAPI_PROD.'/secure/merchant/'); 
 define('URLAPI_MERCHANTSINGLE_PROD', URLAPI_PROD.'/secure/keys/?merchant=');
 define('URLAPI_WEBHOOK_PROD', URLAPI_PROD.'/secure/events');
 
