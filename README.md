@@ -25,8 +25,7 @@ Luego busca el plugin instalado con el nombre de **Culqi** y procedes a activarl
 
 A continuación se presenta una imagen de la pantalla de configuración:
 
-![prestashop](https://docs.culqi.com/images/plugins/prestashop_conf1.png)
-![prestashop](https://docs.culqi.com/images/plugins/prestashop_conf2.png)
+![prestashop](https://docs.culqi.com/images/plugins/prestashop_conf.png)
 
 Ingresa en la sección "Settings" para configurar el plugin.
 Independiente del mecanismo de instalación, los pasos para configurar el plugin son los mismos.
