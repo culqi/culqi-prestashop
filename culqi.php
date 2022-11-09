@@ -505,6 +505,8 @@ class Culqi extends PaymentModule
             $urlapi_merchantsingle = URLAPI_MERCHANTSINGLE_PROD;
             $urlapi_webhook = URLAPI_WEBHOOK_PROD;
         }
+        $username = $this->generate_username();
+        $password = $this->generate_password();
         $post = 0;
         if(isset($_POST['btnSubmit']) and $_POST['btnSubmit']==1){
             $post = 1;
