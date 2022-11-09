@@ -14,6 +14,7 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         Logger::addLog('Inicio weebhook');
 
         $postBody = file_get_contents("php://input");
+        $input = json_decode( $postBody );
         $postBody = json_decode($postBody, true);
         $data = json_decode($postBody["data"], true);
         Logger::addLog('$data ' . serialize($data));
@@ -23,6 +24,15 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         $amount = trim($data['amount']);
         $order_number = trim($data['order_number']);
         $id = trim($data['id']);
+
+		$username = $input->userName;
+		$password = $input->password;
+        $settings = $this->module->getConfigFieldsValues();
+        $username_bd = $settings['CULQI_USERNAME'];
+		$password_bd = $settings['CULQI_PASSWORD'];
+        if( $username != $username_bd || $password != $password_bd ){
+			exit("Error: Error de autenticacion");
+		}
         if (empty($amount)) {
             echo json_encode(['success'=>'false', 'msj'=>'No envió el amount']);
             exit();

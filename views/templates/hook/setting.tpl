@@ -1856,7 +1856,7 @@
                     <input type="text" name="CULQI_NOTPAY" id="CULQI_NOTPAY"
                            value="{$fields_value.CULQI_URL_WEBHOOK_PS|escape:'htmlall':'UTF-8'}" readonly="true"
                            class="">
-                    <span class="form-text text-muted"> Si no iniciaste sesión con tu cuenta de Culqi Panel, tienes que configurar esta URL.</span>
+                    <span class="form-text text-muted"> Si no iniciaste sesión con tu cuenta de Culqi Panel, tienes que configurar esta URL colocando estas credenciales:</span>
                 </div>
             </div>
 
