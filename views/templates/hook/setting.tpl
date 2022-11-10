@@ -1867,17 +1867,12 @@
                     <input type="hidden" name="CULQI_USERNAME" id="CULQI_USERNAME"
                            value="{$fields_value.CULQI_USERNAME|escape:'htmlall':'UTF-8'}"
                            class="">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-lg-8">
                     <input type="hidden" name="CULQI_PASSWORD" id="CULQI_PASSWORD"
                            value="{$fields_value.CULQI_PASSWORD|escape:'htmlall':'UTF-8'}"
                            class="">
                 </div>
             </div>
-            
+
             <div class="form-group customcheckout">
                 <label class="control-label col-lg-4" style="font-weight: bold !important;">
                     Personalizar formulario de checkout
