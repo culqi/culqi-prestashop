@@ -1871,14 +1871,6 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label col-lg-4" style="font-weight: bold !important;">
-
-                    <span class="tool"
-                          data-tip=""
-                          tabindex="2" style=" font-weight: normal;">
-                    </span>
-
-                </label>
                 <div class="col-lg-8">
                     <input type="hidden" name="CULQI_PASSWORD" id="CULQI_PASSWORD"
                            value="{$fields_value.CULQI_PASSWORD|escape:'htmlall':'UTF-8'}"
