@@ -1862,7 +1862,7 @@
                 </div>
             </div>
 
-            <div class="form-group">               
+            <div class="form-group" style="display: none;">               
                 <div class="col-lg-8">
                     <input type="hidden" name="CULQI_USERNAME" id="CULQI_USERNAME"
                            value="{$fields_value.CULQI_USERNAME|escape:'htmlall':'UTF-8'}"
