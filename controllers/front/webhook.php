@@ -12,10 +12,9 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
     {
 
         Logger::addLog('Inicio weebhook');
-
         $postBody = file_get_contents("php://input");
         $headers = getallheaders();
-		$headers = $headers['Authorization'];
+        $headers = $headers['Authorization'];
         $authorization = substr($headers,6);
         $credenciales = base64_decode($authorization);
         $credenciales = explode( ':', $credenciales );
@@ -27,7 +26,6 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         $postBody = json_decode($postBody, true);
         $data = json_decode($postBody["data"], true);
         Logger::addLog('$data ' . serialize($data));
-
         $currencyCode = trim($data['currency_code']);
         $state = trim($data['state']);
         $amount = trim($data['amount']);
