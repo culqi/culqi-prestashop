@@ -81,6 +81,8 @@ class Culqi extends PaymentModule
             Configuration::updateValue('CULQI_METHODS_QUOTEBCP', '') &&
             Configuration::updateValue('CULQI_TIMEXP', '') &&
             Configuration::updateValue('CULQI_NOTPAY', '') &&
+            Configuration::updateValue('CULQI_USERNAME', '') &&
+            Configuration::updateValue('CULQI_PASSWORD', '') &&
             Configuration::updateValue('CULQI_URL_LOGO', '') && 
             Configuration::updateValue('CULQI_COLOR_PALETTE', '')
         );
@@ -302,6 +304,8 @@ class Culqi extends PaymentModule
             || !Configuration::deleteByName('CULQI_METHODS_QUOTEBCP')
             || !Configuration::deleteByName('CULQI_TIMEXP')
             || !Configuration::deleteByName('CULQI_NOTPAY')
+            || !Configuration::deleteByName('CULQI_USERNAME')
+            || !Configuration::deleteByName('CULQI_PASSWORD')
             || !Configuration::deleteByName('CULQI_URL_LOGO')
             || !Configuration::deleteByName('CULQI_COLOR_PALETTE')
             || !$this->uninstallStates())
@@ -465,7 +469,26 @@ class Culqi extends PaymentModule
         //var_dump(__FILE__); exit(1);
         return $this->display(__FILE__, '/views/templates/hook/setting.tpl');
     } 
-
+    public function generate_username() {
+        $username_bd = Tools::getValue('CULQI_USERNAME', Configuration::get('CULQI_USERNAME'));
+        if($username_bd == '' || $username_bd == null){
+            return bin2hex(random_bytes(5));
+        }
+        else
+        {
+            return $username_bd;
+        }
+    }
+    public function generate_password() {
+        $password_bd = Tools::getValue('CULQI_PASSWORD', Configuration::get('CULQI_PASSWORD'));
+        if($password_bd == '' || $password_bd == null){
+            return bin2hex(random_bytes(10));
+        }
+        else
+        {
+            return $password_bd;
+        }
+    }
     public function getConfigFieldsValues()
     {
         $checked_integ = 'checked="true"';
@@ -482,6 +505,8 @@ class Culqi extends PaymentModule
             $urlapi_merchantsingle = URLAPI_MERCHANTSINGLE_PROD;
             $urlapi_webhook = URLAPI_WEBHOOK_PROD;
         }
+        $username = $this->generate_username();
+        $password = $this->generate_password();
         $post = 0;
         if(isset($_POST['btnSubmit']) and $_POST['btnSubmit']==1){
             $post = 1;
@@ -500,6 +525,8 @@ class Culqi extends PaymentModule
             'CULQI_METHODS_QUOTEBCP' => Tools::getValue('CULQI_METHODS_QUOTEBCP', Configuration::get('CULQI_METHODS_QUOTEBCP')),
             'CULQI_TIMEXP' => Tools::getValue('CULQI_TIMEXP', Configuration::get('CULQI_TIMEXP')),
             'CULQI_NOTPAY' => Tools::getValue('CULQI_NOTPAY', Configuration::get('CULQI_NOTPAY')),
+            'CULQI_USERNAME' =>$username,
+            'CULQI_PASSWORD' =>$password,
             'CULQI_URL_LOGO' => Tools::getValue('CULQI_URL_LOGO', Configuration::get('CULQI_URL_LOGO')),
             'CULQI_COLOR_PALETTE' => Tools::getValue('CULQI_COLOR_PALETTE', Configuration::get('CULQI_COLOR_PALETTE')),
             'CULQI_COLOR_PALETTEID' => str_replace('#', '', Tools::getValue('CULQI_COLOR_PALETTE', Configuration::get('CULQI_COLOR_PALETTE'))),
@@ -540,6 +567,8 @@ class Culqi extends PaymentModule
             Configuration::updateValue('CULQI_METHODS_QUOTEBCP', Tools::getValue('CULQI_METHODS_QUOTEBCP'));
             Configuration::updateValue('CULQI_TIMEXP', Tools::getValue('CULQI_TIMEXP'));
             Configuration::updateValue('CULQI_NOTPAY', Tools::getValue('CULQI_NOTPAY'));
+            Configuration::updateValue('CULQI_USERNAME', Tools::getValue('CULQI_USERNAME'));
+            Configuration::updateValue('CULQI_PASSWORD', Tools::getValue('CULQI_PASSWORD'));
             Configuration::updateValue('CULQI_URL_LOGO', Tools::getValue('CULQI_URL_LOGO'));
             Configuration::updateValue('CULQI_COLOR_PALETTE', Tools::getValue('CULQI_COLOR_PALETTE'));
         }

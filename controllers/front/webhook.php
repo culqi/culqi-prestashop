@@ -14,6 +14,16 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         Logger::addLog('Inicio weebhook');
 
         $postBody = file_get_contents("php://input");
+        $headers = getallheaders();
+		$headers = $headers['Authorization'];
+        $authorization = substr($headers,6);
+        $credenciales = base64_decode($authorization);
+        $credenciales = explode( ':', $credenciales );
+        $username = $credenciales[0];
+        $password = $credenciales[1];      
+        if(!isset($username) or !isset($password)){
+           exit("Error: No Autorizado");
+        } 
         $postBody = json_decode($postBody, true);
         $data = json_decode($postBody["data"], true);
         Logger::addLog('$data ' . serialize($data));
@@ -23,6 +33,12 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         $amount = trim($data['amount']);
         $order_number = trim($data['order_number']);
         $id = trim($data['id']);
+        $settings = $this->module->getConfigFieldsValues();
+        $username_bd = $settings['CULQI_USERNAME'];
+		$password_bd = $settings['CULQI_PASSWORD'];
+        if( $username != $username_bd || $password != $password_bd ){
+			exit("Error: Crendenciales Incorrectas");
+		}
         if (empty($amount)) {
             echo json_encode(['success'=>'false', 'msj'=>'No envió el amount']);
             exit();
