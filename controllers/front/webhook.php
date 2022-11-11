@@ -14,7 +14,14 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         Logger::addLog('Inicio weebhook');
 
         $postBody = file_get_contents("php://input");
-        $input = json_decode( $postBody );
+        $headers = getallheaders();
+		$headers = $headers['Authorization'];
+		error_log("Authorizationb: " . $headers);
+        $authorization = substr($headers,6);
+        $credenciales = base64_decode($authorization);
+        $credenciales = explode( ':', $credenciales );
+        $username = $credenciales[0];
+        $password = $credenciales[1];       
         $postBody = json_decode($postBody, true);
         $data = json_decode($postBody["data"], true);
         Logger::addLog('$data ' . serialize($data));
@@ -25,8 +32,6 @@ class CulqiWebHookModuleFrontController extends ModuleFrontController
         $order_number = trim($data['order_number']);
         $id = trim($data['id']);
 
-		$username = $input->userName;
-		$password = $input->password;
         $settings = $this->module->getConfigFieldsValues();
         $username_bd = $settings['CULQI_USERNAME'];
 		$password_bd = $settings['CULQI_PASSWORD'];
