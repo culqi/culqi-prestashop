@@ -474,20 +474,14 @@ class Culqi extends PaymentModule
         if($username_bd == '' || $username_bd == null){
             return bin2hex(random_bytes(5));
         }
-        else
-        {
-            return $username_bd;
-        }
+        return $username_bd;
     }
     public function generate_password() {
         $password_bd = Tools::getValue('CULQI_PASSWORD', Configuration::get('CULQI_PASSWORD'));
         if($password_bd == '' || $password_bd == null){
             return bin2hex(random_bytes(10));
         }
-        else
-        {
-            return $password_bd;
-        }
+        return $password_bd;
     }
     public function getConfigFieldsValues()
     {
