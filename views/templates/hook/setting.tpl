@@ -2785,6 +2785,7 @@
                                 "eventId": "order.status.changed",
                                 "url": jQuery('#CULQI_NOTPAY').val(),
                                 "version": 2,
+                                "loginActive": true,
                                 "username": jQuery('#CULQI_USERNAME').val(),
                                 "password": jQuery('#CULQI_PASSWORD').val()
                             }),
