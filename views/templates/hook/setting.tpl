@@ -2784,7 +2784,9 @@
                                 "merchant": jQuery('#CULQI_LLAVE_PUBLICA').val(),
                                 "eventId": "order.status.changed",
                                 "url": jQuery('#CULQI_NOTPAY').val(),
-                                "version": 2
+                                "version": 2,
+                                "username": jQuery('#CULQI_USERNAME').val(),
+                                "password": jQuery('#CULQI_PASSWORD').val()
                             }),
                         };
                         jQuery.ajax(settings).done(function (response) {
