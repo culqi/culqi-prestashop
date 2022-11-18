@@ -1856,7 +1856,20 @@
                     <input type="text" name="CULQI_NOTPAY" id="CULQI_NOTPAY"
                            value="{$fields_value.CULQI_URL_WEBHOOK_PS|escape:'htmlall':'UTF-8'}" readonly="true"
                            class="">
-                    <span class="form-text text-muted"> Si no iniciaste sesión con tu cuenta de Culqi Panel, tienes que configurar esta URL.</span>
+                    <span class="form-text text-muted"> Si no iniciaste sesión con tu cuenta de Culqi Panel, tienes que configurar esta URL colocando estas credenciales:</span><br>
+                    <b>Usuario:</b> {$fields_value.CULQI_USERNAME|escape:'htmlall':'UTF-8'}  <b>Password:</b> {$fields_value.CULQI_PASSWORD|escape:'htmlall':'UTF-8'}<br>
+
+                </div>
+            </div>
+
+            <div class="form-group" style="display: none;">               
+                <div class="col-lg-8">
+                    <input type="hidden" name="CULQI_USERNAME" id="CULQI_USERNAME"
+                           value="{$fields_value.CULQI_USERNAME|escape:'htmlall':'UTF-8'}"
+                           class="">
+                    <input type="hidden" name="CULQI_PASSWORD" id="CULQI_PASSWORD"
+                           value="{$fields_value.CULQI_PASSWORD|escape:'htmlall':'UTF-8'}"
+                           class="">
                 </div>
             </div>
 
@@ -2771,7 +2784,10 @@
                                 "merchant": jQuery('#CULQI_LLAVE_PUBLICA').val(),
                                 "eventId": "order.status.changed",
                                 "url": jQuery('#CULQI_NOTPAY').val(),
-                                "version": 2
+                                "version": 2,
+                                "loginActive": true,
+                                "username": jQuery('#CULQI_USERNAME').val(),
+                                "password": jQuery('#CULQI_PASSWORD').val()
                             }),
                         };
                         jQuery.ajax(settings).done(function (response) {

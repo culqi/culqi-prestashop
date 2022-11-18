@@ -144,7 +144,12 @@
 
     // GENERAR DEVICE ID (INVOCAR APENAS SE DE AL BOTON PAGAR Y ABRA EL CULQI CHECKOUT)
     Culqi3DS.publicKey = "{/literal}{$llave_publica|escape:'htmlall':'UTF-8'}{literal}";
-    var device = await Culqi3DS.generateDevice();
+    //var device = await Culqi3DS.generateDevice();
+    async function generateDevice(){
+        const device = await Culqi3DS.generateDevice();
+        return device;
+    }
+    var device = generateDevice();
     var orderid = '';
 
     $(document).ready(function () {
