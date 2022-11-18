@@ -4,7 +4,7 @@ define("RAIZ",dirname(__FILE__));
 if (!defined('_PS_VERSION_'))
     exit;
 
-define('CULQI_SDK_VERSION', '1.3.0');
+define('CULQI_PLUGIN_VERSION', '3.0.2');
 
 define('URLAPI_INTEG', 'https://integ-panel.culqi.com');
 define('URLAPI_PROD', 'https://panel.culqi.com');
@@ -43,7 +43,7 @@ class Culqi extends PaymentModule
     {
         $this->name = 'culqi';
         $this->tab = 'payments_gateways';
-        $this->version = '3.0.1';
+        $this->version = CULQI_PLUGIN_VERSION;
         $this->controllers = array('chargeajax','postpayment', 'generateorder', 'webhook', 'registersale');
         $this->author = 'Culqi';
         $this->ps_versions_compliancy = array('min' => '1.6', 'max' => _PS_VERSION_);
@@ -540,6 +540,7 @@ class Culqi extends PaymentModule
             'URLAPI_MERCHANT_PROD' => URLAPI_MERCHANT_PROD,
             'URLAPI_MERCHANTSINGLE_PROD' => URLAPI_MERCHANTSINGLE_PROD,
             'URLAPI_WEBHOOK_PROD' => URLAPI_WEBHOOK_PROD,
+            'CULQI_PLUGIN_VERSION' => CULQI_PLUGIN_VERSION,
             'CULQI_POST_ERRORS'=>$errors,
             'commerce'=>Configuration::get('PS_SHOP_NAME')
         );
