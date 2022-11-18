@@ -1,6 +1,6 @@
 <style>
     .plugin-version{
-            margin-top: -30px;
+            margin-top: -31px;
     }
     #woocommerce_culqi_login_button {
         background: #ffffff;
