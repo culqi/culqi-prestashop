@@ -530,7 +530,7 @@ class Culqi extends PaymentModule
             'CULQI_URL_MERCHANT'=>$urlapi_merchant,
             'CULQI_URL_MERCHANTSINGLE'=>$urlapi_merchantsingle,
             'CULQI_URL_WEBHOOK'=>$urlapi_webhook,
-            'CULQI_URL_WEBHOOK_PS'=>$this->context->link->getModuleLink($this->name, 'webhook', array(), true),
+            'CULQI_URL_WEBHOOK_PS'=> Tools::getHttpHost(true).__PS_BASE_URI__.'module/culqi/webhook',
             'CULQI_POST' => $post,
             'URLAPI_LOGIN_INTEG' => URLAPI_LOGIN_INTEG,
             'URLAPI_MERCHANT_INTEG' => URLAPI_MERCHANT_INTEG,
