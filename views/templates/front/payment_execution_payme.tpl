@@ -28,8 +28,8 @@
         </p>
 
         <p id="showresult" class="text-center" style="margin-top: 2em; text-align: center; display: none;">
-			<b id="showresultcontent" class="text-danger" style="color:red; font-size: 13px;"></b>
-		</p>
+            <b id="showresultcontent" class="text-danger" style="color:red; font-size: 13px;"></b>
+        </p>
 
     {/if}
 
@@ -145,12 +145,9 @@
     // GENERAR DEVICE ID (INVOCAR APENAS SE DE AL BOTON PAGAR Y ABRA EL CULQI CHECKOUT)
     Culqi3DS.publicKey = "{/literal}{$llave_publica|escape:'htmlall':'UTF-8'}{literal}";
 //    var device = await Culqi3DS.generateDevice();
-    const device = Promise.resolve(Culqi3DS.generateDevice());
-    device.then(value => {
-      $('#buyButton').on('click', function (e) {
-        $('#buyButton').attr('disabled', true);
-        generateOrder(e, value);
-      });
+    const device_aux = Promise.resolve(Culqi3DS.generateDevice());
+    device_aux.then(value => {
+      window.device = value;
     }).catch(err => {
       console.log(err);
     });
@@ -204,7 +201,12 @@
         });
     });
 
-    function generateOrder(e, device) {
+    $('#buyButton').on('click', function (e) {
+        $('#buyButton').attr('disabled', true);
+        generateOrder(e);
+    });
+
+    function generateOrder(e) {
         if ({/literal}{$banca_movil|escape:'htmlall':'UTF-8'}{literal} || {/literal}{$agente|escape:'htmlall':'UTF-8'}{literal} || {/literal}{$billetera|escape:'htmlall':'UTF-8'}{literal} || {/literal}{$cuetealo|escape:'htmlall':'UTF-8'}{literal}) {
             $.ajax({
                 url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'generateorder', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
@@ -422,9 +424,8 @@
         }
 
     }
-
+        
     window.culqi = culqi;
-
 
     function run_waitMe() {
         $('body').waitMe({
@@ -439,11 +440,3 @@
 
 {/literal}
 
-
-        
-        
-
-
-
-
-        
