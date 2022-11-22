@@ -28,8 +28,8 @@
         </p>
 
         <p id="showresult" class="text-center" style="margin-top: 2em; text-align: center; display: none;">
-			<b id="showresultcontent" class="text-danger" style="color:red; font-size: 13px;"></b>
-		</p>
+            <b id="showresultcontent" class="text-danger" style="color:red; font-size: 13px;"></b>
+        </p>
 
     {/if}
 
@@ -144,12 +144,13 @@
 
     // GENERAR DEVICE ID (INVOCAR APENAS SE DE AL BOTON PAGAR Y ABRA EL CULQI CHECKOUT)
     Culqi3DS.publicKey = "{/literal}{$llave_publica|escape:'htmlall':'UTF-8'}{literal}";
-    var device = await Culqi3DS.generateDevice();
-    /*async function generateDevice(){
-        const device = await Culqi3DS.generateDevice();
-        return device;
-    }
-    var device = generateDevice();*/
+//    var device = await Culqi3DS.generateDevice();
+    const device_aux = Promise.resolve(Culqi3DS.generateDevice());
+    device_aux.then(value => {
+      window.device = value;
+    }).catch(err => {
+      console.log(err);
+    });
     var orderid = '';
 
     $(document).ready(function () {
@@ -423,9 +424,8 @@
         }
 
     }
-
+        
     window.culqi = culqi;
-
 
     function run_waitMe() {
         $('body').waitMe({
@@ -440,11 +440,3 @@
 
 {/literal}
 
-
-        
-        
-
-
-
-
-        
