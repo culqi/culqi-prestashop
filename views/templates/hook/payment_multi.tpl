@@ -7,6 +7,12 @@
 		background-size: 62px 61px;
 		
 	}
+
+	.culqi-payment-logos {
+		max-width: 285px;
+		margin-right: 15px;
+		float: right;
+	}
 </style>
 
 <div class="row">
@@ -15,6 +21,7 @@
 		    <a class="culqi-payment" href="{$link->getModuleLink('culqi', 'payment', [], true)|escape:'htmlall':'UTF-8'}" title="{l s='Pagar con tarjetas de crédito/débito y más' mod='culqi'}">
 		    	Pagar con Culqi
 		    	<span>Pagar con tarjetas de crédito/débito y más</span>
+				<img class="culqi-payment-logos" src="{$this_path}logo_cards.png" alt="" />
 		    </a>
 		</p>
 	</div>
