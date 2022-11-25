@@ -362,7 +362,8 @@ class Culqi extends PaymentModule
     {
         if (!Configuration::get('CULQI_STATE_OK')) {
             $txt_state='Pago aceptado';
-            $orderstate = Db::getInstance()->ExecuteS("SELECT distinct osl.id_order_state, osl.name FROM " . _DB_PREFIX_ . "order_state_lang osl, " . _DB_PREFIX_ . "order_state os where osl.id_order_state=os.id_order_state and osl.name='" . $txt_state . "' and deleted=0");
+            $txt_state_alt='Pago aceptamos';
+            $orderstate = Db::getInstance()->ExecuteS("SELECT distinct osl.id_order_state, osl.name FROM " . _DB_PREFIX_ . "order_state_lang osl, " . _DB_PREFIX_ . "order_state os where osl.id_order_state=os.id_order_state and osl.name IN ('" . $txt_state . "', '". $txt_state_alt . "') and deleted=0");
             Configuration::updateValue('CULQI_STATE_OK', (int)$orderstate[0]['id_order_state']);
         }
         if (!Configuration::get('CULQI_STATE_PENDING')) {
