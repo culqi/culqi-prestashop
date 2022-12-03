@@ -12,6 +12,7 @@
 		max-width: 285px;
 		margin-right: 15px;
 		float: right;
+		width: 98%;
 	}
 </style>
 
