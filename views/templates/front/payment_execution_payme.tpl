@@ -221,6 +221,7 @@
                         order: response,
                         culqiclient: 'prestashop',
                         culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
+                        culqipluginversion: '{/literal}{$CULQI_PLUGIN_VERSION|escape:'htmlall':'UTF-8'}{literal}',
                     });
                     orderid = response;
                     $('#buyButton').removeAttr('disabled');
@@ -238,6 +239,7 @@
                         //order: 'ord_live_mQjOSWvYKnNgotsY', // esto es solo si se tiene habilitada la opción de billeteras, agentes y/o cuetealo
                         culqiclient: 'prestashop',
                         culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
+                        culqipluginversion: '{/literal}{$CULQI_PLUGIN_VERSION|escape:'htmlall':'UTF-8'}{literal}',
                     });
                     orderid = 'ungenereted';
                     $('#buyButton').removeAttr('disabled');
@@ -255,6 +257,7 @@
                 //order: 'ord_live_mQjOSWvYKnNgotsY', // esto es solo si se tiene habilitada la opción de billeteras, agentes y/o cuetealo
                 culqiclient: 'prestashop',
                 culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
+                culqipluginversion: '{/literal}{$CULQI_PLUGIN_VERSION|escape:'htmlall':'UTF-8'}{literal}',
             });
             orderid = 'ungenereted';
             $('#buyButton').removeAttr('disabled');
