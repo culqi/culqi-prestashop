@@ -6,25 +6,27 @@ if (!defined('_PS_VERSION_'))
 
 define('CULQI_PLUGIN_VERSION', '3.0.1');
 
-define('URLAPI_INTEG', 'https://integ-panel.culqi.com');
-define('URLAPI_PROD', 'https://panel.culqi.com');
+define('URLAPI_INTEG', 'https://internal-v3-dev.culqi.xyz');
+define('URLAPI_PROD', 'https://internal-v3-dev.culqi.xyz');
 
 define('URLAPI_INTEG_3DS', 'https://3ds.culqi.com');
 define('URLAPI_PROD_3DS', 'https://3ds.culqi.com');
 
 define('URLAPI_ORDERCHARGES_INTEG', 'https://api.culqi.com/v2');
 define('URLAPI_CHECKOUT_INTEG', 'https://checkout.culqi.com/js/v4');
-define('URLAPI_LOGIN_INTEG', URLAPI_INTEG.'/user/login');
-define('URLAPI_MERCHANT_INTEG', URLAPI_INTEG.'/secure/merchant/');
-define('URLAPI_MERCHANTSINGLE_INTEG', URLAPI_INTEG.'/secure/keys/?merchant=');
-define('URLAPI_WEBHOOK_INTEG', URLAPI_INTEG.'/secure/events');
+define('URLAPI_LOGIN_INTEG', URLAPI_INTEG.'/or-dashboard/public/auth');
+define('URLAPI_MERCHANT_INTEG', URLAPI_INTEG.'/or-dashboard/secure/account-merchants');
+define('URLAPI_MERCHANTSINGLE_INTEG', URLAPI_INTEG.'/or-dashboard/secure/keys/get-keys');
+define('URLAPI_WEBHOOK_INTEG', URLAPI_INTEG.'/or-dashboard/secure/webhooks/create-merchant-event');
+define('URLAPI_GET_WEBHOOK_INTEG', URLAPI_INTEG.'/or-dashboard/secure/webhooks/get-merchant-events');
 
 define('URLAPI_ORDERCHARGES_PROD', 'https://api.culqi.com/v2');
 define('URLAPI_CHECKOUT_PROD', 'https://checkout.culqi.com/js/v4');
-define('URLAPI_LOGIN_PROD', URLAPI_PROD.'/user/login');
-define('URLAPI_MERCHANT_PROD', URLAPI_PROD.'/secure/merchant/'); 
-define('URLAPI_MERCHANTSINGLE_PROD', URLAPI_PROD.'/secure/keys/?merchant=');
-define('URLAPI_WEBHOOK_PROD', URLAPI_PROD.'/secure/events');
+define('URLAPI_LOGIN_PROD', URLAPI_PROD.'/or-dashboard/public/auth');
+define('URLAPI_MERCHANT_PROD', URLAPI_PROD.'/or-dashboard/secure/account-merchants'); 
+define('URLAPI_MERCHANTSINGLE_PROD', URLAPI_PROD.'/or-dashboard/secure/keys/get-keys');
+define('URLAPI_WEBHOOK_PROD', URLAPI_PROD.'/or-dashboard/secure/webhooks/create-merchant-event');
+define('URLAPI_GET_WEBHOOK_PROD', URLAPI_PROD.'/or-dashboard/secure/webhooks/get-merchant-events');
 
 
 /**
@@ -536,10 +538,12 @@ class Culqi extends PaymentModule
             'URLAPI_MERCHANT_INTEG' => URLAPI_MERCHANT_INTEG,
             'URLAPI_MERCHANTSINGLE_INTEG' => URLAPI_MERCHANTSINGLE_INTEG,
             'URLAPI_WEBHOOK_INTEG' => URLAPI_WEBHOOK_INTEG,
+            'URLAPI_GET_WEBHOOK_INTEG' => URLAPI_GET_WEBHOOK_INTEG,
             'URLAPI_LOGIN_PROD' => URLAPI_LOGIN_PROD,
             'URLAPI_MERCHANT_PROD' => URLAPI_MERCHANT_PROD,
             'URLAPI_MERCHANTSINGLE_PROD' => URLAPI_MERCHANTSINGLE_PROD,
             'URLAPI_WEBHOOK_PROD' => URLAPI_WEBHOOK_PROD,
+            'URLAPI_GET_WEBHOOK_PROD' => URLAPI_GET_WEBHOOK_PROD,
             'CULQI_PLUGIN_VERSION' => CULQI_PLUGIN_VERSION,
             'CULQI_POST_ERRORS'=>$errors,
             'commerce'=>Configuration::get('PS_SHOP_NAME')

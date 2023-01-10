@@ -2575,13 +2575,13 @@
                         <input required type="password" class="form-control" id="password" name="password"
                                placeholder="Tu contraseña de CulqiPanel">
                     </div>
-                    <div class="form-group d-none" style="display: none">
+                    <!--<div class="form-group d-none" style="display: none">
                         <label for="type_integration">Tipo de Integración</label>
                         <select name="type_integration" class="form-control" id="type_integration">
                             <option value="0" selected>Test</option>
                             <option value="1">Live</option>
                         </select>
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <span id="errorlogin" class="form-text text-muted"
                               style="display: none; color: red; font-size: 0.8rem !important;">El usuario ingresado no existe.</span>
@@ -2743,31 +2743,34 @@
         function sendWebhook() {
             console.log('jaji');
             var urlwebhook = "{$fields_value.URLAPI_WEBHOOK_INTEG|escape:'htmlall':'UTF-8'}";
+            var url_get_webhook = "{$fields_value.URLAPI_GET_WEBHOOK_INTEG|escape:'htmlall':'UTF-8'}";
             if (jQuery('#produccion').is(':checked')) {
                 urlwebhook = "{$fields_value.URLAPI_WEBHOOK_PROD|escape:'htmlall':'UTF-8'}";
+                url_get_webhook = "{$fields_value.URLAPI_GET_WEBHOOK_PROD|escape:'htmlall':'UTF-8'}";
             }
             if (jQuery('#CULQI_TOKENLOGIN').val().length > 0) {
                 const settings = {
-                    url: urlwebhook,
+                    url: url_get_webhook,
                     crossDomain: true,
                     dataType: 'json',
                     contentType: 'application/json',
-                    type: "GET",
+                    type: "POST",
                     timeout: 0,
                     headers: {
                         'Authorization': 'Bearer ' + jQuery('#CULQI_TOKENLOGIN').val(),
                         "Content-Type": "application/json",
                         "Accept": "*/*"
                     },
-                    data: {
-                        "merchant": jQuery('#CULQI_LLAVE_PUBLICA').val(),
-                        "version": 2
-                    }
+                    data: JSON.stringify({
+                        "merchantCode": jQuery('#CULQI_LLAVE_PUBLICA').val(),
+                        "apiVersion": "2.0"
+                    })
                 };
                 jQuery.ajax(settings).done(function (response) {
+                    console.log(response);
                     var valid = 1;
-                    for (let i = 0; i < response.data.length; i++) {
-                        if (response.data[i].url == jQuery('#CULQI_NOTPAY').val()) {
+                    for (let i = 0; i < response.length; i++) {
+                        if (response[i].url == jQuery('#CULQI_NOTPAY').val()) {
                             valid = 0;
                         }
                     }
@@ -2785,12 +2788,12 @@
                                 "Accept": "*/*"
                             },
                             data: JSON.stringify({
-                                "merchant": jQuery('#CULQI_LLAVE_PUBLICA').val(),
-                                "eventId": "order.status.changed",
+                                "merchantCode": jQuery('#CULQI_LLAVE_PUBLICA').val(),
+                                "eventType": "order.status.changed",
                                 "url": jQuery('#CULQI_NOTPAY').val(),
-                                "version": 2,
+                                "apiVersion": 2,
                                 "loginActive": true,
-                                "username": jQuery('#CULQI_USERNAME').val(),
+                                "userName": jQuery('#CULQI_USERNAME').val(),
                                 "password": jQuery('#CULQI_PASSWORD').val()
                             }),
                         };
@@ -2838,7 +2841,7 @@
                     $('body').waitMe('hide');
                 } else {
                     jQuery("#modalLogin").modal("hide");
-                    window.culqi_token = response.data;
+                    window.culqi_token = response.idToken;
                     culqiWoGetMerchants(window.culqi_token);
                 }
 
@@ -2857,12 +2860,15 @@
             }
             const settings = {
                 url: urlmerchant,
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
                     "Authorization": "Bearer " + token,
                 },
+                data: JSON.stringify({
+                    email: jQuery("#email").val()
+                }),
             };
 
             console.log('settings:::', settings);
@@ -2870,7 +2876,7 @@
             jQuery.ajax(settings)
                 .done(function (response) {
                     console.log('response:::', response);
-                    renderMerchants(response.data);
+                    renderMerchants(response.accounts[0].merchants);
                     jQuery("#modalLogin").modal("hide");
                     jQuery("#modalList").modal("show");
                 })
@@ -2888,14 +2894,17 @@
                 urlmerchantsingle = "{$fields_value.URLAPI_MERCHANTSINGLE_PROD|escape:'htmlall':'UTF-8'}";
             }
             const settings = {
-                url: urlmerchantsingle + id,
-                method: "GET",
+                url: urlmerchantsingle,
+                method: "POST",
                 timeout: 0,
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json",
                     "Authorization": "Bearer " + window.culqi_token,
                 },
+                data: JSON.stringify({
+                    publicKey: id
+                }),
             };
 
             console.log('settings:::', settings);
@@ -2949,7 +2958,7 @@
 
                     <li>
                     <div class="items">
-                       <div class="merchant_item" data-name="` + merchant.nombre_comercial + `" data-key='` + merchant.codigo_comercio + `'>
+                       <div class="merchant_item" data-name="` + merchant.name + `" data-key='` + merchant.products[0].publicKey + `'>
                         <div class="merchant_logo">
                             <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#clip0_135_620)">
@@ -2968,7 +2977,7 @@
                             </svg>
                         </div>
                         <div class="merchant_name">` +
-                    merchant.nombre_comercial +
+                    merchant.name +
                     `</div>
                         <div class="merchant_arrow">
                             <svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg">
