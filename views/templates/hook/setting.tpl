@@ -2717,7 +2717,7 @@
             }
             //alert('hi');
             console.log(sendsubmit);
-
+            enable3ds();
             sendWebhook();
             e.preventDefault();
         });
@@ -2741,7 +2741,6 @@
         });
 
         function sendWebhook() {
-            console.log('jaji');
             var urlwebhook = "{$fields_value.URLAPI_WEBHOOK_INTEG|escape:'htmlall':'UTF-8'}";
             var url_get_webhook = "{$fields_value.URLAPI_GET_WEBHOOK_INTEG|escape:'htmlall':'UTF-8'}";
             if (jQuery('#produccion').is(':checked')) {
@@ -2791,7 +2790,7 @@
                                 "merchantCode": jQuery('#CULQI_LLAVE_PUBLICA').val(),
                                 "eventType": "order.status.changed",
                                 "url": jQuery('#CULQI_NOTPAY').val(),
-                                "apiVersion": 2,
+                                "apiVersion": "2.0",
                                 "loginActive": true,
                                 "userName": jQuery('#CULQI_USERNAME').val(),
                                 "password": jQuery('#CULQI_PASSWORD').val()
@@ -2810,8 +2809,41 @@
             }
         }
 
-        function fullculqi_login(data) {
+        function enable3ds() {
+            console.log("entro");
+            var url_3ds = '';
+            if (jQuery('#integracion').is(':checked')) {
+                url_3ds = "{$fields_value.URLAPI_ENABLE_3DS_INTEG|escape:'htmlall':'UTF-8'}";
+            }
+            if (jQuery('#produccion').is(':checked')) {
+                url_3ds = "{$fields_value.URLAPI_ENABLE_3DS_PROD|escape:'htmlall':'UTF-8'}";
+            }
+            const settings = {
+                url: url_3ds,
+                crossDomain: true,
+                dataType: 'json',
+                contentType: 'application/json',
+                type: "POST",
+                timeout: 0,
+                headers: {
+                    'Authorization': 'Bearer ' + jQuery('#CULQI_TOKENLOGIN').val(),
+                    "Content-Type": "application/json",
+                    "Accept": "*/*"
+                },
+                data: JSON.stringify({
+                    "publicKey": jQuery('#CULQI_LLAVE_PUBLICA').val(),
+                }),
+            };
 
+            jQuery.ajax(settings).done(function (response) {
+                console.log("fbsjkbnsjvm");
+                console.log(response.data);
+            });
+        }
+
+        function fullculqi_login(data) {
+            var url_3ds = "{$fields_value.URLAPI_ENABLE_3DS_PROD|escape:'htmlall':'UTF-8'}";
+            console.log(url_3ds);
             jQuery('#errorlogin').html('');
             jQuery('#errorlogin').css('display', 'none');
 

@@ -19,6 +19,7 @@ define('URLAPI_MERCHANT_INTEG', URLAPI_INTEG.'/or-dashboard/secure/account-merch
 define('URLAPI_MERCHANTSINGLE_INTEG', URLAPI_INTEG.'/or-dashboard/secure/keys/get-keys');
 define('URLAPI_WEBHOOK_INTEG', URLAPI_INTEG.'/or-dashboard/secure/webhooks/create-merchant-event');
 define('URLAPI_GET_WEBHOOK_INTEG', URLAPI_INTEG.'/or-dashboard/secure/webhooks/get-merchant-events');
+define('URLAPI_ENABLE_3DS_INTEG', URLAPI_INTEG.'/ms-merchant-core/secure/register-3ds-by-code');
 
 define('URLAPI_ORDERCHARGES_PROD', 'https://api.culqi.com/v2');
 define('URLAPI_CHECKOUT_PROD', 'https://checkout.culqi.com/js/v4');
@@ -27,6 +28,7 @@ define('URLAPI_MERCHANT_PROD', URLAPI_PROD.'/or-dashboard/secure/account-merchan
 define('URLAPI_MERCHANTSINGLE_PROD', URLAPI_PROD.'/or-dashboard/secure/keys/get-keys');
 define('URLAPI_WEBHOOK_PROD', URLAPI_PROD.'/or-dashboard/secure/webhooks/create-merchant-event');
 define('URLAPI_GET_WEBHOOK_PROD', URLAPI_PROD.'/or-dashboard/secure/webhooks/get-merchant-events');
+define('URLAPI_ENABLE_3DS_PROD', URLAPI_PROD.'/ms-merchant-core/secure/register-3ds-by-code');
 
 
 /**
@@ -539,11 +541,13 @@ class Culqi extends PaymentModule
             'URLAPI_MERCHANTSINGLE_INTEG' => URLAPI_MERCHANTSINGLE_INTEG,
             'URLAPI_WEBHOOK_INTEG' => URLAPI_WEBHOOK_INTEG,
             'URLAPI_GET_WEBHOOK_INTEG' => URLAPI_GET_WEBHOOK_INTEG,
+            'URLAPI_ENABLE_3DS_INTEG' => URLAPI_ENABLE_3DS_INTEG,
             'URLAPI_LOGIN_PROD' => URLAPI_LOGIN_PROD,
             'URLAPI_MERCHANT_PROD' => URLAPI_MERCHANT_PROD,
             'URLAPI_MERCHANTSINGLE_PROD' => URLAPI_MERCHANTSINGLE_PROD,
             'URLAPI_WEBHOOK_PROD' => URLAPI_WEBHOOK_PROD,
             'URLAPI_GET_WEBHOOK_PROD' => URLAPI_GET_WEBHOOK_PROD,
+            'URLAPI_ENABLE_3DS_PROD' => URLAPI_ENABLE_3DS_PROD,
             'CULQI_PLUGIN_VERSION' => CULQI_PLUGIN_VERSION,
             'CULQI_POST_ERRORS'=>$errors,
             'commerce'=>Configuration::get('PS_SHOP_NAME')
