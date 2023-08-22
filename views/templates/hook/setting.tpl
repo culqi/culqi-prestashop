@@ -1625,6 +1625,9 @@
         background-color: #eee;
         opacity: 1;
     }
+    .tool.custom-ml::after {
+        margin-left: -20px;
+    }
 </style>
 
 <link rel="stylesheet" href="{$module_dir|escape:'htmlall':'UTF-8'}views/css/waitMe.min.css" type="text/css"
@@ -1874,6 +1877,51 @@
                     <input type="hidden" name="CULQI_PASSWORD" id="CULQI_PASSWORD"
                            value="{$fields_value.CULQI_PASSWORD|escape:'htmlall':'UTF-8'}"
                            class="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-4" style="font-weight: bold !important;">
+                    RSA Id
+
+                    <span class="tool custom-ml"
+                          data-tip="Genera el id de tu llave RSA ingresando a la sección Desarrollo de tu CulqiPanel, en la pertaña de RSA Keys"
+                          tabindex="2" style=" font-weight: normal;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-question-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/>
+                        </svg>
+                    </span>
+
+                </label>
+                <div class="col-lg-8">
+                    <input required="true" type="text" name="CULQI_RSA_ID" id="CULQI_RSA_ID"
+                           value="{$fields_value.CULQI_RSA_ID|escape:'htmlall':'UTF-8'}" class="">
+                    <span id="errorrsaid" class="form-text text-muted"
+                          style="display: none; color: red; font-size: 0.8rem !important;">RSA Id incorrecto.</span>
+                    <span class="form-text text-muted"> Ingresa tu RSA Id. </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-lg-4" style="font-weight: bold !important;">
+                    RSA Publickey
+
+                    <span class="tool"
+                          data-tip="Genera tu llave RSA ingresando a la sección Desarrollo de tu CulqiPanel, en la pertaña de RSA Keys"
+                          tabindex="2" style=" font-weight: normal;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-question-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/>
+                        </svg>
+                    </span>
+
+                </label>
+                <div class="col-lg-8">
+                    <textarea rows="5" required="true" type="text" name="CULQI_RSA_PK" id="CULQI_RSA_PK">{$fields_value.CULQI_RSA_PK|escape:'htmlall':'UTF-8'}</textarea>
+                    <span id="errorrsaid" class="form-text text-muted"
+                          style="display: none; color: red; font-size: 0.8rem !important;">RSA PK incorrecto.</span>
+                    <span class="form-text text-muted"> Ingresa tu RSA Publickey. </span>
                 </div>
             </div>
 

@@ -61,6 +61,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign('codigo_comercio', Configuration::get('CULQI_LLAVE_PUBLICA'));
         $this->context->smarty->assign('multipayment_enable', Configuration::get('CULQI_ENABLED'));
         $this->context->smarty->assign("psversion", array('min' => '1.6', 'max' => _PS_VERSION_)['max']);
+        $this->context->smarty->assign("culqipluginversion", CULQI_PLUGIN_VERSION);
         $this->context->smarty->assign("module_dir", $this->_path);
         $this->context->smarty->assign("descripcion", "Orden de compra ".$cart->id);
         $this->context->smarty->assign("orden", $cart->id);
@@ -81,6 +82,8 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign("address", $address);
         $this->context->smarty->assign("customer", $this->context->customer);
         $this->context->smarty->assign("commerce", Configuration::get('PS_SHOP_NAME'));
+        $this->context->smarty->assign("rsa_id", Configuration::get('CULQI_RSA_ID'));
+        $this->context->smarty->assign("rsa_pk", Configuration::get('CULQI_RSA_PK'));
 
         $this->context->smarty->assign("BASE_URL", $base_url);
 

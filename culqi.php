@@ -84,7 +84,9 @@ class Culqi extends PaymentModule
             Configuration::updateValue('CULQI_USERNAME', '') &&
             Configuration::updateValue('CULQI_PASSWORD', '') &&
             Configuration::updateValue('CULQI_URL_LOGO', '') && 
-            Configuration::updateValue('CULQI_COLOR_PALETTE', '')
+            Configuration::updateValue('CULQI_COLOR_PALETTE', '') && 
+            Configuration::updateValue('CULQI_RSA_ID', '') && 
+            Configuration::updateValue('CULQI_RSA_PK', '')
         );
     }
 
@@ -235,8 +237,10 @@ class Culqi extends PaymentModule
         }
         $base_url = $https . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $base_url = $https . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
         return array(
             "psversion" => $this->ps_versions_compliancy['max'],
+            'culqipluginversion' => $this->version,
             "module_dir" => $this->_path,
             "descripcion" => "Orden de compra ".$cart->id,
             "orden" => $cart->id,
@@ -253,6 +257,8 @@ class Culqi extends PaymentModule
             "agente" => Configuration::get('CULQI_METHODS_AGENTS') == 'yes' ? 'true' : 'false',
             "cuetealo" => Configuration::get('CULQI_METHODS_QUOTEBCP') == 'yes' ? 'true' : 'false',
             "url_logo" => Configuration::get('CULQI_URL_LOGO'),
+            "rsa_id" => Configuration::get('CULQI_RSA_ID'),
+            "rsa_pk" => Configuration::get('CULQI_RSA_PK'),
             "tiempo_exp" => (Configuration::get('CULQI_TIMEXP') == '' ? 24 : Configuration::get('CULQI_TIMEXP')),
             "color_pallete" => explode('-', $color_palette),
             "currency" => $this->context->currency->iso_code,
@@ -308,6 +314,8 @@ class Culqi extends PaymentModule
             || !Configuration::deleteByName('CULQI_PASSWORD')
             || !Configuration::deleteByName('CULQI_URL_LOGO')
             || !Configuration::deleteByName('CULQI_COLOR_PALETTE')
+            || !Configuration::deleteByName('CULQI_RSA_ID')
+            || !Configuration::deleteByName('CULQI_RSA_PK')
             || !$this->uninstallStates())
             return false;
         return true;
@@ -522,6 +530,8 @@ class Culqi extends PaymentModule
             'CULQI_USERNAME' =>$username,
             'CULQI_PASSWORD' =>$password,
             'CULQI_URL_LOGO' => Tools::getValue('CULQI_URL_LOGO', Configuration::get('CULQI_URL_LOGO')),
+            'CULQI_RSA_ID' => Tools::getValue('CULQI_RSA_ID', Configuration::get('CULQI_RSA_ID')),
+            'CULQI_RSA_PK' => Tools::getValue('CULQI_RSA_PK', Configuration::get('CULQI_RSA_PK')),
             'CULQI_COLOR_PALETTE' => Tools::getValue('CULQI_COLOR_PALETTE', Configuration::get('CULQI_COLOR_PALETTE')),
             'CULQI_COLOR_PALETTEID' => str_replace('#', '', Tools::getValue('CULQI_COLOR_PALETTE', Configuration::get('CULQI_COLOR_PALETTE'))),
             'CULQI_CHECKED_INTEG' => $checked_integ,
@@ -566,6 +576,8 @@ class Culqi extends PaymentModule
             Configuration::updateValue('CULQI_PASSWORD', Tools::getValue('CULQI_PASSWORD'));
             Configuration::updateValue('CULQI_URL_LOGO', Tools::getValue('CULQI_URL_LOGO'));
             Configuration::updateValue('CULQI_COLOR_PALETTE', Tools::getValue('CULQI_COLOR_PALETTE'));
+            Configuration::updateValue('CULQI_RSA_ID', Tools::getValue('CULQI_RSA_ID'));
+            Configuration::updateValue('CULQI_RSA_PK', Tools::getValue('CULQI_RSA_PK'));
         }
         $this->_html .= $this->displayConfirmation($this->l('Se actualizaron las configuraciones'));
     }

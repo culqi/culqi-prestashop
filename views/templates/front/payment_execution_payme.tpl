@@ -59,6 +59,10 @@
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
+
+    console.log(1243546);
+    console.log('{/literal}{$culqipluginversion|escape:'htmlall':'UTF-8'}{literal}');
+    console.log(1243546);
     Culqi3DS.options = {
         closeModalAction: () => window.location.reload(true), // ACTION CUANDO SE CIERRA EL MODAL
     };
@@ -204,6 +208,30 @@
         });
     });
 
+    function getSettings(order = false) {
+        let args_settings = {
+            title: '{/literal}{$commerce|escape:'htmlall':'UTF-8'}{literal}',
+            currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
+            amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
+            culqiclient: 'prestashop',
+            culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
+            culqipluginversion: '{/literal}{$culqipluginversion|escape:'htmlall':'UTF-8'}{literal}',
+        };
+
+        console.log(args_settings);
+
+        if(order) {
+            args_settings.order = order;
+        }
+
+        if('{/literal}{$rsa_id|escape:'htmlall':'UTF-8'}{literal}' && '{/literal}{$rsa_pk|escape:'htmlall':'UTF-8'}{literal}') {
+            args_settings.xculqirsaid = '{/literal}{$rsa_id|escape:'htmlall':'UTF-8'}{literal}';
+            args_settings.rsapublickey = '{/literal}{$rsa_pk|escape:'htmlall':'UTF-8'}{literal}';
+        }
+
+        Culqi.settings(args_settings);
+    }
+
     function generateOrder(e, device) {
         window.device = device;
         if ({/literal}{$banca_movil|escape:'htmlall':'UTF-8'}{literal} || {/literal}{$agente|escape:'htmlall':'UTF-8'}{literal} || {/literal}{$billetera|escape:'htmlall':'UTF-8'}{literal} || {/literal}{$cuetealo|escape:'htmlall':'UTF-8'}{literal}) {
@@ -214,15 +242,7 @@
                 dataType: 'json',
                 success: function (response) {
                     console.log('response:::', response);
-                    Culqi.settings({
-                        title: '{/literal}{$commerce|escape:'htmlall':'UTF-8'}{literal}',
-                        currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
-                        amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
-                        order: response,
-                        culqiclient: 'prestashop',
-                        culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
-                        culqipluginversion: '{/literal}{$CULQI_PLUGIN_VERSION|escape:'htmlall':'UTF-8'}{literal}',
-                    });
+                    getSettings(response);
                     orderid = response;
                     $('#buyButton').removeAttr('disabled');
                     Culqi.open();
@@ -232,15 +252,7 @@
                 error: function (error) {
                     console.log('error:::', error);
                     $('#showresult').show();
-                    Culqi.settings({
-                        title: '{/literal}{$commerce|escape:'htmlall':'UTF-8'}{literal}',
-                        currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
-                        amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
-                        //order: 'ord_live_mQjOSWvYKnNgotsY', // esto es solo si se tiene habilitada la opción de billeteras, agentes y/o cuetealo
-                        culqiclient: 'prestashop',
-                        culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
-                        culqipluginversion: '{/literal}{$CULQI_PLUGIN_VERSION|escape:'htmlall':'UTF-8'}{literal}',
-                    });
+                    getSettings();
                     orderid = 'ungenereted';
                     $('#buyButton').removeAttr('disabled');
                     Culqi.open();
@@ -250,15 +262,7 @@
             });
         } else {
             $('#showresult').show();
-            Culqi.settings({
-                title: '{/literal}{$commerce|escape:'htmlall':'UTF-8'}{literal}',
-                currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
-                amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
-                //order: 'ord_live_mQjOSWvYKnNgotsY', // esto es solo si se tiene habilitada la opción de billeteras, agentes y/o cuetealo
-                culqiclient: 'prestashop',
-                culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
-                culqipluginversion: '{/literal}{$CULQI_PLUGIN_VERSION|escape:'htmlall':'UTF-8'}{literal}',
-            });
+            getSettings();
             orderid = 'ungenereted';
             $('#buyButton').removeAttr('disabled');
             Culqi.open();
