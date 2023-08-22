@@ -1918,7 +1918,7 @@
 
                 </label>
                 <div class="col-lg-8">
-                    <textarea rows="5" required="true" type="text" name="CULQI_RSA_PK" id="CULQI_RSA_PK">{$fields_value.CULQI_RSA_PK|escape:'htmlall':'UTF-8'}</textarea>
+                    <textarea rows="9" required="true" type="text" name="CULQI_RSA_PK" id="CULQI_RSA_PK">{$fields_value.CULQI_RSA_PK|escape:'htmlall':'UTF-8'}</textarea>
                     <span id="errorrsaid" class="form-text text-muted"
                           style="display: none; color: red; font-size: 0.8rem !important;">RSA PK incorrecto.</span>
                     <span class="form-text text-muted"> Ingresa tu RSA Publickey. </span>
