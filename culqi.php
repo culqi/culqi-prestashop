@@ -532,7 +532,7 @@ class Culqi extends PaymentModule
             'CULQI_PASSWORD' =>$password,
             'CULQI_URL_LOGO' => Tools::getValue('CULQI_URL_LOGO', Configuration::get('CULQI_URL_LOGO')),
             'CULQI_RSA_ID' => Tools::getValue('CULQI_RSA_ID', Configuration::get('CULQI_RSA_ID')),
-            'CULQI_RSA_PK' => str_replace(array("\n", "\r", " ", "\t"), '', Tools::getValue('CULQI_RSA_PK', Configuration::get('CULQI_RSA_PK'))),
+            'CULQI_RSA_PK' => trim(Tools::getValue('CULQI_RSA_PK', Configuration::get('CULQI_RSA_PK'))),
             'CULQI_COLOR_PALETTE' => Tools::getValue('CULQI_COLOR_PALETTE', Configuration::get('CULQI_COLOR_PALETTE')),
             'CULQI_COLOR_PALETTEID' => str_replace('#', '', Tools::getValue('CULQI_COLOR_PALETTE', Configuration::get('CULQI_COLOR_PALETTE'))),
             'CULQI_CHECKED_INTEG' => $checked_integ,
@@ -578,7 +578,7 @@ class Culqi extends PaymentModule
             Configuration::updateValue('CULQI_URL_LOGO', Tools::getValue('CULQI_URL_LOGO'));
             Configuration::updateValue('CULQI_COLOR_PALETTE', Tools::getValue('CULQI_COLOR_PALETTE'));
             Configuration::updateValue('CULQI_RSA_ID', Tools::getValue('CULQI_RSA_ID'));
-            Configuration::updateValue('CULQI_RSA_PK', str_replace(array("\n", "\r", " ", "\t"), '', Tools::getValue('CULQI_RSA_PK')));
+            Configuration::updateValue('CULQI_RSA_PK', trim(Tools::getValue('CULQI_RSA_PK')));
         }
         $this->_html .= $this->displayConfirmation($this->l('Se actualizaron las configuraciones'));
     }
