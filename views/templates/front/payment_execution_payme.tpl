@@ -224,9 +224,9 @@
             args_settings.order = order;
         }
 
-        if('{/literal}{$rsa_id|escape:'htmlall':'UTF-8'}{literal}' && '{/literal}{$rsa_pk|escape:'htmlall':'UTF-8'}{literal}') {
+        if('{/literal}{$rsa_id|escape:'htmlall':'UTF-8'}{literal}' && `{/literal}{$rsa_pk|escape:'htmlall':'UTF-8'}{literal}`) {
             args_settings.xculqirsaid = '{/literal}{$rsa_id|escape:'htmlall':'UTF-8'}{literal}';
-            args_settings.rsapublickey = '{/literal}{$rsa_pk|escape:'htmlall':'UTF-8'}{literal}';
+            args_settings.rsapublickey = `{/literal}{$rsa_pk|escape:'htmlall':'UTF-8'}{literal}`;
         }
 
         Culqi.settings(args_settings);
