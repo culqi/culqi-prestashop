@@ -1885,7 +1885,7 @@
                     RSA Id
 
                     <span class="tool custom-ml"
-                          data-tip="Genera el id de tu llave RSA ingresando a la sección Desarrollo de tu CulqiPanel, en la pertaña de RSA Keys"
+                          data-tip="Genera el id de tu llave RSA ingresando a la sección Desarrollo de tu CulqiPanel, en la pestaña de RSA Keys"
                           tabindex="2" style=" font-weight: normal;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-question-circle-fill" viewBox="0 0 16 16">
@@ -1908,7 +1908,7 @@
                     RSA Publickey
 
                     <span class="tool"
-                          data-tip="Genera tu llave RSA ingresando a la sección Desarrollo de tu CulqiPanel, en la pertaña de RSA Keys"
+                          data-tip="Genera tu llave RSA ingresando a la sección Desarrollo de tu CulqiPanel, en la pestaña de RSA Keys"
                           tabindex="2" style=" font-weight: normal;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-question-circle-fill" viewBox="0 0 16 16">
