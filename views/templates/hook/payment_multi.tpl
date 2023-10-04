@@ -19,6 +19,12 @@
 		float: right;
 		max-width: 75%;
 	}
+
+	.culqi-text-logos {
+		border: 0px;
+    	top: 0; 
+    	position: absolute;
+	}
 </style>
 <script>
 
@@ -92,8 +98,9 @@ if(banca_movil == 'true' || billetera == 'true' || agente == 'true' || cuetealo 
 	<div class="col-xs-12">
 		<p class="payment_module">		
 		    <a  id="texto" class="culqi-payment" href="{$link->getModuleLink('culqi', 'payment', [], true)|escape:'htmlall':'UTF-8'}" title="{l s='Pagar con tarjetas de crédito/débito y más' mod='culqi'}">
-		    	<span>Pagar con Culqi</span>		    	
+		    	    	
 		    </a>
+			<a class = "culqi-text-logos">Pagar con Culqi</a>		
 		</p>
 	</div>
 </div>
