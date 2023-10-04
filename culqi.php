@@ -4,7 +4,7 @@ define("RAIZ",dirname(__FILE__));
 if (!defined('_PS_VERSION_'))
     exit;
 
-define('CULQI_PLUGIN_VERSION', '3.0.3');
+define('CULQI_PLUGIN_VERSION', '3.0.4');
 
 define('URLAPI_INTEG', 'https://integ-panel.culqi.com');
 define('URLAPI_PROD', 'https://panel.culqi.com');

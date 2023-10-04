@@ -118,6 +118,7 @@
                             var success_url = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
                             
                             if (brand.toUpperCase() == "MASTERCARD"){
+                                $('body').waitMe('hide');
                                 fn_mc_sonic();
                                 playSonic(success_url);
                             }else{
@@ -217,12 +218,18 @@
         });
     });
     function fn_mc_sonic(){  
-        $('#loadingloginculqi').html(`<div style="
+        $('body').append(`<div style="
         width: 100%;
         height: 100%;
         align-items: center;
         justify-content: center;
         display: flex;
+        background-color: rgba(0,0,0,0.7);
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99999;
         margin: auto;">
         <mc-sonic id="mc-sonic" style="height: 40%;" type="default"  clear-background ></mc-sonic> </div>`);
     }
@@ -436,6 +443,7 @@
                             console.log("Marca de tarjeta: " + result['source']['iin']['card_brand']);
 
                             if (brand.toUpperCase() == "MASTERCARD"){
+                                $('body').waitMe('hide');
                                 fn_mc_sonic();
                                 playSonic(success_url);
                             }else{
@@ -483,4 +491,3 @@
 
 
 {/literal}
-
