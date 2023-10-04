@@ -241,7 +241,7 @@
     }
     function onCompletion(success_url) {
         setTimeout(() => {
-            //location.href = success_url;
+            location.href = success_url;
         }, 2000);
     }
     function getSettings(order = false) {
