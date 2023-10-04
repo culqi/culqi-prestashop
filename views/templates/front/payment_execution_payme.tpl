@@ -1,5 +1,6 @@
 
 <script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
+<script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/mc-sonic.min.js"></script>
 
  <script type="text/javascript" defer src="{$enviroment_3ds|escape:'htmlall':'UTF-8'}"></script> 
 
@@ -110,10 +111,18 @@
                             var card_number = result['source']['card_number'];
                             var card_brand = result['source']['iin']['card_brand'] + ' ' + result['source']['iin']['card_category'] + ' ' + result['source']['iin']['card_type'];
                             var chargeid = result['id'];
-                            showResult('green', result['user_message']);
+                            var brand = result['source']['iin']['card_brand']
+                            showResult('green', result['user_message']);                            
 
                             var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                            location.href = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
+                            var success_url = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
+                            
+                            if (brand.toUpperCase() == "MASTERCARD"){
+                                fn_mc_sonic();
+                                playSonic(success_url);
+                            }else{
+                                location.href = success_url;
+                            }
                         }
                         if (result.object === 'error') {
                             $('body').waitMe('hide');
@@ -207,7 +216,27 @@
 
         });
     });
+    function fn_mc_sonic(){  
+        $('#loadingloginculqi').html(`<div style="
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        margin: auto;">
+        <mc-sonic id="mc-sonic" style="height: 40%;" type="default"  clear-background ></mc-sonic> </div>`);
+    }
 
+    function playSonic(success_url) {
+        let mc_component = document.getElementById("mc-sonic")
+        document.addEventListener('sonicCompletion', onCompletion(success_url))
+        mc_component.play()
+    }
+    function onCompletion(success_url) {
+        setTimeout(() => {
+            //location.href = success_url;
+        }, 2000);
+    }
     function getSettings(order = false) {
         let args_settings = {
             title: '{/literal}{$commerce|escape:'htmlall':'UTF-8'}{literal}',
@@ -399,10 +428,19 @@
                             var card_number = result['source']['card_number'];
                             var card_brand = result['source']['iin']['card_brand'] + ' ' + result['source']['iin']['card_category'] + ' ' + result['source']['iin']['card_type'];
                             var chargeid = result['id'];
+                            var brand = result['source']['iin']['card_brand']
                             showResult('green', result['user_message']);
 
                             var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                            location.href = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
+                            var success_url = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
+                            console.log("Marca de tarjeta: " + result['source']['iin']['card_brand']);
+
+                            if (brand.toUpperCase() == "MASTERCARD"){
+                                fn_mc_sonic();
+                                playSonic(success_url);
+                            }else{
+                                location.href = success_url;
+                            }
 
                         }
                         if (result.object === 'error') {
