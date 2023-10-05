@@ -61,9 +61,6 @@
      * THE SOFTWARE.
      */
 
-    console.log(1243546);
-    console.log('{/literal}{$culqipluginversion|escape:'htmlall':'UTF-8'}{literal}');
-    console.log(1243546);
     Culqi3DS.options = {
         closeModalAction: () => window.location.reload(true), // ACTION CUANDO SE CIERRA EL MODAL
     };
