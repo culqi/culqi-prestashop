@@ -186,8 +186,7 @@ class Culqi extends PaymentModule
         }
         $this->smarty->assign(array(
             'this_path' => $this->_path,
-            'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/',
-            'this_test' => 'hola',
+            'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/',            
             'tarjeta' => Configuration::get('CULQI_METHODS_TARJETA') == 'yes' ? 'true' : 'false',
             'banca_movil' => Configuration::get('CULQI_METHODS_BANCAMOVIL') == 'yes' ? 'true' : 'false',
             'yape' => Configuration::get('CULQI_METHODS_YAPE') == 'yes' ? 'true' : 'false',
