@@ -78,8 +78,8 @@ if(banca_movil == 'true' || billetera == 'true' || agente == 'true' || cuetealo 
 	<div class="col-xs-12">
 		<p class="payment_module">		
 		    <a  id="texto" class="culqi-payment" href="{$link->getModuleLink('culqi', 'payment', [], true)|escape:'htmlall':'UTF-8'}" title="{l s='Pagar con tarjetas de crédito/débito y más' mod='culqi'}">
-				<span id="mensaje" style = "width: 40%"> </span>
-				<span id="culqi-payment-logo" style="margin-right:5px;margin-left:5px;"> </span>
+				<span id="mensaje" style = "width: 40%;margin-right:5px;margin-left:5px;"> </span>
+				<span id="culqi-payment-logo"> </span>
 		    </a>
 		</p>
 	</div>
