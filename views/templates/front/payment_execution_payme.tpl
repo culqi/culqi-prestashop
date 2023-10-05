@@ -1,5 +1,6 @@
 
 <script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
+<script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/mc-sonic.min.js"></script>
 
  <script type="text/javascript" defer src="{$enviroment_3ds|escape:'htmlall':'UTF-8'}"></script> 
 
@@ -59,6 +60,7 @@
      * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
      * THE SOFTWARE.
      */
+
     Culqi3DS.options = {
         closeModalAction: () => window.location.reload(true), // ACTION CUANDO SE CIERRA EL MODAL
     };
@@ -106,10 +108,19 @@
                             var card_number = result['source']['card_number'];
                             var card_brand = result['source']['iin']['card_brand'] + ' ' + result['source']['iin']['card_category'] + ' ' + result['source']['iin']['card_type'];
                             var chargeid = result['id'];
-                            showResult('green', result['user_message']);
+                            var brand = result['source']['iin']['card_brand']
+                            showResult('green', result['user_message']);                            
 
                             var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                            location.href = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
+                            var success_url = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
+                            
+                            if (brand.toUpperCase() == "MASTERCARD"){
+                                $('body').waitMe('hide');
+                                fn_mc_sonic();
+                                playSonic(success_url);
+                            }else{
+                                location.href = success_url;
+                            }
                         }
                         if (result.object === 'error') {
                             $('body').waitMe('hide');
@@ -203,6 +214,56 @@
 
         });
     });
+    function fn_mc_sonic(){  
+        $('body').append(`<div style="
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        background-color: rgba(0,0,0,0.7);
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99999;
+        margin: auto;">
+        <mc-sonic id="mc-sonic" style="height: 40%;" type="default"  clear-background ></mc-sonic> </div>`);
+    }
+
+    function playSonic(success_url) {
+        let mc_component = document.getElementById("mc-sonic")
+        document.addEventListener('sonicCompletion', onCompletion(success_url))
+        mc_component.play()
+    }
+    function onCompletion(success_url) {
+        setTimeout(() => {
+            location.href = success_url;
+        }, 2000);
+    }
+    function getSettings(order = false) {
+        let args_settings = {
+            title: '{/literal}{$commerce|escape:'htmlall':'UTF-8'}{literal}',
+            currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
+            amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
+            culqiclient: 'prestashop',
+            culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
+            culqipluginversion: '{/literal}{$culqipluginversion|escape:'htmlall':'UTF-8'}{literal}',
+        };
+
+        console.log(args_settings);
+
+        if(order) {
+            args_settings.order = order;
+        }
+
+        if('{/literal}{$rsa_id|escape:'htmlall':'UTF-8'}{literal}' && `{/literal}{$rsa_pk|escape:'htmlall':'UTF-8'}{literal}`) {
+            args_settings.xculqirsaid = '{/literal}{$rsa_id|escape:'htmlall':'UTF-8'}{literal}';
+            args_settings.rsapublickey = `{/literal}{$rsa_pk|escape:'htmlall':'UTF-8'}{literal}`;
+        }
+
+        Culqi.settings(args_settings);
+    }
 
     function generateOrder(e, device) {
         window.device = device;
@@ -214,15 +275,7 @@
                 dataType: 'json',
                 success: function (response) {
                     console.log('response:::', response);
-                    Culqi.settings({
-                        title: '{/literal}{$commerce|escape:'htmlall':'UTF-8'}{literal}',
-                        currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
-                        amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
-                        order: response,
-                        culqiclient: 'prestashop',
-                        culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
-                        culqipluginversion: '{/literal}{$CULQI_PLUGIN_VERSION|escape:'htmlall':'UTF-8'}{literal}',
-                    });
+                    getSettings(response);
                     orderid = response;
                     $('#buyButton').removeAttr('disabled');
                     Culqi.open();
@@ -232,15 +285,7 @@
                 error: function (error) {
                     console.log('error:::', error);
                     $('#showresult').show();
-                    Culqi.settings({
-                        title: '{/literal}{$commerce|escape:'htmlall':'UTF-8'}{literal}',
-                        currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
-                        amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
-                        //order: 'ord_live_mQjOSWvYKnNgotsY', // esto es solo si se tiene habilitada la opción de billeteras, agentes y/o cuetealo
-                        culqiclient: 'prestashop',
-                        culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
-                        culqipluginversion: '{/literal}{$CULQI_PLUGIN_VERSION|escape:'htmlall':'UTF-8'}{literal}',
-                    });
+                    getSettings();
                     orderid = 'ungenereted';
                     $('#buyButton').removeAttr('disabled');
                     Culqi.open();
@@ -250,15 +295,7 @@
             });
         } else {
             $('#showresult').show();
-            Culqi.settings({
-                title: '{/literal}{$commerce|escape:'htmlall':'UTF-8'}{literal}',
-                currency: '{/literal}{$currency|escape:'htmlall':'UTF-8'}{literal}',
-                amount: {/literal}{$total|escape:'htmlall':'UTF-8'}{literal},
-                //order: 'ord_live_mQjOSWvYKnNgotsY', // esto es solo si se tiene habilitada la opción de billeteras, agentes y/o cuetealo
-                culqiclient: 'prestashop',
-                culqiclientversion: '{/literal}{$psversion|escape:'htmlall':'UTF-8'}{literal}',
-                culqipluginversion: '{/literal}{$CULQI_PLUGIN_VERSION|escape:'htmlall':'UTF-8'}{literal}',
-            });
+            getSettings();
             orderid = 'ungenereted';
             $('#buyButton').removeAttr('disabled');
             Culqi.open();
@@ -395,10 +432,20 @@
                             var card_number = result['source']['card_number'];
                             var card_brand = result['source']['iin']['card_brand'] + ' ' + result['source']['iin']['card_category'] + ' ' + result['source']['iin']['card_type'];
                             var chargeid = result['id'];
+                            var brand = result['source']['iin']['card_brand']
                             showResult('green', result['user_message']);
 
                             var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
-                            location.href = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
+                            var success_url = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
+                            console.log("Marca de tarjeta: " + result['source']['iin']['card_brand']);
+
+                            if (brand.toUpperCase() == "MASTERCARD"){
+                                $('body').waitMe('hide');
+                                fn_mc_sonic();
+                                playSonic(success_url);
+                            }else{
+                                location.href = success_url;
+                            }
 
                         }
                         if (result.object === 'error') {
@@ -441,4 +488,3 @@
 
 
 {/literal}
-
