@@ -43,7 +43,7 @@ if(tarjeta == 'true'){
     image.alt = '';
 	image.style.width = '130px';
     anchorElement.appendChild(image);
-	txt = txt + 'tarjetas de débito y crédito, ';
+	txt = txt + 'tarjetas de débito y crédito ';
 }
 if(yape == 'true'){
 	const image = document.createElement('img');
@@ -52,7 +52,7 @@ if(yape == 'true'){
     image.alt = '';
 	image.style.width = '20px';
     anchorElement.appendChild(image);
-	txt = txt + 'Yape';
+	txt = txt + ' ,Yape';
 }
 if(banca_movil == 'true' || billetera == 'true' || agente == 'true' || cuetealo == 'true'){
 	const image = document.createElement('img');
