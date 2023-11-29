@@ -2669,9 +2669,12 @@
         </div>
     </div>
 </div>
-
+<?php
+$version = time();
+?>
 <script type="text/javascript" defer src="{$module_dir|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
-<script type="text/javascript" defer src="{$module_dir|escape:'htmlall':'UTF-8'}views/js/mc-sonic.min.js"></script>
+<script type="text/javascript" defer src="{$module_dir|escape:'htmlall':'UTF-8'}views/js/mc-sonic.min.js?_=<?php echo $version; ?>"></script>
+
 <script type="text/javascript">
     /**
      * @license

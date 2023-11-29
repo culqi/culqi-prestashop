@@ -1,6 +1,10 @@
 
+<?php
+$version = time();
+?>
 <script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
-<script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/mc-sonic.min.js"></script>
+<script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/mc-sonic.min.js?_=<?php echo $version; ?>"></script>
+
 
  <script type="text/javascript" defer src="{$enviroment_3ds|escape:'htmlall':'UTF-8'}"></script> 
 
