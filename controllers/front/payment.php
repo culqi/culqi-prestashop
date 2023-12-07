@@ -23,8 +23,9 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
             $urlapi_checkout = URLAPI_CHECKOUT_PROD;
             $urlapi_3ds = URLAPI_PROD_3DS;
         }
+        $version = time();
 
-        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/culqi.css');
+        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/culqi.css?_='.$version);
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/waitMe.min.css');
         $this->context->controller->addJS($urlapi_checkout);
         $this->context->controller->addJS('https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
