@@ -6,26 +6,27 @@ if (!defined('_PS_VERSION_'))
 
 define('CULQI_PLUGIN_VERSION', '3.0.3');
 
-define('URLAPI_INTEG', 'https://integ-panel.culqi.com');
-define('URLAPI_PROD', 'https://panel.culqi.com');
+define('URLAPI_INTEG', 'https://ag-plugins.culqi.com');
+define('URLAPI_PROD', 'https://ag-plugins.culqi.com');
 
 define('URLAPI_INTEG_3DS', 'https://3ds.culqi.com');
 define('URLAPI_PROD_3DS', 'https://3ds.culqi.com');
 
 define('URLAPI_ORDERCHARGES_INTEG', 'https://api.culqi.com/v2');
 define('URLAPI_CHECKOUT_INTEG', 'https://checkout.culqi.com/js/v4');
-define('URLAPI_LOGIN_INTEG', URLAPI_INTEG.'/user/login');
-define('URLAPI_MERCHANT_INTEG', URLAPI_INTEG.'/secure/merchant/');
-define('URLAPI_MERCHANTSINGLE_INTEG', URLAPI_INTEG.'/secure/keys/?merchant=');
-define('URLAPI_WEBHOOK_INTEG', URLAPI_INTEG.'/secure/events');
+
+define('URLAPI_LOGIN_INTEG', URLAPI_INTEG.'/plugins/public/login');
+define('URLAPI_MERCHANT_INTEG', URLAPI_INTEG.'/plugins/public/get_merchants');
+define('URLAPI_MERCHANTSINGLE_INTEG', URLAPI_INTEG.'/plugins/public/get_merchant?public_key=');
+define('URLAPI_WEBHOOK_INTEG', URLAPI_INTEG.'/plugins/public/webhook');
 
 define('URLAPI_ORDERCHARGES_PROD', 'https://api.culqi.com/v2');
 define('URLAPI_CHECKOUT_PROD', 'https://checkout.culqi.com/js/v4');
-define('URLAPI_LOGIN_PROD', URLAPI_PROD.'/user/login');
-define('URLAPI_MERCHANT_PROD', URLAPI_PROD.'/secure/merchant/'); 
-define('URLAPI_MERCHANTSINGLE_PROD', URLAPI_PROD.'/secure/keys/?merchant=');
-define('URLAPI_WEBHOOK_PROD', URLAPI_PROD.'/secure/events');
 
+define('URLAPI_LOGIN_PROD', URLAPI_PROD.'/plugins/public/login');
+define('URLAPI_MERCHANT_PROD', URLAPI_PROD.'/plugins/public/get_merchants'); 
+define('URLAPI_MERCHANTSINGLE_PROD', URLAPI_PROD.'/plugins/public/get_merchant?public_key=');
+define('URLAPI_WEBHOOK_PROD', URLAPI_PROD.'/plugins/public/webhook');
 
 /**
  * Calling dependencies
