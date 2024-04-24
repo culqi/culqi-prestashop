@@ -13,14 +13,14 @@ define('URLAPI_INTEG_3DS', 'https://3ds.culqi.com');
 define('URLAPI_PROD_3DS', 'https://3ds.culqi.com');
 
 define('URLAPI_ORDERCHARGES_INTEG', 'https://api.culqi.com/v2');
-define('URLAPI_CHECKOUT_INTEG', 'https://checkout.culqi.com/js/v4');
+define('URLAPI_CHECKOUT_INTEG', 'https://js.culqi.com/checkout-js');
 define('URLAPI_LOGIN_INTEG', URLAPI_INTEG.'/user/login');
 define('URLAPI_MERCHANT_INTEG', URLAPI_INTEG.'/secure/merchant/');
 define('URLAPI_MERCHANTSINGLE_INTEG', URLAPI_INTEG.'/secure/keys/?merchant=');
 define('URLAPI_WEBHOOK_INTEG', URLAPI_INTEG.'/secure/events');
 
 define('URLAPI_ORDERCHARGES_PROD', 'https://api.culqi.com/v2');
-define('URLAPI_CHECKOUT_PROD', 'https://checkout.culqi.com/js/v4');
+define('URLAPI_CHECKOUT_PROD', 'https://js.culqi.com/checkout-js');
 define('URLAPI_LOGIN_PROD', URLAPI_PROD.'/user/login');
 define('URLAPI_MERCHANT_PROD', URLAPI_PROD.'/secure/merchant/'); 
 define('URLAPI_MERCHANTSINGLE_PROD', URLAPI_PROD.'/secure/keys/?merchant=');
