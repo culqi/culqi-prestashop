@@ -251,7 +251,7 @@
 
     function setClient() {
         const client = {
-            email: undefined
+            email: '{/literal}{$email|escape:'htmlall':'UTF-8'}{literal}' 
         };
 
         return client;
