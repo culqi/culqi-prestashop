@@ -194,10 +194,6 @@
     function setCheckout() {
         const publicKey = setPublicKey();
         const config = setConfig();
-
-        console.log("publicKey", publicKey);
-        console.log("config", config);
-
         
         Culqi = new CulqiCheckout(publicKey, config);
         Culqi.culqi = culqi
