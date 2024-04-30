@@ -343,7 +343,7 @@
                 type: "POST",
                 dataType: 'json',
                 success: function (response) {
-                    console.log('response:::', response);
+                    console.log('Se genero una orden:::', response);
                     orderid = response;
                     setCheckout()
                     $('#buyButton').removeAttr('disabled');
