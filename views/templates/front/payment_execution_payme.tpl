@@ -351,9 +351,9 @@
                     e.preventDefault();
                 },
                 error: function (error) {
-                    console.log('error:::', error);
+                    console.log('Error al generar orden :::', error);
                     $('#showresult').show();
-                    orderid = 'ungenereted';
+                    orderid = ''
                     setCheckout()
                     $('#buyButton').removeAttr('disabled');
                     $('#showresult').hide();
@@ -362,7 +362,8 @@
             });
         } else {
             $('#showresult').show();
-            orderid = 'ungenereted';
+            console.log('No se genero orden');
+            orderid = ''
             setCheckout()
             $('#buyButton').removeAttr('disabled');
             $('#showresult').hide();
