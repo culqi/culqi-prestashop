@@ -1898,7 +1898,7 @@
                     <input required="true" type="text" name="CULQI_RSA_ID" id="CULQI_RSA_ID"
                            value="{$fields_value.CULQI_RSA_ID|escape:'htmlall':'UTF-8'}" class="">
                     <span id="errorrsaid" class="form-text text-muted"
-                          style="display: none; color: red; font-size: 0.8rem !important;">RSA Id incorrecto.</span>
+                          style="display: none; color: red; font-size: 0.8rem !important;">Ingrese el RSA Id.</span>
                     <span class="form-text text-muted"> Ingresa tu RSA Id. </span>
                 </div>
             </div>
@@ -1919,8 +1919,8 @@
                 </label>
                 <div class="col-lg-8">
                     <textarea rows="9" required="true" type="text" name="CULQI_RSA_PK" id="CULQI_RSA_PK">{$fields_value.CULQI_RSA_PK|escape:'htmlall':'UTF-8'}</textarea>
-                    <span id="errorrsaid" class="form-text text-muted"
-                          style="display: none; color: red; font-size: 0.8rem !important;">RSA PK incorrecto.</span>
+                    <span id="errorrsapk" class="form-text text-muted"
+                          style="display: none; color: red; font-size: 0.8rem !important;">Ingrese el RSA Publickey.</span>
                     <span class="form-text text-muted"> Ingresa tu RSA Publickey. </span>
                 </div>
             </div>
@@ -2767,6 +2767,16 @@
 
             if (!(jQuery('#CULQI_METHODS_TARJETA').is(':checked') || jQuery('#CULQI_METHODS_BANCAMOVIL').is(':checked') || jQuery('#CULQI_METHODS_YAPE').is(':checked') || jQuery('#CULQI_METHODS_AGENTS').is(':checked') || jQuery('#CULQI_METHODS_WALLETS').is(':checked') || jQuery('#CULQI_METHODS_QUOTEBCP').is(':checked'))) {
                 jQuery('#errorpaymentmethod').css('display', 'block');
+                hasError = '1';
+            }
+
+            if (jQuery('#CULQI_RSA_ID').val() === '' && jQuery('#CULQI_RSA_PK').val()){
+                jQuery('#errorrsaid').css('display', 'block');
+                hasError = '1';
+            }
+
+            if (jQuery('#CULQI_RSA_ID').val() && jQuery('#CULQI_RSA_PK').val() === '' ){
+                jQuery('#errorrsapk').css('display', 'block');
                 hasError = '1';
             }
 
