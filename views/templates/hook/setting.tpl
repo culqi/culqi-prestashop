@@ -2718,12 +2718,12 @@
             jQuery('#errorseckey').css('display', 'none');
             jQuery('#errortimeexp').css('display', 'none');
 
-            if (llavepublica.length == 0) {
+            if (llavepublica.length == 1) {
                 jQuery('#errorpubkey').html('Ingrese su llave pública');
                 jQuery('#errorpubkey').css('display', 'block');
                 hasError = '1';
             }
-            if (llaveprivada.length == 0) {
+            if (llaveprivada.length == 1) {
                 jQuery('#errorseckey').html('Ingrese su llave privada');
                 jQuery('#errorseckey').css('display', 'block');
                 hasError = '1';
