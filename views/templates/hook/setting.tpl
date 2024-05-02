@@ -2729,26 +2729,26 @@
                 hasError = '1';
             }
             if (jQuery('#integracion').is(':checked')) {
-                if (!(llavepublica.length == 3 && llavepublica[1] == 'test')) {
+                if (!(llavepublica.length == 3 && llavepublica[1] == 'test' && hasError == '0')) {
                     jQuery('#errorpubkey').html('La llave pública no pertenece al ambiente de integración');
                     jQuery('#errorpubkey').css('display', 'block');
                     //alert('Las llaves ingresadas no pertenecen al ambiente de integración');
                     //e.preventDefault();
                     hasError = '1';
                 }
-                if (!(llaveprivada.length == 3 && llaveprivada[1] == 'test')) {
+                if (!(llaveprivada.length == 3 && llaveprivada[1] == 'test' && hasError == '0')) {
                     jQuery('#errorseckey').html('La llave privada no pertenece al ambiente de integración');
                     jQuery('#errorseckey').css('display', 'block');
                     hasError = '1';
                 }
             }
             if (jQuery('#produccion').is(':checked')) {
-                if (!(llavepublica.length == 3 && llavepublica[1] == 'live')) {
+                if (!(llavepublica.length == 3 && llavepublica[1] == 'live' && hasError == '0')) {
                     jQuery('#errorpubkey').html('La llave pública no pertenece al ambiente de producción');
                     jQuery('#errorpubkey').css('display', 'block');
                     hasError = '1';
                 }
-                if (!(llaveprivada.length == 3 && llaveprivada[1] == 'live')) {
+                if (!(llaveprivada.length == 3 && llaveprivada[1] == 'live' && hasError == '0')) {
                     jQuery('#errorseckey').html('La llave privada no pertenece al ambiente de producción');
                     jQuery('#errorseckey').css('display', 'block');
                     hasError = '1';
