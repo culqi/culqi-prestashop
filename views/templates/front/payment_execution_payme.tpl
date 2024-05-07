@@ -80,7 +80,7 @@
                 $(document).ajaxComplete(function () {
                 });
 
-                var installments = (Culqi.token.metadata.installments == undefined) ? 0 : Culqi.token.metadata.installments;
+                var installments = (Culqi.token.metadata == undefined || Culqi.token.metadata.installments == undefined) ? 0 : Culqi.token.metadata.installments;
 
                 $.ajax({
                     url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
@@ -456,7 +456,7 @@
             $(document).ajaxComplete(function () {
             });
 
-            var installments = (Culqi.token.metadata.installments == undefined) ? 0 : Culqi.token.metadata.installments;
+            var installments = (Culqi.token.metadata == undefined || Culqi.token.metadata.installments == undefined) ? 0 : Culqi.token.metadata.installments;
             $.ajax({
                 url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
                 data: {
