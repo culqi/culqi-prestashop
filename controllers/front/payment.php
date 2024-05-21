@@ -82,6 +82,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign("currency", $this->context->currency->iso_code);
         $this->context->smarty->assign("address", $address);
         $this->context->smarty->assign("customer", $this->context->customer);
+        $this->context->smarty->assign("email", $this->context->customer->email);
         $this->context->smarty->assign("commerce", Configuration::get('PS_SHOP_NAME'));
         $this->context->smarty->assign("rsa_id", Configuration::get('CULQI_RSA_ID'));
         $this->context->smarty->assign("rsa_pk", Configuration::get('CULQI_RSA_PK'));
