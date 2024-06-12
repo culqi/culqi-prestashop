@@ -1,7 +1,20 @@
 
 <script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/waitMe.min.js"></script>
 {$timestamp = time()}
-<script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/mc-sonic.min.js?_={$timestamp}"></script>
+<script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/brands/mastercard/mc-sonic.min.js?_={$timestamp}"></script>
+<script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/brands/visa/visa-sensory-branding.js?_={$timestamp}"></script>
+<script>
+const modulePath = "{$this_path|escape:'htmlall':'UTF-8'}views/brands";
+const run_waitMe = (bg='rgba(0,0,0, 0.7)') => {
+    $('body').waitMe({
+        effect: 'bounce',
+        text: 'Cargando. Espere por favor',
+        bg: bg,
+        color: '#ffffff'
+    });
+}
+</script>
+<script type="text/javascript" defer src="{$this_path|escape:'htmlall':'UTF-8'}views/js/brand-handle.js?_={$timestamp}"></script>
 
  <script type="text/javascript" defer src="{$enviroment_3ds|escape:'htmlall':'UTF-8'}"></script> 
 
@@ -115,11 +128,11 @@
                             var url = fnReplace("{/literal}{$link->getModuleLink('culqi', 'postpayment', [], true)|escape:'htmlall':'UTF-8'}{literal}");
                             var success_url = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
                             
-                            if (brand.toUpperCase() == "MASTERCARD"){
-                                $('body').waitMe('hide');
-                                fn_mc_sonic();
-                                playSonic(success_url);
-                            }else{
+                            if (brand.toUpperCase() == "MASTERCARD") {
+                                fnMcSonic(success_url);
+                            } else if (brand.toUpperCase() == "VISA") {
+                                fnBrandvisa(success_url);
+                            } else {
                                 location.href = success_url;
                             }
                         }
@@ -306,34 +319,6 @@
         return appearence;
     }
 
-    function fn_mc_sonic(){  
-        $('body').append(`<div style="
-        width: 100%;
-        height: 100%;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        background-color: rgba(0,0,0,0.7);
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 99999;
-        margin: auto;">
-        <mc-sonic id="mc-sonic" style="height: 40%;" type="default"  clear-background ></mc-sonic> </div>`);
-    }
-
-    function playSonic(success_url) {
-        let mc_component = document.getElementById("mc-sonic")
-        document.addEventListener('sonicCompletion', onCompletion(success_url))
-        mc_component.play()
-    }
-    function onCompletion(success_url) {
-        setTimeout(() => {
-            location.href = success_url;
-        }, 2000);
-    }
-
     function generateOrder(e, device) {
         window.device = device;
         if ({/literal}{$banca_movil|escape:'htmlall':'UTF-8'}{literal} || {/literal}{$agente|escape:'htmlall':'UTF-8'}{literal} || {/literal}{$billetera|escape:'htmlall':'UTF-8'}{literal} || {/literal}{$cuetealo|escape:'htmlall':'UTF-8'}{literal}) {
@@ -506,11 +491,11 @@
                             var success_url = url + '?card_number=' + card_number + '&card_brand=' + card_brand + '&orderid=' + orderid + '&chargeid=' + chargeid;
                             console.log("Marca de tarjeta: " + result['source']['iin']['card_brand']);
 
-                            if (brand.toUpperCase() == "MASTERCARD"){
-                                $('body').waitMe('hide');
-                                fn_mc_sonic();
-                                playSonic(success_url);
-                            }else{
+                            if (brand.toUpperCase() == "MASTERCARD") {
+                                fnMcSonic(success_url);
+                            } else if (brand.toUpperCase() == "VISA") {
+                                fnBrandvisa(success_url);
+                            } else {
                                 location.href = success_url;
                             }
 
@@ -539,15 +524,6 @@
             }
         }
 
-    }
-
-    function run_waitMe() {
-        $('body').waitMe({
-            effect: 'bounce',
-            text: 'Cargando. Espere por favor',
-            bg: 'rgba(0,0,0, 0.7)',
-            color: '#ffffff'
-        });
     }
 </script>
 

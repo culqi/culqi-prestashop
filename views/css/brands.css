@@ -1,0 +1,34 @@
+body.showVisa {
+    background-color: #15195a;
+}
+#brand-wrapper {
+    position: relative;
+}
+#visa-sensory-branding {
+    display: none;
+    position: absolute;
+}
+#visa-sensory-branding.show {
+    display:block;
+    width:700px;
+    height:500px;
+}
+#demoButton {
+    width: 400px;
+    height: 100px;
+}
+#brandMastercard {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin: auto;
+    background-color: rgba(0,0,0,0.7);
+    top: 0 !important;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    margin: auto;
+}

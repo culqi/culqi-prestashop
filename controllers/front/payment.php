@@ -18,6 +18,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         $urlapi_ordercharges = URLAPI_ORDERCHARGES_INTEG;
         $urlapi_checkout = URLAPI_CHECKOUT_INTEG;
         $urlapi_3ds = URLAPI_INTEG_3DS;
+
         if(Configuration::get('CULQI_ENVIROMENT')=='prod'){
             $urlapi_ordercharges = URLAPI_ORDERCHARGES_PROD;
             $urlapi_checkout = URLAPI_CHECKOUT_PROD;
@@ -25,12 +26,15 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         }
         $version = time();
 
-        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/culqi.css?_='.$version);
+        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/global.css');
+        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/culqi.css');
+        $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/brands.css');
         $this->context->controller->addCSS(__PS_BASE_URI__.'modules/'.$this->module->name.'/views/css/waitMe.min.css');
         $this->context->controller->addJS($urlapi_checkout);
         $this->context->controller->addJS('https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js');
-
+        
         $cart = $this->context->cart;
+        $address = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "address where id_address=" . $cart->id_address_invoice);
 
         if (!$this->module->checkCurrency($cart))
         {
@@ -39,6 +43,9 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
 
         $total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH),  _PS_PRICE_DISPLAY_PRECISION_);
         $color_palette = Configuration::get('CULQI_COLOR_PALETTE');
+        if(!$color_palette) {
+            $color_palette = "-";
+        }
         $base_url = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ . 'module/culqi/payment';
 
         $total = $total*100;
@@ -63,7 +70,7 @@ class CulqiPaymentModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign('multipayment_enable', Configuration::get('CULQI_ENABLED'));
         $this->context->smarty->assign("psversion", array('min' => '1.6', 'max' => _PS_VERSION_)['max']);
         $this->context->smarty->assign("culqipluginversion", 'v'.CULQI_PLUGIN_VERSION);
-        $this->context->smarty->assign("module_dir", $this->_path);
+        $this->context->smarty->assign("module_dir", $this->module->getPathUri());
         $this->context->smarty->assign("descripcion", "Orden de compra ".$cart->id);
         $this->context->smarty->assign("orden", $cart->id);
         $this->context->smarty->assign("enviroment_backend", $urlapi_ordercharges);
