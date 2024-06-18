@@ -1,0 +1,23 @@
+#loadingloginculqi {
+    position: fixed; 
+    width: 100%; 
+    height: 100%; 
+    z-index: 9999999; 
+    top: 0; 
+    text-align: center; 
+    justify-content: center; 
+    align-content: center;
+    flex-direction: column; 
+    color: white; 
+    font-size: 14px; 
+    display:table-cell; 
+    vertical-align:middle;
+}
+#loadingloginculqi > div {
+    position: absolute; 
+    top: 50%;
+    width: 100%; 
+}
+#loadingloginculqi img {
+    display: inline-block
+}

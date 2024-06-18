@@ -4,7 +4,7 @@ define("RAIZ",dirname(__FILE__));
 if (!defined('_PS_VERSION_'))
     exit;
 
-define('CULQI_PLUGIN_VERSION', '3.1.0');
+define('CULQI_PLUGIN_VERSION', '3.1.1');
 
 define('URLAPI_INTEG', 'https://integ-panel.culqi.com');
 define('URLAPI_PROD', 'https://panel.culqi.com');
@@ -220,12 +220,10 @@ class Culqi extends PaymentModule
 
         $cart = $this->context->cart;
         $address = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "address where id_address=" . $cart->id_address_invoice);
-        //var_dump($currency); exit(1);
+        if($address) {
+            $country = Db::getInstance()->ExecuteS("SELECT * FROM " . _DB_PREFIX_ . "country where id_country=" . $address[0]['id_country']);
+        }
         $total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH),  _PS_PRICE_DISPLAY_PRECISION_);
-        //$total = Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), PS_PRICE_DISPLAY_PRECISION);
-        //var_dump(PS_PRICE_DISPLAY_PRECISION); exit(1);
-        //$total = $cart->getOrderTotal(true, Cart::BOTH);
-        //var_dump($this->context->currency); exit(1);
         $color_palette = Configuration::get('CULQI_COLOR_PALETTE');
         $total = $total * 100;
 
@@ -246,7 +244,7 @@ class Culqi extends PaymentModule
 
         return array(
             "psversion" => $this->ps_versions_compliancy['max'],
-            'culqipluginversion' => $this->version,
+            "culqipluginversion" => $this->version,
             "module_dir" => $this->_path,
             "descripcion" => "Orden de compra ".$cart->id,
             "orden" => $cart->id,
@@ -270,8 +268,9 @@ class Culqi extends PaymentModule
             "currency" => $this->context->currency->iso_code,
             "address" => $address,
             "customer" => $this->context->customer,
-            'commerce' => Configuration::get('PS_SHOP_NAME'),
-            "BASE_URL" => $base_url
+            "commerce" => Configuration::get('PS_SHOP_NAME'),
+            "BASE_URL" => $base_url,
+            "country" =>$country ?? "PE"
         );
     }
 
@@ -374,10 +373,30 @@ class Culqi extends PaymentModule
 
     private function createStates()
     {
-        if (!Configuration::get('CULQI_STATE_OK')) {
+        if (!Configuration::get('CULQI_STATE_OK') || Configuration::get('CULQI_STATE_OK') == "0") {
             $txt_state='Pago aceptado';
-            $orderstate = Db::getInstance()->ExecuteS("SELECT distinct osl.id_order_state, osl.name FROM " . _DB_PREFIX_ . "order_state_lang osl, " . _DB_PREFIX_ . "order_state os where osl.id_order_state=os.id_order_state and osl.name='" . $txt_state . "' and deleted=0");
-            Configuration::updateValue('CULQI_STATE_OK', (int)$orderstate[0]['id_order_state']);
+            $rows = Db::getInstance()->getValue($this->queryGetStates($txt_state));
+            if (intval($rows) == 0) {
+                $order_state = new OrderState();
+                $order_state->name = array();
+                foreach (Language::getLanguages() as $language) {
+                    $order_state->name[$language['id_lang']] = $txt_state;
+                }
+                $order_state->send_email = false;
+                $order_state->color = '#32CD32';
+                $order_state->hidden = false;
+                $order_state->paid = true;
+                $order_state->module_name = 'culqi';
+                $order_state->delivery = false;
+                $order_state->logable = false;
+                $order_state->invoice = true;
+                $order_state->pdf_invoice = true;
+                $order_state->add();
+                Configuration::updateValue('CULQI_STATE_OK', (int)$order_state->id);
+            } else {
+                $orderstate = Db::getInstance()->ExecuteS("SELECT distinct osl.id_order_state, osl.name FROM " . _DB_PREFIX_ . "order_state_lang osl, " . _DB_PREFIX_ . "order_state os where osl.id_order_state=os.id_order_state and osl.name='" . $txt_state . "' and deleted=0");
+                Configuration::updateValue('CULQI_STATE_OK', (int)$orderstate[0]['id_order_state']);
+            }
         }
         if (!Configuration::get('CULQI_STATE_PENDING')) {
             $txt_state = 'En espera de pago por Culqi';
