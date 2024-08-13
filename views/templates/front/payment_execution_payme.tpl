@@ -101,7 +101,7 @@ const run_waitMe = (bg='rgba(0,0,0, 0.7)') => {
                     device: device,
                     parameters3DS: parameters3DS
                 };
-                if (Culqi.token.metadata == undefined || Culqi.token.metadata.installments == undefined){
+                if (Culqi.token.metadata != undefined && Culqi.token.metadata.installments != undefined){
                     payloadCharge.installments = Culqi.token.metadata.installments;
                 }
 
@@ -450,7 +450,7 @@ const run_waitMe = (bg='rgba(0,0,0, 0.7)') => {
                 email: Culqi.token.email,
                 device: device
             };
-            if (Culqi.token.metadata == undefined || Culqi.token.metadata.installments == undefined){
+            if (Culqi.token.metadata != undefined && Culqi.token.metadata.installments != undefined){
                 payloadCharge.installments = Culqi.token.metadata.installments;
             }
 
