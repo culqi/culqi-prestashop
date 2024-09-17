@@ -93,19 +93,21 @@ const run_waitMe = (bg='rgba(0,0,0, 0.7)') => {
                 $(document).ajaxComplete(function () {
                 });
 
-                var installments = (Culqi.token.metadata == undefined || Culqi.token.metadata.installments == undefined) ? 0 : Culqi.token.metadata.installments;
+                var payloadCharge =  {
+                    ajax: true,
+                    action: 'displayAjax',
+                    token_id: Culqi.token.id,
+                    email: Culqi.token.email,
+                    device: device,
+                    parameters3DS: parameters3DS
+                };
+                if (Culqi.token.metadata != undefined && Culqi.token.metadata.installments != undefined){
+                    payloadCharge.installments = Culqi.token.metadata.installments;
+                }
 
                 $.ajax({
                     url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
-                    data: {
-                        ajax: true,
-                        action: 'displayAjax',
-                        token_id: Culqi.token.id,
-                        installments: installments,
-                        email: Culqi.token.email,
-                        device: device,
-                        parameters3DS: parameters3DS
-                    },
+                    data: payloadCharge,
                     type: "POST",
                     dataType: 'json',
                     success: function (data, textStatus, xhr) {
@@ -441,17 +443,20 @@ const run_waitMe = (bg='rgba(0,0,0, 0.7)') => {
             $(document).ajaxComplete(function () {
             });
 
-            var installments = (Culqi.token.metadata == undefined || Culqi.token.metadata.installments == undefined) ? 0 : Culqi.token.metadata.installments;
+            var payloadCharge =  {
+                ajax: true,
+                action: 'displayAjax',
+                token_id: Culqi.token.id,
+                email: Culqi.token.email,
+                device: device
+            };
+            if (Culqi.token.metadata != undefined && Culqi.token.metadata.installments != undefined){
+                payloadCharge.installments = Culqi.token.metadata.installments;
+            }
+
             $.ajax({
                 url: fnReplace("{/literal}{$link->getModuleLink('culqi', 'chargeajax', [], true)|escape:'htmlall':'UTF-8'}{literal}"),
-                data: {
-                    ajax: true,
-                    action: 'displayAjax',
-                    token_id: Culqi.token.id,
-                    installments: installments,
-                    email: Culqi.token.email,
-                    device: device
-                },
+                data: payloadCharge,
                 type: "POST",
                 dataType: 'json',
                 success: function (data, textStatus, xhr) {

@@ -73,6 +73,9 @@ class CulqiChargeAjaxModuleFrontController extends ModuleFrontController
             if (Tools::getValue("parameters3DS") !== FALSE) {
                 $args_charge['authentication_3DS'] = Tools::getValue("parameters3DS");
             }
+            if (Tools::getValue("installments") !== FALSE) {
+                $args_charge['installments'] = Tools::getValue("installments");
+            }
             $culqi_charge = $culqi->Charges->create($args_charge);
 
         } catch (Exception $e) {
